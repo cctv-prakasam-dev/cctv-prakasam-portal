@@ -10,8 +10,6 @@ const VEnvSchema = object({
     transform(val => Number(val)),
   ),
   COOKIE_DOMAIN: string(),
-  API_BASE_URL: string(),
-  APP_BASE_URL: string(),
   DB_HOST: string(),
   DB_PORT: pipe(
     string(),
@@ -23,7 +21,6 @@ const VEnvSchema = object({
   JWT_SECRET: string(),
   BREVO_API_KEY: string(),
 
-  SCOPE: string(),
 });
 
 export type Env = InferOutput<typeof VEnvSchema>;

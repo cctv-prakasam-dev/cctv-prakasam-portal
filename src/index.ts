@@ -12,6 +12,7 @@ const apiVer = appConfig.version;
 const app = new Hono().basePath(`/v${apiVer}`);
 
 const port = envData.PORT || 3000;
+console.log(`🚀 Server is running on port ${port} in ${envData.NODE_ENV} mode`);
 
 app.use(logger());
 
