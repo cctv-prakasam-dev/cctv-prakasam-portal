@@ -2,17 +2,33 @@
   "name": "cctv-prakasam-portal",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "dotenvx run -- tsx watch src/index.ts",
+    "start": "dotenvx run -- node dist/src/index.js",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "migrations:gen": "dotenvx run -- tsx node_modules/drizzle-kit/bin.cjs generate",
+    "migrations:apply": "dotenvx run -- drizzle-kit migrate",
+    "db:studio": "tsx node_modules/drizzle-kit/bin.cjs studio",
+    "seed": "dotenvx run -- tsx seeders/seed.ts"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.54.1",
     "@hono/node-server": "^1.19.11",
-    "hono": "^4.12.5"
+    "drizzle-orm": "^0.45.1",
+    "env": "^0.0.2",
+    "hono": "^4.12.5",
+    "pg": "^8.20.0",
+    "valibot": "^1.2.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^7.7.0",
     "@types/node": "^20.11.17",
-    "tsx": "^4.7.1",
+    "@types/pg": "^8.18.0",
+    "drizzle-kit": "^0.31.9",
+    "eslint": "^9.39.4",
+    "eslint-plugin-format": "^2.0.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.3"
   }
 }
