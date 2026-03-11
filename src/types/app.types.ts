@@ -67,11 +67,16 @@ export type AuthActivity
     | "reset-password"
     | "verify-email";
 
+export type CategoryActivity
+  = | "create-category"
+    | "update-category";
+
 export type UserLogOut = "user-logout";
 
 export type AppActivity
   = | SignUpOrSignInActivity
     | AuthActivity
+    | CategoryActivity
     | UserLogOut;
 
 export interface ValidatedRegister {
@@ -109,10 +114,31 @@ export interface AuthTokens {
   refresh_token_expires_at: number;
 }
 
+export interface ValidatedCreateCategory {
+  name: string;
+  name_te?: string;
+  slug: string;
+  icon?: string;
+  color?: string;
+  sort_order?: number;
+}
+
+export interface ValidatedUpdateCategory {
+  name?: string;
+  name_te?: string;
+  slug?: string;
+  icon?: string;
+  color?: string;
+  sort_order?: number;
+  is_active?: boolean;
+}
+
 export type ValidatedRequest
   = | ValidatedRegister
     | ValidatedLogin
     | ValidatedRefreshToken
     | ValidatedForgotPassword
     | ValidatedResetPassword
-    | ValidatedVerifyEmail;
+    | ValidatedVerifyEmail
+    | ValidatedCreateCategory
+    | ValidatedUpdateCategory;

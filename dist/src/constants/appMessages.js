@@ -62,3 +62,12 @@ export const EMAIL_VERIFIED = "Email verified successfully";
 export const INVALID_VERIFICATION_TOKEN = "Invalid or expired verification token";
 export const INVALID_RESET_TOKEN = "Invalid or expired reset token";
 export const LOGOUT_DONE = "Logged out successfully";
+// Categories messages
+export const CATEGORIES_FETCHED = "Categories fetched successfully";
+export const CATEGORY_FETCHED = "Category fetched successfully";
+export const CATEGORY_CREATED = "Category created successfully";
+export const CATEGORY_UPDATED = "Category updated successfully";
+export const CATEGORY_DELETED = "Category deleted successfully";
+export const CATEGORY_NOT_FOUND = "Category not found";
+export const CREATE_CATEGORY_VALIDATION_ERROR = "Category details provided do not meet the required validation criteria";
+export const UPDATE_CATEGORY_VALIDATION_ERROR = "Update category details provided do not meet the required validation criteria";

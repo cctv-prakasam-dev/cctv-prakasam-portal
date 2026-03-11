@@ -1,6 +1,7 @@
 import { flatten, safeParseAsync } from "valibot";
 import UnprocessableContentException from "../exceptions/unprocessableContentException.js";
 import { VForgotPasswordSchema, VLoginSchema, VRefreshTokenSchema, VRegisterSchema, VResetPasswordSchema, VVerifyEmailSchema, } from "../modules/auth/auth.validation.js";
+import { VCreateCategorySchema, VUpdateCategorySchema, } from "../modules/categories/categories.validation.js";
 export async function validateRequest(actionType, reqData, errorMessage) {
     let schema;
     switch (actionType) {
@@ -21,6 +22,12 @@ export async function validateRequest(actionType, reqData, errorMessage) {
             break;
         case "verify-email":
             schema = VVerifyEmailSchema;
+            break;
+        case "create-category":
+            schema = VCreateCategorySchema;
+            break;
+        case "update-category":
+            schema = VUpdateCategorySchema;
             break;
         default:
     }

@@ -11,6 +11,10 @@ import {
   VResetPasswordSchema,
   VVerifyEmailSchema,
 } from "../modules/auth/auth.validation.js";
+import {
+  VCreateCategorySchema,
+  VUpdateCategorySchema,
+} from "../modules/categories/categories.validation.js";
 
 export async function validateRequest<R extends ValidatedRequest>(
   actionType: AppActivity,
@@ -37,6 +41,12 @@ export async function validateRequest<R extends ValidatedRequest>(
       break;
     case "verify-email":
       schema = VVerifyEmailSchema;
+      break;
+    case "create-category":
+      schema = VCreateCategorySchema;
+      break;
+    case "update-category":
+      schema = VUpdateCategorySchema;
       break;
     default:
   }

@@ -1,4 +1,5 @@
 import { and, eq, ne } from "drizzle-orm";
+import { categories } from "../db/schema/categories.js";
 import { db } from "../db/configuration.js";
 import { users } from "../db/schema/users.js";
 import { getSingleRecordByAColumnValue } from "../services/db/baseDbService.js";
@@ -35,4 +36,9 @@ export async function phoneExist(phone) {
         .from(users)
         .where(and(eq(users.phone, phone)));
     return existingUser.length > 0;
+}
+export async function categorySlugExists(slug) {
+    const columnsToSelect = ["id", "slug"];
+    const result = await getSingleRecordByAColumnValue(categories, "slug", slug, "eq", columnsToSelect);
+    return !!result;
 }
