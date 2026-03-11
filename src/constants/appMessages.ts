@@ -114,3 +114,25 @@ export const NEWSLETTER_SUBSCRIBER_DELETED = "Newsletter subscriber removed succ
 export const NEWSLETTER_SUBSCRIBER_NOT_FOUND = "Newsletter subscriber not found";
 export const SUBSCRIBE_NEWSLETTER_VALIDATION_ERROR
   = "Newsletter subscription details provided do not meet the required validation criteria";
+
+// Breaking News messages
+export const BREAKING_NEWS_FETCHED = "Breaking news fetched successfully";
+export const BREAKING_NEWS_CREATED = "Breaking news created successfully";
+export const BREAKING_NEWS_UPDATED = "Breaking news updated successfully";
+export const BREAKING_NEWS_DELETED = "Breaking news deleted successfully";
+export const BREAKING_NEWS_NOT_FOUND = "Breaking news not found";
+export const CREATE_BREAKING_NEWS_VALIDATION_ERROR
+  = "Breaking news details provided do not meet the required validation criteria";
+export const UPDATE_BREAKING_NEWS_VALIDATION_ERROR
+  = "Update breaking news details provided do not meet the required validation criteria";
+
+// Featured Content messages
+export const FEATURED_CONTENT_FETCHED = "Featured content fetched successfully";
+export const FEATURED_CONTENT_CREATED = "Featured content created successfully";
+export const FEATURED_CONTENT_UPDATED = "Featured content updated successfully";
+export const FEATURED_CONTENT_DELETED = "Featured content deleted successfully";
+export const FEATURED_CONTENT_NOT_FOUND = "Featured content not found";
+export const CREATE_FEATURED_CONTENT_VALIDATION_ERROR
+  = "Featured content details provided do not meet the required validation criteria";
+export const UPDATE_FEATURED_CONTENT_VALIDATION_ERROR
+  = "Update featured content details provided do not meet the required validation criteria";

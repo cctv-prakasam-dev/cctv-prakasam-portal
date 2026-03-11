@@ -1,0 +1,1 @@
+ALTER TABLE "breaking_news" ADD COLUMN "updated_at" timestamp;

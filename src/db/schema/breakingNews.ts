@@ -7,6 +7,7 @@ export const breakingNews = pgTable("breaking_news", {
   is_active: boolean().default(true),
   sort_order: integer().default(0),
   created_at: timestamp().defaultNow(),
+  updated_at: timestamp(),
 }, t => [
   index("breaking_news_is_active_idx").on(t.is_active),
   index("breaking_news_sort_order_idx").on(t.sort_order),

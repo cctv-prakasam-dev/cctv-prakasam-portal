@@ -77,6 +77,14 @@ export type VideoActivity
 
 export type NewsletterActivity = "subscribe-newsletter";
 
+export type BreakingNewsActivity
+  = | "create-breaking-news"
+    | "update-breaking-news";
+
+export type FeaturedContentActivity
+  = | "create-featured-content"
+    | "update-featured-content";
+
 export type UserLogOut = "user-logout";
 
 export type AppActivity
@@ -85,6 +93,8 @@ export type AppActivity
     | CategoryActivity
     | VideoActivity
     | NewsletterActivity
+    | BreakingNewsActivity
+    | FeaturedContentActivity
     | UserLogOut;
 
 export interface ValidatedRegister {
@@ -159,6 +169,34 @@ export interface ValidatedSubscribeNewsletter {
   email: string;
 }
 
+export interface ValidatedCreateBreakingNews {
+  text: string;
+  text_te?: string;
+  sort_order?: number;
+}
+
+export interface ValidatedUpdateBreakingNews {
+  text?: string;
+  text_te?: string;
+  sort_order?: number;
+  is_active?: boolean;
+}
+
+export interface ValidatedCreateFeaturedContent {
+  type: string;
+  video_id?: number;
+  title?: string;
+  sort_order?: number;
+}
+
+export interface ValidatedUpdateFeaturedContent {
+  type?: string;
+  video_id?: number;
+  title?: string;
+  sort_order?: number;
+  is_active?: boolean;
+}
+
 export interface ValidatedUpdateVideo {
   title?: string;
   title_te?: string;
@@ -184,4 +222,8 @@ export type ValidatedRequest
     | ValidatedUpdateCategory
     | ValidatedCreateVideo
     | ValidatedUpdateVideo
-    | ValidatedSubscribeNewsletter;
+    | ValidatedSubscribeNewsletter
+    | ValidatedCreateBreakingNews
+    | ValidatedUpdateBreakingNews
+    | ValidatedCreateFeaturedContent
+    | ValidatedUpdateFeaturedContent;

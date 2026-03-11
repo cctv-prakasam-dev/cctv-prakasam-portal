@@ -1,7 +1,9 @@
 import { Hono } from "hono";
 
 import authRoutes from "./modules/auth/auth.routes.js";
+import { breakingNewsAdminRoutes, breakingNewsPublicRoutes } from "./modules/breakingNews/breakingNews.routes.js";
 import { categoryAdminRoutes, categoryPublicRoutes } from "./modules/categories/categories.routes.js";
+import { featuredContentAdminRoutes, featuredContentPublicRoutes } from "./modules/featuredContent/featuredContent.routes.js";
 import { newsletterAdminRoutes, newsletterPublicRoutes } from "./modules/newsletter/newsletter.routes.js";
 import { videoAdminRoutes, videoPublicRoutes } from "./modules/videos/videos.routes.js";
 
@@ -14,5 +16,9 @@ routes.route("/videos", videoPublicRoutes);
 routes.route("/admin/videos", videoAdminRoutes);
 routes.route("/newsletter", newsletterPublicRoutes);
 routes.route("/admin/newsletter", newsletterAdminRoutes);
+routes.route("/breaking-news", breakingNewsPublicRoutes);
+routes.route("/admin/breaking-news", breakingNewsAdminRoutes);
+routes.route("/featured-content", featuredContentPublicRoutes);
+routes.route("/admin/featured-content", featuredContentAdminRoutes);
 
 export default routes;

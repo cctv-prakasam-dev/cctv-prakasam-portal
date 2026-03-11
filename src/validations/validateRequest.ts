@@ -15,6 +15,14 @@ import {
   VCreateCategorySchema,
   VUpdateCategorySchema,
 } from "../modules/categories/categories.validation.js";
+import {
+  VCreateBreakingNewsSchema,
+  VUpdateBreakingNewsSchema,
+} from "../modules/breakingNews/breakingNews.validation.js";
+import {
+  VCreateFeaturedContentSchema,
+  VUpdateFeaturedContentSchema,
+} from "../modules/featuredContent/featuredContent.validation.js";
 import { VSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
 import {
   VCreateVideoSchema,
@@ -61,6 +69,18 @@ export async function validateRequest<R extends ValidatedRequest>(
       break;
     case "subscribe-newsletter":
       schema = VSubscribeNewsletterSchema;
+      break;
+    case "create-breaking-news":
+      schema = VCreateBreakingNewsSchema;
+      break;
+    case "update-breaking-news":
+      schema = VUpdateBreakingNewsSchema;
+      break;
+    case "create-featured-content":
+      schema = VCreateFeaturedContentSchema;
+      break;
+    case "update-featured-content":
+      schema = VUpdateFeaturedContentSchema;
       break;
     default:
   }
