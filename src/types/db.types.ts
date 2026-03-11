@@ -1,17 +1,47 @@
 import type { db } from "../db/configuration.js";
+import type { BreakingNewsItem, BreakingNewsTable, NewBreakingNewsItem } from "../db/schema/breakingNews.js";
+import type { CategoriesTable, Category, NewCategory } from "../db/schema/categories.js";
+import type { FeaturedContentItem, FeaturedContentTable, NewFeaturedContentItem } from "../db/schema/featuredContent.js";
+import type { NewNewsletterSubscriber, NewsletterSubscriber, NewsletterSubscribersTable } from "../db/schema/newsletterSubscribers.js";
+import type { NewSetting, Setting, SettingsTable } from "../db/schema/settings.js";
 import type { NewUser, User, UsersTable } from "../db/schema/users.js";
+import type { NewVideo, Video, VideosTable } from "../db/schema/videos.js";
 
 export type DBTable
-  = | UsersTable;
+  = | UsersTable
+    | CategoriesTable
+    | VideosTable
+    | NewsletterSubscribersTable
+    | SettingsTable
+    | BreakingNewsTable
+    | FeaturedContentTable;
 
 export type DBTableRow
-  = | User;
+  = | User
+    | Category
+    | Video
+    | NewsletterSubscriber
+    | Setting
+    | BreakingNewsItem
+    | FeaturedContentItem;
 
 export type DBNewRecord
-  = | NewUser;
+  = | NewUser
+    | NewCategory
+    | NewVideo
+    | NewNewsletterSubscriber
+    | NewSetting
+    | NewBreakingNewsItem
+    | NewFeaturedContentItem;
 
 export type DBNewRecords
-  = | NewUser[];
+  = | NewUser[]
+    | NewCategory[]
+    | NewVideo[]
+    | NewNewsletterSubscriber[]
+    | NewSetting[]
+    | NewBreakingNewsItem[]
+    | NewFeaturedContentItem[];
 
 export type SortDirection = "asc" | "desc";
 
