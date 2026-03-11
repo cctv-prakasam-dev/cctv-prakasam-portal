@@ -71,12 +71,20 @@ export type CategoryActivity
   = | "create-category"
     | "update-category";
 
+export type VideoActivity
+  = | "create-video"
+    | "update-video";
+
+export type NewsletterActivity = "subscribe-newsletter";
+
 export type UserLogOut = "user-logout";
 
 export type AppActivity
   = | SignUpOrSignInActivity
     | AuthActivity
     | CategoryActivity
+    | VideoActivity
+    | NewsletterActivity
     | UserLogOut;
 
 export interface ValidatedRegister {
@@ -133,6 +141,38 @@ export interface ValidatedUpdateCategory {
   is_active?: boolean;
 }
 
+export interface ValidatedCreateVideo {
+  youtube_id: string;
+  title: string;
+  title_te?: string;
+  description?: string;
+  category_id?: number;
+  thumbnail_url?: string;
+  duration?: string;
+  view_count?: string;
+  published_at?: string;
+  is_featured?: boolean;
+  is_trending?: boolean;
+}
+
+export interface ValidatedSubscribeNewsletter {
+  email: string;
+}
+
+export interface ValidatedUpdateVideo {
+  title?: string;
+  title_te?: string;
+  description?: string;
+  category_id?: number;
+  thumbnail_url?: string;
+  duration?: string;
+  view_count?: string;
+  published_at?: string;
+  is_featured?: boolean;
+  is_trending?: boolean;
+  is_active?: boolean;
+}
+
 export type ValidatedRequest
   = | ValidatedRegister
     | ValidatedLogin
@@ -141,4 +181,7 @@ export type ValidatedRequest
     | ValidatedResetPassword
     | ValidatedVerifyEmail
     | ValidatedCreateCategory
-    | ValidatedUpdateCategory;
+    | ValidatedUpdateCategory
+    | ValidatedCreateVideo
+    | ValidatedUpdateVideo
+    | ValidatedSubscribeNewsletter;

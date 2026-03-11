@@ -92,3 +92,25 @@ export const CREATE_CATEGORY_VALIDATION_ERROR
   = "Category details provided do not meet the required validation criteria";
 export const UPDATE_CATEGORY_VALIDATION_ERROR
   = "Update category details provided do not meet the required validation criteria";
+
+// Videos messages
+export const VIDEOS_FETCHED = "Videos fetched successfully";
+export const VIDEO_FETCHED = "Video fetched successfully";
+export const FEATURED_VIDEOS_FETCHED = "Featured videos fetched successfully";
+export const TRENDING_VIDEOS_FETCHED = "Trending videos fetched successfully";
+export const VIDEO_CREATED = "Video created successfully";
+export const VIDEO_UPDATED = "Video updated successfully";
+export const VIDEO_DELETED = "Video deleted successfully";
+export const VIDEO_NOT_FOUND = "Video not found";
+export const CREATE_VIDEO_VALIDATION_ERROR
+  = "Video details provided do not meet the required validation criteria";
+export const UPDATE_VIDEO_VALIDATION_ERROR
+  = "Update video details provided do not meet the required validation criteria";
+
+// Newsletter messages
+export const NEWSLETTER_SUBSCRIBED = "Subscribed to newsletter successfully";
+export const NEWSLETTER_SUBSCRIBERS_FETCHED = "Newsletter subscribers fetched successfully";
+export const NEWSLETTER_SUBSCRIBER_DELETED = "Newsletter subscriber removed successfully";
+export const NEWSLETTER_SUBSCRIBER_NOT_FOUND = "Newsletter subscriber not found";
+export const SUBSCRIBE_NEWSLETTER_VALIDATION_ERROR
+  = "Newsletter subscription details provided do not meet the required validation criteria";

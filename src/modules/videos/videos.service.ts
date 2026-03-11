@@ -1,0 +1,140 @@
+import type { Video } from "../../db/schema/videos.js";
+import type { ValidatedCreateVideo, ValidatedUpdateVideo } from "../../types/app.types.js";
+import type { OrderByQueryData, WhereQueryData } from "../../types/db.types.js";
+
+import { VIDEO_NOT_FOUND } from "../../constants/appMessages.js";
+import { videos } from "../../db/schema/videos.js";
+import NotFoundException from "../../exceptions/notFoundException.js";
+import {
+  deleteRecordById,
+  getMultipleRecordsByAColumnValue,
+  getPaginatedRecordsConditionally,
+  getRecordById,
+  saveSingleRecord,
+  updateRecordById,
+} from "../../services/db/baseDbService.js";
+
+async function getVideosPaginated(
+  page: number,
+  pageSize: number,
+  categoryId?: number,
+  sort?: string,
+) {
+  const whereQueryData: WhereQueryData<Video> = {
+    columns: ["is_active"],
+    values: [true],
+    operators: ["eq"],
+  };
+
+  if (categoryId) {
+    whereQueryData.columns.push("category_id");
+    whereQueryData.values.push(categoryId);
+    whereQueryData.operators.push("eq");
+  }
+
+  const orderByQueryData: OrderByQueryData<Video> = {
+    columns: [sort === "oldest" ? "published_at" : "published_at"],
+    values: [sort === "oldest" ? "asc" : "desc"],
+  };
+
+  const result = await getPaginatedRecordsConditionally<Video>(
+    videos,
+    page,
+    pageSize,
+    orderByQueryData,
+    whereQueryData,
+  );
+
+  return result;
+}
+
+async function getVideoById(id: number): Promise<Video> {
+  const video = await getRecordById<Video>(videos, id);
+
+  if (!video) {
+    throw new NotFoundException(VIDEO_NOT_FOUND);
+  }
+
+  return video;
+}
+
+async function getFeaturedVideos(): Promise<Video[]> {
+  const result = await getMultipleRecordsByAColumnValue<Video>(
+    videos,
+    "is_featured",
+    true,
+    "eq",
+    undefined,
+    {
+      columns: ["published_at"],
+      values: ["desc"],
+    },
+  );
+
+  return (result || []) as Video[];
+}
+
+async function getTrendingVideos(): Promise<Video[]> {
+  const result = await getMultipleRecordsByAColumnValue<Video>(
+    videos,
+    "is_trending",
+    true,
+    "eq",
+    undefined,
+    {
+      columns: ["published_at"],
+      values: ["desc"],
+    },
+  );
+
+  return (result || []) as Video[];
+}
+
+async function createVideo(data: ValidatedCreateVideo): Promise<Video> {
+  const newVideo = await saveSingleRecord<Video>(videos, {
+    youtube_id: data.youtube_id,
+    title: data.title,
+    title_te: data.title_te,
+    description: data.description,
+    category_id: data.category_id,
+    thumbnail_url: data.thumbnail_url,
+    duration: data.duration,
+    view_count: data.view_count,
+    published_at: data.published_at ? new Date(data.published_at) : undefined,
+    is_featured: data.is_featured,
+    is_trending: data.is_trending,
+  });
+
+  return newVideo;
+}
+
+async function updateVideo(id: number, data: ValidatedUpdateVideo): Promise<Video> {
+  await getVideoById(id);
+
+  const updateData: Record<string, unknown> = { ...data };
+  if (data.published_at) {
+    updateData.published_at = new Date(data.published_at);
+  }
+
+  const updatedVideo = await updateRecordById<Video>(videos, id, updateData);
+
+  return updatedVideo;
+}
+
+async function deleteVideo(id: number): Promise<Video> {
+  await getVideoById(id);
+
+  const deletedVideo = await deleteRecordById<Video>(videos, id);
+
+  return deletedVideo;
+}
+
+export {
+  createVideo,
+  deleteVideo,
+  getFeaturedVideos,
+  getTrendingVideos,
+  getVideoById,
+  getVideosPaginated,
+  updateVideo,
+};

@@ -15,6 +15,11 @@ import {
   VCreateCategorySchema,
   VUpdateCategorySchema,
 } from "../modules/categories/categories.validation.js";
+import { VSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
+import {
+  VCreateVideoSchema,
+  VUpdateVideoSchema,
+} from "../modules/videos/videos.validation.js";
 
 export async function validateRequest<R extends ValidatedRequest>(
   actionType: AppActivity,
@@ -47,6 +52,15 @@ export async function validateRequest<R extends ValidatedRequest>(
       break;
     case "update-category":
       schema = VUpdateCategorySchema;
+      break;
+    case "create-video":
+      schema = VCreateVideoSchema;
+      break;
+    case "update-video":
+      schema = VUpdateVideoSchema;
+      break;
+    case "subscribe-newsletter":
+      schema = VSubscribeNewsletterSchema;
       break;
     default:
   }
