@@ -17,7 +17,9 @@ export type SortDirection = "asc" | "desc";
 
 export type UserType
   = | "SUPER_ADMIN"
-    | "MANAGER";
+    | "ADMIN"
+    | "MANAGER"
+    | "CUSTOMER";
 
 export type DBTableColumns<T extends DBTableRow> = keyof T;
 

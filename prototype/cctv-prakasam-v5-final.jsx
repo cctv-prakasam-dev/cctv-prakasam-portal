@@ -663,7 +663,7 @@ function Admin({ $ }) {
                     <div style={{ fontFamily: ff.d, fontSize: 26, color: $.tx }}>{s.v}</div>
                     <div style={{ fontFamily: ff.b, fontSize: 10, color: s.cl, fontWeight: 700, marginTop: 3 }}>
                       ↑
-{s.ch}
+                      {s.ch}
                     </div>
                   </div>
                 ))}
@@ -705,8 +705,8 @@ function Admin({ $ }) {
                       <div style={{ width: 7, height: 7, borderRadius: "50%", background: a.cl }} />
                       <div>
                         <div style={{ fontFamily: ff.h, fontSize: 12, fontWeight: 600, color: $.tx }}>{a.a}</div>
-<div style={{ fontFamily: ff.b, fontSize: 11, color: $.t3 }}>{a.dt}</div>
-</div>
+                        <div style={{ fontFamily: ff.b, fontSize: 11, color: $.t3 }}>{a.dt}</div>
+                      </div>
                     </div>
                     <span style={{ fontFamily: ff.m, fontSize: 10, color: $.t3 }}>{a.tm}</span>
                   </div>
@@ -728,13 +728,17 @@ function Admin({ $ }) {
                   <thead><tr style={{ borderBottom: `1px solid ${$.bd}` }}>{["#", "Title", "Category", "Views", "Date", ""].map(h => <th key={h} style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 700, color: $.t3, textTransform: "uppercase", letterSpacing: 1, padding: "11px 12px", textAlign: "left" }}>{h}</th>)}</tr></thead>
                   <tbody>
                     {vds.slice(0, 8).map((v, i) => {
- const cat = gc(v.c); return (
-<tr key={v.id} style={{ borderBottom: `1px solid ${$.bdL}` }}>
-<td style={{padding:"10px 12px",fontFamily:ff.m,fontSize:11,color:$.t3}}>{i+1}</td><td style={{ padding: "10px 12px", fontFamily: ff.h, fontSize: 12, fontWeight: 600, color: $.tx, maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{v.ti}</td>
-<td style={{padding:"10px 12px"}}><span style={{background:cat.cl+"15",color:cat.cl,fontFamily:ff.h,fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:20}}>{cat.nm}</span></td><td style={{ padding: "10px 12px", fontFamily: ff.m, fontSize: 11, color: $.t2 }}>{v.v}</td>
-<td style={{padding:"10px 12px",fontFamily:ff.b,fontSize:11,color:$.t3}}>{v.d}</td><td style={{ padding: "10px 12px" }}><button style={{ background: $.pBg, border: `1px solid ${$.p}22`, color: $.p, fontFamily: ff.h, fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 5, cursor: "pointer" }}>Edit</button></td></tr>
-) 
-})}
+                      const cat = gc(v.c); return (
+                        <tr key={v.id} style={{ borderBottom: `1px solid ${$.bdL}` }}>
+                          <td style={{ padding: "10px 12px", fontFamily: ff.m, fontSize: 11, color: $.t3 }}>{i + 1}</td>
+                          <td style={{ padding: "10px 12px", fontFamily: ff.h, fontSize: 12, fontWeight: 600, color: $.tx, maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{v.ti}</td>
+                          <td style={{ padding: "10px 12px" }}><span style={{ background: `${cat.cl}15`, color: cat.cl, fontFamily: ff.h, fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>{cat.nm}</span></td>
+                          <td style={{ padding: "10px 12px", fontFamily: ff.m, fontSize: 11, color: $.t2 }}>{v.v}</td>
+                          <td style={{ padding: "10px 12px", fontFamily: ff.b, fontSize: 11, color: $.t3 }}>{v.d}</td>
+                          <td style={{ padding: "10px 12px" }}><button style={{ background: $.pBg, border: `1px solid ${$.p}22`, color: $.p, fontFamily: ff.h, fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 5, cursor: "pointer" }}>Edit</button></td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -762,13 +766,16 @@ function Admin({ $ }) {
                   <div key={c.id} style={{ background: $.card, borderRadius: 10, padding: "14px 16px", border: `1px solid ${$.bdL}`, boxShadow: $.sh1, borderLeft: `3px solid ${c.cl}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
                       <div style={{ fontFamily: ff.h, fontSize: 12, fontWeight: 700, color: $.tx }}>
-{c.ic} 
-{' '}
-{c.nm}
-</div>
-<div style={{ fontFamily: ff.m, fontSize: 10, color: $.t3, marginTop: 2 }}>
-{c.n} videos</div>
-</div>
+                        {c.ic}
+                        {" "}
+                        {c.nm}
+                      </div>
+                      <div style={{ fontFamily: ff.m, fontSize: 10, color: $.t3, marginTop: 2 }}>
+                        {c.n}
+                        {" "}
+                        videos
+                      </div>
+                    </div>
                     <button style={{ background: $.pBg, border: `1px solid ${$.p}22`, color: $.p, fontFamily: ff.h, fontSize: 10, fontWeight: 600, padding: "4px 10px", borderRadius: 5, cursor: "pointer" }}>Edit</button>
                   </div>
                 ))}
@@ -784,10 +791,16 @@ function Admin({ $ }) {
                   <thead><tr style={{ borderBottom: `1px solid ${$.bd}` }}>{["#", "Email", "Date", "Status"].map(h => <th key={h} style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 700, color: $.t3, textTransform: "uppercase", padding: "11px 12px", textAlign: "left" }}>{h}</th>)}</tr></thead>
                   <tbody>
                     {["user1@gmail.com", "newsreader@yahoo.com", "prakash@outlook.com", "rajesh@gmail.com", "lakshmi@email.com"].map((e, i) => (
-<tr key={e} style={{ borderBottom: `1px solid ${$.bdL}` }}>
-<td style={{padding:"10px 12px",fontFamily:ff.m,fontSize:11,color:$.t3}}>{i+1}</td><td style={{ padding: "10px 12px", fontFamily: ff.b, fontSize: 12, color: $.tx }}>{e}</td>
-<td style={{padding:"10px 12px",fontFamily:ff.b,fontSize:11,color:$.t3}}>{["Mar 8","Mar 7","Mar 5","Mar 3","Feb 28"][i]}, 2026</td><td style={{ padding: "10px 12px" }}><span style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 600, color: $.ok, background: `${$.ok}15`, padding: "2px 8px", borderRadius: 20 }}>Active</span></td></tr>
-))}
+                      <tr key={e} style={{ borderBottom: `1px solid ${$.bdL}` }}>
+                        <td style={{ padding: "10px 12px", fontFamily: ff.m, fontSize: 11, color: $.t3 }}>{i + 1}</td>
+                        <td style={{ padding: "10px 12px", fontFamily: ff.b, fontSize: 12, color: $.tx }}>{e}</td>
+                        <td style={{ padding: "10px 12px", fontFamily: ff.b, fontSize: 11, color: $.t3 }}>
+                          {["Mar 8", "Mar 7", "Mar 5", "Mar 3", "Feb 28"][i]}
+                          , 2026
+                        </td>
+                        <td style={{ padding: "10px 12px" }}><span style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 600, color: $.ok, background: `${$.ok}15`, padding: "2px 8px", borderRadius: 20 }}>Active</span></td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -801,13 +814,20 @@ function Admin({ $ }) {
                   <thead><tr style={{ borderBottom: `1px solid ${$.bd}` }}>{["#", "Name", "Joined", "Role", ""].map(h => <th key={h} style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 700, color: $.t3, textTransform: "uppercase", padding: "11px 12px", textAlign: "left" }}>{h}</th>)}</tr></thead>
                   <tbody>
                     {[{ n: "Prakash", e: "prakash@email.com", d: "Mar 8", r: "User" }, { n: "Lakshmi", e: "lakshmi@email.com", d: "Mar 5", r: "User" }, { n: "Admin", e: "admin@cctvprakasam.com", d: "Jan 1", r: "Admin" }].map((u, i) => (
-<tr key={u.e} style={{ borderBottom: `1px solid ${$.bdL}` }}>
-<td style={{padding:"10px 12px",fontFamily:ff.m,fontSize:11,color:$.t3}}>{i+1}</td><td style={{ padding: "10px 12px" }}>
-<div style={{fontFamily:ff.h,fontSize:12,fontWeight:600,color:$.tx}}>{u.n}</div><div style={{ fontFamily: ff.b, fontSize: 10, color: $.t3 }}>{u.e}</div></td>
-<td style={{padding:"10px 12px",fontFamily:ff.b,fontSize:11,color:$.t3}}>{u.d}, 2026</td><td style={{ padding: "10px 12px" }}><span style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 600, color: u.r === "Admin" ? $.a : $.p, background: u.r === "Admin" ? $.aBg : $.pBg, padding: "2px 8px", borderRadius: 20 }}>{u.r}</span></td>
-<td style={{padding:"10px 12px"}}><button style={{background:$.pBg,border:`1px solid ${$.p}22`,color:$.p,fontFamily:ff.h,fontSize:10,fontWeight:600,padding:"3px 10px",borderRadius:5,cursor:"pointer"}}>Edit</button></td>
-</tr>
-))}
+                      <tr key={u.e} style={{ borderBottom: `1px solid ${$.bdL}` }}>
+                        <td style={{ padding: "10px 12px", fontFamily: ff.m, fontSize: 11, color: $.t3 }}>{i + 1}</td>
+                        <td style={{ padding: "10px 12px" }}>
+                          <div style={{ fontFamily: ff.h, fontSize: 12, fontWeight: 600, color: $.tx }}>{u.n}</div>
+                          <div style={{ fontFamily: ff.b, fontSize: 10, color: $.t3 }}>{u.e}</div>
+                        </td>
+                        <td style={{ padding: "10px 12px", fontFamily: ff.b, fontSize: 11, color: $.t3 }}>
+                          {u.d}
+                          , 2026
+                        </td>
+                        <td style={{ padding: "10px 12px" }}><span style={{ fontFamily: ff.h, fontSize: 10, fontWeight: 600, color: u.r === "Admin" ? $.a : $.p, background: u.r === "Admin" ? $.aBg : $.pBg, padding: "2px 8px", borderRadius: 20 }}>{u.r}</span></td>
+                        <td style={{ padding: "10px 12px" }}><button style={{ background: $.pBg, border: `1px solid ${$.p}22`, color: $.p, fontFamily: ff.h, fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 5, cursor: "pointer" }}>Edit</button></td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -821,9 +841,11 @@ function Admin({ $ }) {
                   <div key={s.t} style={{ background: $.card, borderRadius: 10, padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", border: `1px solid ${$.bdL}`, boxShadow: $.sh1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
                       <span style={{ fontSize: 18 }}>{s.ic}</span>
-<div>
-<div style={{fontFamily:ff.h,fontSize:13,fontWeight:700,color:$.tx}}>{s.t}</div><div style={{ fontFamily: ff.b, fontSize: 11, color: $.t3 }}>{s.d}</div></div>
-</div>
+                      <div>
+                        <div style={{ fontFamily: ff.h, fontSize: 13, fontWeight: 700, color: $.tx }}>{s.t}</div>
+                        <div style={{ fontFamily: ff.b, fontSize: 11, color: $.t3 }}>{s.d}</div>
+                      </div>
+                    </div>
                     <button style={{ background: $.pBg, border: `1px solid ${$.p}22`, color: $.p, fontFamily: ff.h, fontSize: 11, fontWeight: 600, padding: "6px 14px", borderRadius: 6, cursor: "pointer" }}>Edit</button>
                   </div>
                 ))}

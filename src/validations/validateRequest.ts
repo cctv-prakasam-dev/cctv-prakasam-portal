@@ -1,7 +1,16 @@
 import { flatten, safeParseAsync } from "valibot";
 
 import type { AppActivity, ValidatedRequest } from "../types/app.types.js";
+
 import UnprocessableContentException from "../exceptions/unprocessableContentException.js";
+import {
+  VForgotPasswordSchema,
+  VLoginSchema,
+  VRefreshTokenSchema,
+  VRegisterSchema,
+  VResetPasswordSchema,
+  VVerifyEmailSchema,
+} from "../modules/auth/auth.validation.js";
 
 export async function validateRequest<R extends ValidatedRequest>(
   actionType: AppActivity,
@@ -11,8 +20,23 @@ export async function validateRequest<R extends ValidatedRequest>(
   let schema;
 
   switch (actionType) {
-    case null:
-      schema = null;
+    case "register":
+      schema = VRegisterSchema;
+      break;
+    case "login":
+      schema = VLoginSchema;
+      break;
+    case "refresh-token":
+      schema = VRefreshTokenSchema;
+      break;
+    case "forgot-password":
+      schema = VForgotPasswordSchema;
+      break;
+    case "reset-password":
+      schema = VResetPasswordSchema;
+      break;
+    case "verify-email":
+      schema = VVerifyEmailSchema;
       break;
     default:
   }

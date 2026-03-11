@@ -59,10 +59,60 @@ export type SignUpOrSignInActivity
     | "signin-with-phone"
     | "signin-with-phone-verify";
 
+export type AuthActivity
+  = | "register"
+    | "login"
+    | "refresh-token"
+    | "forgot-password"
+    | "reset-password"
+    | "verify-email";
+
 export type UserLogOut = "user-logout";
+
 export type AppActivity
   = | SignUpOrSignInActivity
+    | AuthActivity
     | UserLogOut;
 
+export interface ValidatedRegister {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}
+
+export interface ValidatedLogin {
+  email: string;
+  password: string;
+}
+
+export interface ValidatedRefreshToken {
+  refresh_token: string;
+}
+
+export interface ValidatedForgotPassword {
+  email: string;
+}
+
+export interface ValidatedResetPassword {
+  token: string;
+  password: string;
+}
+
+export interface ValidatedVerifyEmail {
+  token: string;
+}
+
+export interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+  refresh_token_expires_at: number;
+}
+
 export type ValidatedRequest
-  = | null;
+  = | ValidatedRegister
+    | ValidatedLogin
+    | ValidatedRefreshToken
+    | ValidatedForgotPassword
+    | ValidatedResetPassword
+    | ValidatedVerifyEmail;

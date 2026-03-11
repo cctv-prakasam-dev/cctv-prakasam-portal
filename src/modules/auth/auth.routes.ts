@@ -1,0 +1,23 @@
+import { Hono } from "hono";
+
+import {
+  forgotPasswordHandler,
+  login,
+  logout,
+  refreshToken,
+  register,
+  resetPasswordHandler,
+  verifyEmailHandler,
+} from "./auth.controller.js";
+
+const authRoutes = new Hono();
+
+authRoutes.post("/register", register);
+authRoutes.post("/login", login);
+authRoutes.post("/refresh-token", refreshToken);
+authRoutes.post("/forgot-password", forgotPasswordHandler);
+authRoutes.post("/reset-password", resetPasswordHandler);
+authRoutes.post("/verify-email", verifyEmailHandler);
+authRoutes.post("/logout", logout);
+
+export default authRoutes;

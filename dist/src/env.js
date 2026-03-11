@@ -11,6 +11,7 @@ const VEnvSchema = object({
     DB_NAME: string(),
     JWT_SECRET: string(),
     BREVO_API_KEY: string(),
+    APP_BASE_URL: string(),
     YOUTUBE_API_KEY: string(),
     YOUTUBE_CHANNEL_ID: string(),
 });

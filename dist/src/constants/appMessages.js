@@ -49,3 +49,16 @@ export const PAYMENT_METHOD_CAPTURED = "Payment method captured successfully";
 export const CASE_CNR_ADDED = "CNR number added successfully";
 export const CASE_OPPONENT_UPDATED = "Case opponent updated successfully";
 export const CASE_OPPONENT_VALIDATION_ERROR = "Update case opponent details provided do not meet required validation criteria";
+// Auth messages
+export const REGISTER_VALIDATION_ERROR = "Registration details provided do not meet the required validation criteria";
+export const REGISTER_DONE = "Registration successful";
+export const EMAIL_ALREADY_EXISTS = "An account with this email already exists";
+export const REFRESH_TOKEN_VALIDATION_ERROR = "Refresh token details provided do not meet the required validation criteria";
+export const FORGOT_PASSWORD_VALIDATION_ERROR = "Forgot password details provided do not meet the required validation criteria";
+export const RESET_PASSWORD_VALIDATION_ERROR = "Reset password details provided do not meet the required validation criteria";
+export const VERIFY_EMAIL_VALIDATION_ERROR = "Verify email details provided do not meet the required validation criteria";
+export const VERIFICATION_EMAIL_SENT = "A verification email has been sent. Please check your inbox";
+export const EMAIL_VERIFIED = "Email verified successfully";
+export const INVALID_VERIFICATION_TOKEN = "Invalid or expired verification token";
+export const INVALID_RESET_TOKEN = "Invalid or expired reset token";
+export const LOGOUT_DONE = "Logged out successfully";
