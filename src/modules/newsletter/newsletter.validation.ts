@@ -1,3 +1,5 @@
+import type { InferOutput } from "valibot";
+
 import { email, nonEmpty, object, pipe, pipeAsync, rawTransformAsync, string } from "valibot";
 
 import { newsletterEmailExists } from "../../validations/customValidations.js";
@@ -28,3 +30,5 @@ export const VSubscribeNewsletterSchema = pipeAsync(
     return dataset.value;
   }),
 );
+
+export type ValidatedSubscribeNewsletterSchema = InferOutput<typeof VSubscribeNewsletterSchema>;

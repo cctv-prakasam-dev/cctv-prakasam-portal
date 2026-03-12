@@ -2,6 +2,7 @@ import { VIDEO_NOT_FOUND } from "../../constants/appMessages.js";
 import { videos } from "../../db/schema/videos.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getMultipleRecordsByAColumnValue, getPaginatedRecordsConditionally, getRecordById, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 async function getVideosPaginated(page, pageSize, categoryId, sort) {
     const whereQueryData = {
         columns: ["is_active"],
@@ -13,10 +14,7 @@ async function getVideosPaginated(page, pageSize, categoryId, sort) {
         whereQueryData.values.push(categoryId);
         whereQueryData.operators.push("eq");
     }
-    const orderByQueryData = {
-        columns: [sort === "oldest" ? "published_at" : "published_at"],
-        values: [sort === "oldest" ? "asc" : "desc"],
-    };
+    const orderByQueryData = parseOrderByQuery(sort, "published_at", "desc");
     const result = await getPaginatedRecordsConditionally(videos, page, pageSize, orderByQueryData, whereQueryData);
     return result;
 }
@@ -28,17 +26,13 @@ async function getVideoById(id) {
     return video;
 }
 async function getFeaturedVideos() {
-    const result = await getMultipleRecordsByAColumnValue(videos, "is_featured", true, "eq", undefined, {
-        columns: ["published_at"],
-        values: ["desc"],
-    });
+    const orderByQueryData = parseOrderByQuery(undefined, "published_at", "desc");
+    const result = await getMultipleRecordsByAColumnValue(videos, "is_featured", true, "eq", undefined, orderByQueryData);
     return (result || []);
 }
 async function getTrendingVideos() {
-    const result = await getMultipleRecordsByAColumnValue(videos, "is_trending", true, "eq", undefined, {
-        columns: ["published_at"],
-        values: ["desc"],
-    });
+    const orderByQueryData = parseOrderByQuery(undefined, "published_at", "desc");
+    const result = await getMultipleRecordsByAColumnValue(videos, "is_trending", true, "eq", undefined, orderByQueryData);
     return (result || []);
 }
 async function createVideo(data) {

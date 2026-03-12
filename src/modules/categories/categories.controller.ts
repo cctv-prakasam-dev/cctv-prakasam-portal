@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 
 import type {
-  ValidatedCreateCategory,
-  ValidatedUpdateCategory,
-} from "../../types/app.types.js";
+  ValidatedCreateCategorySchema,
+  ValidatedUpdateCategorySchema,
+} from "./categories.validation.js";
 
 import {
   CATEGORIES_FETCHED,
@@ -40,7 +40,7 @@ async function getCategory(c: Context) {
 async function create(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedCreateCategory>(
+  const validatedData = await validateRequest<ValidatedCreateCategorySchema>(
     "create-category",
     reqData,
     CREATE_CATEGORY_VALIDATION_ERROR,
@@ -55,7 +55,7 @@ async function update(c: Context) {
   const id = Number(c.req.param("id"));
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedUpdateCategory>(
+  const validatedData = await validateRequest<ValidatedUpdateCategorySchema>(
     "update-category",
     reqData,
     UPDATE_CATEGORY_VALIDATION_ERROR,

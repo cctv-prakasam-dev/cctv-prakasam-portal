@@ -3,6 +3,7 @@ import { newsletterSubscribers } from "../../db/schema/newsletterSubscribers.js"
 import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getPaginatedRecordsConditionally, getRecordById, saveSingleRecord, } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 async function subscribe(data) {
     const subscriber = await saveSingleRecord(newsletterSubscribers, {
         email: data.email,
@@ -21,10 +22,8 @@ async function subscribe(data) {
     return subscriber;
 }
 async function getAllSubscribers(page, pageSize) {
-    const result = await getPaginatedRecordsConditionally(newsletterSubscribers, page, pageSize, {
-        columns: ["subscribed_at"],
-        values: ["desc"],
-    });
+    const orderByQueryData = parseOrderByQuery(undefined, "subscribed_at", "desc");
+    const result = await getPaginatedRecordsConditionally(newsletterSubscribers, page, pageSize, orderByQueryData);
     return result;
 }
 async function removeSubscriber(id) {

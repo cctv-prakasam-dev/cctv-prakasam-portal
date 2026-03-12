@@ -1,5 +1,5 @@
 import type { Category } from "../../db/schema/categories.js";
-import type { ValidatedCreateCategory, ValidatedUpdateCategory } from "../../types/app.types.js";
+import type { ValidatedCreateCategorySchema, ValidatedUpdateCategorySchema } from "./categories.validation.js";
 
 import { CATEGORY_NOT_FOUND } from "../../constants/appMessages.js";
 import { categories } from "../../db/schema/categories.js";
@@ -11,8 +11,11 @@ import {
   saveSingleRecord,
   updateRecordById,
 } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 
 async function getAllActiveCategories(): Promise<Category[]> {
+  const orderByQueryData = parseOrderByQuery<Category>(undefined, "sort_order", "asc");
+
   const result = await getRecordsConditionally<Category>(
     categories,
     {
@@ -21,10 +24,7 @@ async function getAllActiveCategories(): Promise<Category[]> {
       operators: ["eq"],
     },
     undefined,
-    {
-      columns: ["sort_order"],
-      values: ["asc"],
-    },
+    orderByQueryData,
   );
 
   return result as Category[];
@@ -40,7 +40,7 @@ async function getCategoryById(id: number): Promise<Category> {
   return category;
 }
 
-async function createCategory(data: ValidatedCreateCategory): Promise<Category> {
+async function createCategory(data: ValidatedCreateCategorySchema): Promise<Category> {
   const newCategory = await saveSingleRecord<Category>(categories, {
     name: data.name,
     name_te: data.name_te,
@@ -53,7 +53,7 @@ async function createCategory(data: ValidatedCreateCategory): Promise<Category> 
   return newCategory;
 }
 
-async function updateCategory(id: number, data: ValidatedUpdateCategory): Promise<Category> {
+async function updateCategory(id: number, data: ValidatedUpdateCategorySchema): Promise<Category> {
   await getCategoryById(id);
 
   const updatedCategory = await updateRecordById<Category>(categories, id, data);

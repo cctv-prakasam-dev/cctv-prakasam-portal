@@ -2,7 +2,7 @@ import type { SQL } from "drizzle-orm";
 
 import { and, eq, getTableName, gt, gte, ilike, inArray, isNull, like, lt, lte, ne, not, notInArray, sql } from "drizzle-orm";
 
-import type { DBTable, DBTableRow, InQueryData, OrderByQueryData, Transaction, WhereQueryData } from "../types/db.types.js";
+import type { DBTable, DBTableColumns, DBTableRow, InQueryData, OrderByQueryData, SortDirection, Transaction, WhereQueryData } from "../types/db.types.js";
 
 import { db } from "../db/configuration.js";
 
@@ -206,6 +206,40 @@ async function executeQuery<R extends DBTableRow, C extends keyof R = keyof R>(
     }
     throw error;
   }
+}
+
+export function parseOrderByQuery<T extends DBTableRow>(
+  orderBy: string | undefined,
+  defaultColumn: DBTableColumns<T> = "created_at" as DBTableColumns<T>,
+  defaultDirection: SortDirection = "desc",
+): OrderByQueryData<T> {
+  // Default orderBy configuration
+  let orderByQueryData: OrderByQueryData<T> = {
+    columns: [defaultColumn],
+    values: [defaultDirection],
+  };
+  if (orderBy) {
+    const orderByColumns: DBTableColumns<T>[] = [];
+    const orderByValues: SortDirection[] = [];
+
+    // Split by comma for multiple ordering criteria
+    const queryStrings = orderBy.split(",");
+
+    // Process each ordering criterion
+    for (const queryString of queryStrings) {
+      const [column, value] = queryString.split(":");
+      orderByColumns.push(column as DBTableColumns<T>);
+      orderByValues.push(value as SortDirection);
+    }
+
+    // Update the orderByQueryData with parsed values
+    orderByQueryData = {
+      columns: orderByColumns,
+      values: orderByValues,
+    };
+  }
+
+  return orderByQueryData;
 }
 
 export {

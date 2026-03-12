@@ -1,5 +1,5 @@
 import type { FeaturedContentItem } from "../../db/schema/featuredContent.js";
-import type { ValidatedCreateFeaturedContent, ValidatedUpdateFeaturedContent } from "../../types/app.types.js";
+import type { ValidatedCreateFeaturedContentSchema, ValidatedUpdateFeaturedContentSchema } from "./featuredContent.validation.js";
 
 import { FEATURED_CONTENT_NOT_FOUND } from "../../constants/appMessages.js";
 import { featuredContent } from "../../db/schema/featuredContent.js";
@@ -11,8 +11,11 @@ import {
   saveSingleRecord,
   updateRecordById,
 } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 
 async function getActiveFeaturedContent(): Promise<FeaturedContentItem[]> {
+  const orderByQueryData = parseOrderByQuery<FeaturedContentItem>(undefined, "sort_order", "asc");
+
   const result = await getRecordsConditionally<FeaturedContentItem>(
     featuredContent,
     {
@@ -21,10 +24,7 @@ async function getActiveFeaturedContent(): Promise<FeaturedContentItem[]> {
       operators: ["eq"],
     },
     undefined,
-    {
-      columns: ["sort_order"],
-      values: ["asc"],
-    },
+    orderByQueryData,
   );
 
   return result as FeaturedContentItem[];
@@ -40,7 +40,7 @@ async function getFeaturedContentById(id: number): Promise<FeaturedContentItem> 
   return item;
 }
 
-async function createFeaturedContent(data: ValidatedCreateFeaturedContent): Promise<FeaturedContentItem> {
+async function createFeaturedContent(data: ValidatedCreateFeaturedContentSchema): Promise<FeaturedContentItem> {
   const newItem = await saveSingleRecord<FeaturedContentItem>(featuredContent, {
     type: data.type,
     video_id: data.video_id,
@@ -51,7 +51,7 @@ async function createFeaturedContent(data: ValidatedCreateFeaturedContent): Prom
   return newItem;
 }
 
-async function updateFeaturedContent(id: number, data: ValidatedUpdateFeaturedContent): Promise<FeaturedContentItem> {
+async function updateFeaturedContent(id: number, data: ValidatedUpdateFeaturedContentSchema): Promise<FeaturedContentItem> {
   await getFeaturedContentById(id);
 
   const updatedItem = await updateRecordById<FeaturedContentItem>(featuredContent, id, data);

@@ -2,15 +2,14 @@ import { CATEGORY_NOT_FOUND } from "../../constants/appMessages.js";
 import { categories } from "../../db/schema/categories.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getRecordById, getRecordsConditionally, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 async function getAllActiveCategories() {
+    const orderByQueryData = parseOrderByQuery(undefined, "sort_order", "asc");
     const result = await getRecordsConditionally(categories, {
         columns: ["is_active"],
         values: [true],
         operators: ["eq"],
-    }, undefined, {
-        columns: ["sort_order"],
-        values: ["asc"],
-    });
+    }, undefined, orderByQueryData);
     return result;
 }
 async function getCategoryById(id) {

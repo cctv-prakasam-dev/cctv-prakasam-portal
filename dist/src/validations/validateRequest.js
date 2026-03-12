@@ -5,6 +5,7 @@ import { VCreateCategorySchema, VUpdateCategorySchema, } from "../modules/catego
 import { VCreateBreakingNewsSchema, VUpdateBreakingNewsSchema, } from "../modules/breakingNews/breakingNews.validation.js";
 import { VCreateFeaturedContentSchema, VUpdateFeaturedContentSchema, } from "../modules/featuredContent/featuredContent.validation.js";
 import { VSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
+import { VUpdateSettingSchema } from "../modules/settings/settings.validation.js";
 import { VCreateVideoSchema, VUpdateVideoSchema, } from "../modules/videos/videos.validation.js";
 export async function validateRequest(actionType, reqData, errorMessage) {
     let schema;
@@ -53,6 +54,9 @@ export async function validateRequest(actionType, reqData, errorMessage) {
             break;
         case "update-featured-content":
             schema = VUpdateFeaturedContentSchema;
+            break;
+        case "update-setting":
+            schema = VUpdateSettingSchema;
             break;
         default:
     }

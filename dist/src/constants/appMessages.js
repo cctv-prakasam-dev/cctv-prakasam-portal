@@ -104,3 +104,11 @@ export const FEATURED_CONTENT_DELETED = "Featured content deleted successfully";
 export const FEATURED_CONTENT_NOT_FOUND = "Featured content not found";
 export const CREATE_FEATURED_CONTENT_VALIDATION_ERROR = "Featured content details provided do not meet the required validation criteria";
 export const UPDATE_FEATURED_CONTENT_VALIDATION_ERROR = "Update featured content details provided do not meet the required validation criteria";
+// Settings messages
+export const SETTINGS_FETCHED = "Settings fetched successfully";
+export const SETTING_FETCHED = "Setting fetched successfully";
+export const SETTING_UPDATED = "Setting updated successfully";
+export const SETTING_NOT_FOUND = "Setting not found";
+export const UPDATE_SETTING_VALIDATION_ERROR = "Setting details provided do not meet the required validation criteria";
+// YouTube Sync messages
+export const YOUTUBE_SYNC_DONE = "YouTube videos synced successfully";

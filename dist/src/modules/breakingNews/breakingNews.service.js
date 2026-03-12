@@ -2,15 +2,14 @@ import { BREAKING_NEWS_NOT_FOUND } from "../../constants/appMessages.js";
 import { breakingNews } from "../../db/schema/breakingNews.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getRecordById, getRecordsConditionally, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 async function getActiveBreakingNews() {
+    const orderByQueryData = parseOrderByQuery(undefined, "sort_order", "asc");
     const result = await getRecordsConditionally(breakingNews, {
         columns: ["is_active"],
         values: [true],
         operators: ["eq"],
-    }, undefined, {
-        columns: ["sort_order"],
-        values: ["asc"],
-    });
+    }, undefined, orderByQueryData);
     return result;
 }
 async function getBreakingNewsById(id) {

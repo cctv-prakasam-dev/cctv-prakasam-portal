@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 
-import type { ValidatedSubscribeNewsletter } from "../../types/app.types.js";
+import type { ValidatedSubscribeNewsletterSchema } from "./newsletter.validation.js";
 
 import {
   NEWSLETTER_SUBSCRIBED,
@@ -19,7 +19,7 @@ import {
 async function subscribeNewsletter(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedSubscribeNewsletter>(
+  const validatedData = await validateRequest<ValidatedSubscribeNewsletterSchema>(
     "subscribe-newsletter",
     reqData,
     SUBSCRIBE_NEWSLETTER_VALIDATION_ERROR,

@@ -1,5 +1,5 @@
 import type { BreakingNewsItem } from "../../db/schema/breakingNews.js";
-import type { ValidatedCreateBreakingNews, ValidatedUpdateBreakingNews } from "../../types/app.types.js";
+import type { ValidatedCreateBreakingNewsSchema, ValidatedUpdateBreakingNewsSchema } from "./breakingNews.validation.js";
 
 import { BREAKING_NEWS_NOT_FOUND } from "../../constants/appMessages.js";
 import { breakingNews } from "../../db/schema/breakingNews.js";
@@ -11,8 +11,11 @@ import {
   saveSingleRecord,
   updateRecordById,
 } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 
 async function getActiveBreakingNews(): Promise<BreakingNewsItem[]> {
+  const orderByQueryData = parseOrderByQuery<BreakingNewsItem>(undefined, "sort_order", "asc");
+
   const result = await getRecordsConditionally<BreakingNewsItem>(
     breakingNews,
     {
@@ -21,10 +24,7 @@ async function getActiveBreakingNews(): Promise<BreakingNewsItem[]> {
       operators: ["eq"],
     },
     undefined,
-    {
-      columns: ["sort_order"],
-      values: ["asc"],
-    },
+    orderByQueryData,
   );
 
   return result as BreakingNewsItem[];
@@ -40,7 +40,7 @@ async function getBreakingNewsById(id: number): Promise<BreakingNewsItem> {
   return item;
 }
 
-async function createBreakingNews(data: ValidatedCreateBreakingNews): Promise<BreakingNewsItem> {
+async function createBreakingNews(data: ValidatedCreateBreakingNewsSchema): Promise<BreakingNewsItem> {
   const newItem = await saveSingleRecord<BreakingNewsItem>(breakingNews, {
     text: data.text,
     text_te: data.text_te,
@@ -50,7 +50,7 @@ async function createBreakingNews(data: ValidatedCreateBreakingNews): Promise<Br
   return newItem;
 }
 
-async function updateBreakingNews(id: number, data: ValidatedUpdateBreakingNews): Promise<BreakingNewsItem> {
+async function updateBreakingNews(id: number, data: ValidatedUpdateBreakingNewsSchema): Promise<BreakingNewsItem> {
   await getBreakingNewsById(id);
 
   const updatedItem = await updateRecordById<BreakingNewsItem>(breakingNews, id, data);

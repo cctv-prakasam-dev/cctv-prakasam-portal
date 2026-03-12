@@ -1,3 +1,5 @@
+import type { InferOutput } from "valibot";
+
 import { boolean, integer, maxLength, nonEmpty, number, object, optional, pipe, pipeAsync, rawTransformAsync, string } from "valibot";
 
 import { videoYoutubeIdExists } from "../../validations/customValidations.js";
@@ -90,3 +92,6 @@ export const VUpdateVideoSchema = object({
   is_trending: optional(boolean("Trending status must be a boolean")),
   is_active: optional(boolean("Active status must be a boolean")),
 });
+
+export type ValidatedCreateVideoSchema = InferOutput<typeof VCreateVideoSchema>;
+export type ValidatedUpdateVideoSchema = InferOutput<typeof VUpdateVideoSchema>;

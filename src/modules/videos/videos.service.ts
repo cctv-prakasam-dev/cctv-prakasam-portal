@@ -1,6 +1,6 @@
 import type { Video } from "../../db/schema/videos.js";
-import type { ValidatedCreateVideo, ValidatedUpdateVideo } from "../../types/app.types.js";
-import type { OrderByQueryData, WhereQueryData } from "../../types/db.types.js";
+import type { WhereQueryData } from "../../types/db.types.js";
+import type { ValidatedCreateVideoSchema, ValidatedUpdateVideoSchema } from "./videos.validation.js";
 
 import { VIDEO_NOT_FOUND } from "../../constants/appMessages.js";
 import { videos } from "../../db/schema/videos.js";
@@ -13,6 +13,7 @@ import {
   saveSingleRecord,
   updateRecordById,
 } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 
 async function getVideosPaginated(
   page: number,
@@ -32,10 +33,11 @@ async function getVideosPaginated(
     whereQueryData.operators.push("eq");
   }
 
-  const orderByQueryData: OrderByQueryData<Video> = {
-    columns: [sort === "oldest" ? "published_at" : "published_at"],
-    values: [sort === "oldest" ? "asc" : "desc"],
-  };
+  const orderByQueryData = parseOrderByQuery<Video>(
+    sort,
+    "published_at",
+    "desc",
+  );
 
   const result = await getPaginatedRecordsConditionally<Video>(
     videos,
@@ -59,38 +61,36 @@ async function getVideoById(id: number): Promise<Video> {
 }
 
 async function getFeaturedVideos(): Promise<Video[]> {
+  const orderByQueryData = parseOrderByQuery<Video>(undefined, "published_at", "desc");
+
   const result = await getMultipleRecordsByAColumnValue<Video>(
     videos,
     "is_featured",
     true,
     "eq",
     undefined,
-    {
-      columns: ["published_at"],
-      values: ["desc"],
-    },
+    orderByQueryData,
   );
 
   return (result || []) as Video[];
 }
 
 async function getTrendingVideos(): Promise<Video[]> {
+  const orderByQueryData = parseOrderByQuery<Video>(undefined, "published_at", "desc");
+
   const result = await getMultipleRecordsByAColumnValue<Video>(
     videos,
     "is_trending",
     true,
     "eq",
     undefined,
-    {
-      columns: ["published_at"],
-      values: ["desc"],
-    },
+    orderByQueryData,
   );
 
   return (result || []) as Video[];
 }
 
-async function createVideo(data: ValidatedCreateVideo): Promise<Video> {
+async function createVideo(data: ValidatedCreateVideoSchema): Promise<Video> {
   const newVideo = await saveSingleRecord<Video>(videos, {
     youtube_id: data.youtube_id,
     title: data.title,
@@ -108,7 +108,7 @@ async function createVideo(data: ValidatedCreateVideo): Promise<Video> {
   return newVideo;
 }
 
-async function updateVideo(id: number, data: ValidatedUpdateVideo): Promise<Video> {
+async function updateVideo(id: number, data: ValidatedUpdateVideoSchema): Promise<Video> {
   await getVideoById(id);
 
   const updateData: Record<string, unknown> = { ...data };

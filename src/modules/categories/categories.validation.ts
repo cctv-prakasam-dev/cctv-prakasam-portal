@@ -1,3 +1,5 @@
+import type { InferOutput } from "valibot";
+
 import { boolean, integer, maxLength, nonEmpty, number, object, optional, pipe, pipeAsync, rawTransformAsync, string } from "valibot";
 
 import { categorySlugExists } from "../../validations/customValidations.js";
@@ -79,3 +81,6 @@ export const VUpdateCategorySchema = object({
   )),
   is_active: optional(boolean("Active status must be a boolean")),
 });
+
+export type ValidatedCreateCategorySchema = InferOutput<typeof VCreateCategorySchema>;
+export type ValidatedUpdateCategorySchema = InferOutput<typeof VUpdateCategorySchema>;

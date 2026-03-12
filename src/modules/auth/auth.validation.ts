@@ -1,3 +1,5 @@
+import type { InferOutput } from "valibot";
+
 import { email, minLength, nonEmpty, object, pipe, pipeAsync, rawTransformAsync, string } from "valibot";
 
 import { userEmailExists } from "../../validations/customValidations.js";
@@ -87,3 +89,10 @@ export const VVerifyEmailSchema = object({
     nonEmpty("Token is required"),
   ),
 });
+
+export type ValidatedRegisterSchema = InferOutput<typeof VRegisterSchema>;
+export type ValidatedLoginSchema = InferOutput<typeof VLoginSchema>;
+export type ValidatedRefreshTokenSchema = InferOutput<typeof VRefreshTokenSchema>;
+export type ValidatedForgotPasswordSchema = InferOutput<typeof VForgotPasswordSchema>;
+export type ValidatedResetPasswordSchema = InferOutput<typeof VResetPasswordSchema>;
+export type ValidatedVerifyEmailSchema = InferOutput<typeof VVerifyEmailSchema>;

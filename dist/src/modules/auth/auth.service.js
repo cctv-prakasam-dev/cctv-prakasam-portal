@@ -75,7 +75,7 @@ async function forgotPassword(data) {
         throw new ForbiddenException(USER_INACTIVE);
     }
     const resetToken = generateToken();
-    const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
     await updateRecordById(users, user.id, {
         reset_token: resetToken,
         reset_token_expires_at: resetTokenExpiresAt,

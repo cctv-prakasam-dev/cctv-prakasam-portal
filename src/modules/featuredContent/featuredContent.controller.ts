@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 
 import type {
-  ValidatedCreateFeaturedContent,
-  ValidatedUpdateFeaturedContent,
-} from "../../types/app.types.js";
+  ValidatedCreateFeaturedContentSchema,
+  ValidatedUpdateFeaturedContentSchema,
+} from "./featuredContent.validation.js";
 
 import {
   CREATE_FEATURED_CONTENT_VALIDATION_ERROR,
@@ -31,7 +31,7 @@ async function getFeaturedContent(c: Context) {
 async function create(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedCreateFeaturedContent>(
+  const validatedData = await validateRequest<ValidatedCreateFeaturedContentSchema>(
     "create-featured-content",
     reqData,
     CREATE_FEATURED_CONTENT_VALIDATION_ERROR,
@@ -46,7 +46,7 @@ async function update(c: Context) {
   const id = Number(c.req.param("id"));
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedUpdateFeaturedContent>(
+  const validatedData = await validateRequest<ValidatedUpdateFeaturedContentSchema>(
     "update-featured-content",
     reqData,
     UPDATE_FEATURED_CONTENT_VALIDATION_ERROR,

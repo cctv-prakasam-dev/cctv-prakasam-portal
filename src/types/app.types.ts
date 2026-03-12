@@ -1,4 +1,11 @@
 import type { User } from "../db/schema/users.js";
+import type { ValidatedForgotPasswordSchema, ValidatedLoginSchema, ValidatedRefreshTokenSchema, ValidatedRegisterSchema, ValidatedResetPasswordSchema, ValidatedVerifyEmailSchema } from "../modules/auth/auth.validation.js";
+import type { ValidatedCreateBreakingNewsSchema, ValidatedUpdateBreakingNewsSchema } from "../modules/breakingNews/breakingNews.validation.js";
+import type { ValidatedCreateCategorySchema, ValidatedUpdateCategorySchema } from "../modules/categories/categories.validation.js";
+import type { ValidatedCreateFeaturedContentSchema, ValidatedUpdateFeaturedContentSchema } from "../modules/featuredContent/featuredContent.validation.js";
+import type { ValidatedSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
+import type { ValidatedUpdateSettingSchema } from "../modules/settings/settings.validation.js";
+import type { ValidatedCreateVideoSchema, ValidatedUpdateVideoSchema } from "../modules/videos/videos.validation.js";
 import type { DBTableRow } from "./db.types.js";
 
 export type ActionType = string;
@@ -85,6 +92,8 @@ export type FeaturedContentActivity
   = | "create-featured-content"
     | "update-featured-content";
 
+export type SettingsActivity = "update-setting";
+
 export type UserLogOut = "user-logout";
 
 export type AppActivity
@@ -95,36 +104,8 @@ export type AppActivity
     | NewsletterActivity
     | BreakingNewsActivity
     | FeaturedContentActivity
+    | SettingsActivity
     | UserLogOut;
-
-export interface ValidatedRegister {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-}
-
-export interface ValidatedLogin {
-  email: string;
-  password: string;
-}
-
-export interface ValidatedRefreshToken {
-  refresh_token: string;
-}
-
-export interface ValidatedForgotPassword {
-  email: string;
-}
-
-export interface ValidatedResetPassword {
-  token: string;
-  password: string;
-}
-
-export interface ValidatedVerifyEmail {
-  token: string;
-}
 
 export interface AuthTokens {
   access_token: string;
@@ -132,98 +113,20 @@ export interface AuthTokens {
   refresh_token_expires_at: number;
 }
 
-export interface ValidatedCreateCategory {
-  name: string;
-  name_te?: string;
-  slug: string;
-  icon?: string;
-  color?: string;
-  sort_order?: number;
-}
-
-export interface ValidatedUpdateCategory {
-  name?: string;
-  name_te?: string;
-  slug?: string;
-  icon?: string;
-  color?: string;
-  sort_order?: number;
-  is_active?: boolean;
-}
-
-export interface ValidatedCreateVideo {
-  youtube_id: string;
-  title: string;
-  title_te?: string;
-  description?: string;
-  category_id?: number;
-  thumbnail_url?: string;
-  duration?: string;
-  view_count?: string;
-  published_at?: string;
-  is_featured?: boolean;
-  is_trending?: boolean;
-}
-
-export interface ValidatedSubscribeNewsletter {
-  email: string;
-}
-
-export interface ValidatedCreateBreakingNews {
-  text: string;
-  text_te?: string;
-  sort_order?: number;
-}
-
-export interface ValidatedUpdateBreakingNews {
-  text?: string;
-  text_te?: string;
-  sort_order?: number;
-  is_active?: boolean;
-}
-
-export interface ValidatedCreateFeaturedContent {
-  type: string;
-  video_id?: number;
-  title?: string;
-  sort_order?: number;
-}
-
-export interface ValidatedUpdateFeaturedContent {
-  type?: string;
-  video_id?: number;
-  title?: string;
-  sort_order?: number;
-  is_active?: boolean;
-}
-
-export interface ValidatedUpdateVideo {
-  title?: string;
-  title_te?: string;
-  description?: string;
-  category_id?: number;
-  thumbnail_url?: string;
-  duration?: string;
-  view_count?: string;
-  published_at?: string;
-  is_featured?: boolean;
-  is_trending?: boolean;
-  is_active?: boolean;
-}
-
 export type ValidatedRequest
-  = | ValidatedRegister
-    | ValidatedLogin
-    | ValidatedRefreshToken
-    | ValidatedForgotPassword
-    | ValidatedResetPassword
-    | ValidatedVerifyEmail
-    | ValidatedCreateCategory
-    | ValidatedUpdateCategory
-    | ValidatedCreateVideo
-    | ValidatedUpdateVideo
-    | ValidatedSubscribeNewsletter
-    | ValidatedCreateBreakingNews
-    | ValidatedUpdateBreakingNews
-    | ValidatedCreateFeaturedContent
-    | ValidatedUpdateFeaturedContent;
+  = | ValidatedRegisterSchema
+    | ValidatedLoginSchema
+    | ValidatedRefreshTokenSchema
+    | ValidatedForgotPasswordSchema
+    | ValidatedResetPasswordSchema
+    | ValidatedVerifyEmailSchema
+    | ValidatedCreateCategorySchema
+    | ValidatedUpdateCategorySchema
+    | ValidatedCreateVideoSchema
+    | ValidatedUpdateVideoSchema
+    | ValidatedSubscribeNewsletterSchema
+    | ValidatedCreateBreakingNewsSchema
+    | ValidatedUpdateBreakingNewsSchema
+    | ValidatedCreateFeaturedContentSchema
+    | ValidatedUpdateFeaturedContentSchema
+    | ValidatedUpdateSettingSchema;

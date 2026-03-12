@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 
 import type {
-  ValidatedCreateBreakingNews,
-  ValidatedUpdateBreakingNews,
-} from "../../types/app.types.js";
+  ValidatedCreateBreakingNewsSchema,
+  ValidatedUpdateBreakingNewsSchema,
+} from "./breakingNews.validation.js";
 
 import {
   BREAKING_NEWS_CREATED,
@@ -31,7 +31,7 @@ async function getBreakingNews(c: Context) {
 async function create(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedCreateBreakingNews>(
+  const validatedData = await validateRequest<ValidatedCreateBreakingNewsSchema>(
     "create-breaking-news",
     reqData,
     CREATE_BREAKING_NEWS_VALIDATION_ERROR,
@@ -46,7 +46,7 @@ async function update(c: Context) {
   const id = Number(c.req.param("id"));
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedUpdateBreakingNews>(
+  const validatedData = await validateRequest<ValidatedUpdateBreakingNewsSchema>(
     "update-breaking-news",
     reqData,
     UPDATE_BREAKING_NEWS_VALIDATION_ERROR,

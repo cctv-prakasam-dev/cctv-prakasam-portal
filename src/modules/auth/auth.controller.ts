@@ -1,13 +1,13 @@
 import type { Context } from "hono";
 
 import type {
-  ValidatedForgotPassword,
-  ValidatedLogin,
-  ValidatedRefreshToken,
-  ValidatedRegister,
-  ValidatedResetPassword,
-  ValidatedVerifyEmail,
-} from "../../types/app.types.js";
+  ValidatedForgotPasswordSchema,
+  ValidatedLoginSchema,
+  ValidatedRefreshTokenSchema,
+  ValidatedRegisterSchema,
+  ValidatedResetPasswordSchema,
+  ValidatedVerifyEmailSchema,
+} from "./auth.validation.js";
 
 import {
   EMAIL_VERIFIED,
@@ -36,7 +36,7 @@ import {
 async function register(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedRegister>(
+  const validatedData = await validateRequest<ValidatedRegisterSchema>(
     "register",
     reqData,
     REGISTER_VALIDATION_ERROR,
@@ -50,7 +50,7 @@ async function register(c: Context) {
 async function login(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedLogin>(
+  const validatedData = await validateRequest<ValidatedLoginSchema>(
     "login",
     reqData,
     LOGIN_VALIDATION_ERROR,
@@ -64,7 +64,7 @@ async function login(c: Context) {
 async function refreshToken(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedRefreshToken>(
+  const validatedData = await validateRequest<ValidatedRefreshTokenSchema>(
     "refresh-token",
     reqData,
     REFRESH_TOKEN_VALIDATION_ERROR,
@@ -78,7 +78,7 @@ async function refreshToken(c: Context) {
 async function forgotPasswordHandler(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedForgotPassword>(
+  const validatedData = await validateRequest<ValidatedForgotPasswordSchema>(
     "forgot-password",
     reqData,
     FORGOT_PASSWORD_VALIDATION_ERROR,
@@ -92,7 +92,7 @@ async function forgotPasswordHandler(c: Context) {
 async function resetPasswordHandler(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedResetPassword>(
+  const validatedData = await validateRequest<ValidatedResetPasswordSchema>(
     "reset-password",
     reqData,
     RESET_PASSWORD_VALIDATION_ERROR,
@@ -106,7 +106,7 @@ async function resetPasswordHandler(c: Context) {
 async function verifyEmailHandler(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedVerifyEmail>(
+  const validatedData = await validateRequest<ValidatedVerifyEmailSchema>(
     "verify-email",
     reqData,
     VERIFY_EMAIL_VALIDATION_ERROR,

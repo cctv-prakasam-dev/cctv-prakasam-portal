@@ -1,3 +1,5 @@
+import type { InferOutput } from "valibot";
+
 import { boolean, integer, maxLength, nonEmpty, number, object, optional, pipe, string } from "valibot";
 
 export const VCreateFeaturedContentSchema = object({
@@ -40,3 +42,6 @@ export const VUpdateFeaturedContentSchema = object({
   )),
   is_active: optional(boolean("Active status must be a boolean")),
 });
+
+export type ValidatedCreateFeaturedContentSchema = InferOutput<typeof VCreateFeaturedContentSchema>;
+export type ValidatedUpdateFeaturedContentSchema = InferOutput<typeof VUpdateFeaturedContentSchema>;

@@ -2,15 +2,14 @@ import { FEATURED_CONTENT_NOT_FOUND } from "../../constants/appMessages.js";
 import { featuredContent } from "../../db/schema/featuredContent.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getRecordById, getRecordsConditionally, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 async function getActiveFeaturedContent() {
+    const orderByQueryData = parseOrderByQuery(undefined, "sort_order", "asc");
     const result = await getRecordsConditionally(featuredContent, {
         columns: ["is_active"],
         values: [true],
         operators: ["eq"],
-    }, undefined, {
-        columns: ["sort_order"],
-        values: ["asc"],
-    });
+    }, undefined, orderByQueryData);
     return result;
 }
 async function getFeaturedContentById(id) {

@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 
 import type {
-  ValidatedCreateVideo,
-  ValidatedUpdateVideo,
-} from "../../types/app.types.js";
+  ValidatedCreateVideoSchema,
+  ValidatedUpdateVideoSchema,
+} from "./videos.validation.js";
 
 import {
   CREATE_VIDEO_VALIDATION_ERROR,
@@ -32,7 +32,7 @@ async function getVideos(c: Context) {
   const page = Number(c.req.query("page")) || 1;
   const limit = Number(c.req.query("limit")) || 10;
   const categoryId = c.req.query("category") ? Number(c.req.query("category")) : undefined;
-  const sort = c.req.query("sort") || "latest";
+  const sort = c.req.query("sort");
 
   const result = await getVideosPaginated(page, limit, categoryId, sort);
 
@@ -61,7 +61,7 @@ async function getTrending(c: Context) {
 async function create(c: Context) {
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedCreateVideo>(
+  const validatedData = await validateRequest<ValidatedCreateVideoSchema>(
     "create-video",
     reqData,
     CREATE_VIDEO_VALIDATION_ERROR,
@@ -76,7 +76,7 @@ async function update(c: Context) {
   const id = Number(c.req.param("id"));
   const reqData = await c.req.json();
 
-  const validatedData = await validateRequest<ValidatedUpdateVideo>(
+  const validatedData = await validateRequest<ValidatedUpdateVideoSchema>(
     "update-video",
     reqData,
     UPDATE_VIDEO_VALIDATION_ERROR,

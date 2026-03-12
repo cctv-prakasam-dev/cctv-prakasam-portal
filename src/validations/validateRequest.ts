@@ -24,6 +24,7 @@ import {
   VUpdateFeaturedContentSchema,
 } from "../modules/featuredContent/featuredContent.validation.js";
 import { VSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
+import { VUpdateSettingSchema } from "../modules/settings/settings.validation.js";
 import {
   VCreateVideoSchema,
   VUpdateVideoSchema,
@@ -81,6 +82,9 @@ export async function validateRequest<R extends ValidatedRequest>(
       break;
     case "update-featured-content":
       schema = VUpdateFeaturedContentSchema;
+      break;
+    case "update-setting":
+      schema = VUpdateSettingSchema;
       break;
     default:
   }

@@ -1,5 +1,5 @@
 import type { NewsletterSubscriber } from "../../db/schema/newsletterSubscribers.js";
-import type { ValidatedSubscribeNewsletter } from "../../types/app.types.js";
+import type { ValidatedSubscribeNewsletterSchema } from "./newsletter.validation.js";
 
 import { NEWSLETTER_SUBSCRIBER_NOT_FOUND } from "../../constants/appMessages.js";
 import { newsletterSubscribers } from "../../db/schema/newsletterSubscribers.js";
@@ -11,8 +11,9 @@ import {
   saveSingleRecord,
 } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
+import { parseOrderByQuery } from "../../utils/dbUtils.js";
 
-async function subscribe(data: ValidatedSubscribeNewsletter): Promise<NewsletterSubscriber> {
+async function subscribe(data: ValidatedSubscribeNewsletterSchema): Promise<NewsletterSubscriber> {
   const subscriber = await saveSingleRecord<NewsletterSubscriber>(newsletterSubscribers, {
     email: data.email,
     status: "active",
@@ -34,14 +35,13 @@ async function subscribe(data: ValidatedSubscribeNewsletter): Promise<Newsletter
 }
 
 async function getAllSubscribers(page: number, pageSize: number) {
+  const orderByQueryData = parseOrderByQuery<NewsletterSubscriber>(undefined, "subscribed_at", "desc");
+
   const result = await getPaginatedRecordsConditionally<NewsletterSubscriber>(
     newsletterSubscribers,
     page,
     pageSize,
-    {
-      columns: ["subscribed_at"],
-      values: ["desc"],
-    },
+    orderByQueryData,
   );
 
   return result;

@@ -2,7 +2,14 @@ import { compare, hash } from "bcryptjs";
 import { randomBytes } from "node:crypto";
 
 import type { User } from "../../db/schema/users.js";
-import type { AuthTokens, ValidatedForgotPassword, ValidatedLogin, ValidatedRegister, ValidatedResetPassword, ValidatedVerifyEmail } from "../../types/app.types.js";
+import type { AuthTokens } from "../../types/app.types.js";
+import type {
+  ValidatedForgotPasswordSchema,
+  ValidatedLoginSchema,
+  ValidatedRegisterSchema,
+  ValidatedResetPasswordSchema,
+  ValidatedVerifyEmailSchema,
+} from "./auth.validation.js";
 
 import { appConfig } from "../../config/appConfig.js";
 import {
@@ -31,7 +38,7 @@ function generateToken(): string {
   return randomBytes(32).toString("hex");
 }
 
-async function registerUser(data: ValidatedRegister): Promise<{ user: Omit<User, "password_hash" | "created_at" | "updated_at" | "deleted_at">; tokens: AuthTokens }> {
+async function registerUser(data: ValidatedRegisterSchema): Promise<{ user: Omit<User, "password_hash" | "created_at" | "updated_at" | "deleted_at">; tokens: AuthTokens }> {
   const passwordHash = await hash(data.password, SALT_ROUNDS);
   const verificationToken = generateToken();
 
@@ -68,7 +75,7 @@ async function registerUser(data: ValidatedRegister): Promise<{ user: Omit<User,
   return { user: userWithoutSensitive, tokens };
 }
 
-async function loginUser(data: ValidatedLogin): Promise<{ user: Omit<User, "password_hash" | "created_at" | "updated_at" | "deleted_at">; tokens: AuthTokens }> {
+async function loginUser(data: ValidatedLoginSchema): Promise<{ user: Omit<User, "password_hash" | "created_at" | "updated_at" | "deleted_at">; tokens: AuthTokens }> {
   const user = await getSingleRecordByAColumnValue<User>(
     users,
     "email",
@@ -106,7 +113,7 @@ async function refreshTokens(refreshToken: string): Promise<AuthTokens> {
   return tokens;
 }
 
-async function forgotPassword(data: ValidatedForgotPassword): Promise<string> {
+async function forgotPassword(data: ValidatedForgotPasswordSchema): Promise<string> {
   const user = await getSingleRecordByAColumnValue<User>(
     users,
     "email",
@@ -123,7 +130,7 @@ async function forgotPassword(data: ValidatedForgotPassword): Promise<string> {
   }
 
   const resetToken = generateToken();
-  const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
   await updateRecordById<User>(users, user.id, {
     reset_token: resetToken,
@@ -148,7 +155,7 @@ async function forgotPassword(data: ValidatedForgotPassword): Promise<string> {
   return FP_EMAIL_SENT;
 }
 
-async function resetPassword(data: ValidatedResetPassword): Promise<void> {
+async function resetPassword(data: ValidatedResetPasswordSchema): Promise<void> {
   const user = await getSingleRecordByAColumnValue<User>(
     users,
     "reset_token",
@@ -173,7 +180,7 @@ async function resetPassword(data: ValidatedResetPassword): Promise<void> {
   });
 }
 
-async function verifyEmail(data: ValidatedVerifyEmail): Promise<void> {
+async function verifyEmail(data: ValidatedVerifyEmailSchema): Promise<void> {
   const user = await getSingleRecordByAColumnValue<User>(
     users,
     "verification_token",
