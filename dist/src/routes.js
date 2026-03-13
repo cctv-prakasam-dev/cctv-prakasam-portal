@@ -4,6 +4,8 @@ import { breakingNewsAdminRoutes, breakingNewsPublicRoutes } from "./modules/bre
 import { categoryAdminRoutes, categoryPublicRoutes } from "./modules/categories/categories.routes.js";
 import { featuredContentAdminRoutes, featuredContentPublicRoutes } from "./modules/featuredContent/featuredContent.routes.js";
 import { newsletterAdminRoutes, newsletterPublicRoutes } from "./modules/newsletter/newsletter.routes.js";
+import { contactPublicRoutes } from "./modules/contact/contact.routes.js";
+import { dashboardAdminRoutes } from "./modules/dashboard/dashboard.routes.js";
 import { settingsAdminRoutes, settingsPublicRoutes } from "./modules/settings/settings.routes.js";
 import { videoAdminRoutes, videoPublicRoutes } from "./modules/videos/videos.routes.js";
 import { youtubeAdminRoutes } from "./modules/youtube/youtube.routes.js";
@@ -19,6 +21,8 @@ routes.route("/breaking-news", breakingNewsPublicRoutes);
 routes.route("/admin/breaking-news", breakingNewsAdminRoutes);
 routes.route("/featured-content", featuredContentPublicRoutes);
 routes.route("/admin/featured-content", featuredContentAdminRoutes);
+routes.route("/contact", contactPublicRoutes);
+routes.route("/admin/dashboard", dashboardAdminRoutes);
 routes.route("/settings", settingsPublicRoutes);
 routes.route("/admin/settings", settingsAdminRoutes);
 routes.route("/admin/videos", youtubeAdminRoutes);

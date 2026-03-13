@@ -145,5 +145,17 @@ export const SETTING_NOT_FOUND = "Setting not found";
 export const UPDATE_SETTING_VALIDATION_ERROR
   = "Setting details provided do not meet the required validation criteria";
 
+// Dashboard messages
+export const DASHBOARD_STATS_FETCHED = "Dashboard stats fetched successfully";
+export const USERS_FETCHED = "Users fetched successfully";
+export const USER_ROLE_UPDATED = "User role updated successfully";
+export const UPDATE_USER_ROLE_VALIDATION_ERROR
+  = "User role details provided do not meet the required validation criteria";
+
+// Contact messages
+export const CONTACT_EMAIL_SENT = "Your message has been sent successfully";
+export const CONTACT_VALIDATION_ERROR
+  = "Contact form details provided do not meet the required validation criteria";
+
 // YouTube Sync messages
 export const YOUTUBE_SYNC_DONE = "YouTube videos synced successfully";

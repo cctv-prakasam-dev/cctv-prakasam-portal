@@ -19,6 +19,8 @@ import {
   VCreateBreakingNewsSchema,
   VUpdateBreakingNewsSchema,
 } from "../modules/breakingNews/breakingNews.validation.js";
+import { VContactSchema } from "../modules/contact/contact.validation.js";
+import { VUpdateUserRoleSchema } from "../modules/dashboard/dashboard.validation.js";
 import {
   VCreateFeaturedContentSchema,
   VUpdateFeaturedContentSchema,
@@ -85,6 +87,12 @@ export async function validateRequest<R extends ValidatedRequest>(
       break;
     case "update-setting":
       schema = VUpdateSettingSchema;
+      break;
+    case "submit-contact":
+      schema = VContactSchema;
+      break;
+    case "update-user-role":
+      schema = VUpdateUserRoleSchema;
       break;
     default:
   }

@@ -3,6 +3,8 @@ import UnprocessableContentException from "../exceptions/unprocessableContentExc
 import { VForgotPasswordSchema, VLoginSchema, VRefreshTokenSchema, VRegisterSchema, VResetPasswordSchema, VVerifyEmailSchema, } from "../modules/auth/auth.validation.js";
 import { VCreateCategorySchema, VUpdateCategorySchema, } from "../modules/categories/categories.validation.js";
 import { VCreateBreakingNewsSchema, VUpdateBreakingNewsSchema, } from "../modules/breakingNews/breakingNews.validation.js";
+import { VContactSchema } from "../modules/contact/contact.validation.js";
+import { VUpdateUserRoleSchema } from "../modules/dashboard/dashboard.validation.js";
 import { VCreateFeaturedContentSchema, VUpdateFeaturedContentSchema, } from "../modules/featuredContent/featuredContent.validation.js";
 import { VSubscribeNewsletterSchema } from "../modules/newsletter/newsletter.validation.js";
 import { VUpdateSettingSchema } from "../modules/settings/settings.validation.js";
@@ -57,6 +59,12 @@ export async function validateRequest(actionType, reqData, errorMessage) {
             break;
         case "update-setting":
             schema = VUpdateSettingSchema;
+            break;
+        case "submit-contact":
+            schema = VContactSchema;
+            break;
+        case "update-user-role":
+            schema = VUpdateUserRoleSchema;
             break;
         default:
     }

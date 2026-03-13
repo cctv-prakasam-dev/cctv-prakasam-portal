@@ -1,5 +1,7 @@
 import type { User } from "../db/schema/users.js";
 import type { ValidatedForgotPasswordSchema, ValidatedLoginSchema, ValidatedRefreshTokenSchema, ValidatedRegisterSchema, ValidatedResetPasswordSchema, ValidatedVerifyEmailSchema } from "../modules/auth/auth.validation.js";
+import type { ValidatedContactSchema } from "../modules/contact/contact.validation.js";
+import type { ValidatedUpdateUserRoleSchema } from "../modules/dashboard/dashboard.validation.js";
 import type { ValidatedCreateBreakingNewsSchema, ValidatedUpdateBreakingNewsSchema } from "../modules/breakingNews/breakingNews.validation.js";
 import type { ValidatedCreateCategorySchema, ValidatedUpdateCategorySchema } from "../modules/categories/categories.validation.js";
 import type { ValidatedCreateFeaturedContentSchema, ValidatedUpdateFeaturedContentSchema } from "../modules/featuredContent/featuredContent.validation.js";
@@ -94,6 +96,10 @@ export type FeaturedContentActivity
 
 export type SettingsActivity = "update-setting";
 
+export type ContactActivity = "submit-contact";
+
+export type DashboardActivity = "update-user-role";
+
 export type UserLogOut = "user-logout";
 
 export type AppActivity
@@ -105,6 +111,8 @@ export type AppActivity
     | BreakingNewsActivity
     | FeaturedContentActivity
     | SettingsActivity
+    | ContactActivity
+    | DashboardActivity
     | UserLogOut;
 
 export interface AuthTokens {
@@ -129,4 +137,6 @@ export type ValidatedRequest
     | ValidatedUpdateBreakingNewsSchema
     | ValidatedCreateFeaturedContentSchema
     | ValidatedUpdateFeaturedContentSchema
-    | ValidatedUpdateSettingSchema;
+    | ValidatedUpdateSettingSchema
+    | ValidatedContactSchema
+    | ValidatedUpdateUserRoleSchema;
