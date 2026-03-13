@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary Colors */
+  --color-primary: #0891B2;
+  --color-primary-dark: #0E7490;
+  --color-primary-light: #22D3EE;
+  --color-primary-bg: #ECFEFF;
+
+  /* Accent */
+  --color-accent: #DB2777;
+
+  /* Surfaces - Light */
+  --color-background: #FFFFFF;
+  --color-surface-1: #F8FAFC;
+  --color-surface-2: #F1F5F9;
+  --color-card: #FFFFFF;
+
+  /* Text - Light */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+
+  /* Border */
+  --color-border: #E2E8F0;
+
+  /* Navbar & Footer */
+  --color-navbar: #0C1A2B;
+  --color-footer: #0C1A2B;
+
+  /* Status */
+  --color-live: #DC2626;
+  --color-success: #059669;
+  --color-warning: #D97706;
+
+  /* Category Colors */
+  --color-cat-general: #0891B2;
+  --color-cat-political: #6D28D9;
+  --color-cat-entertainment: #D97706;
+  --color-cat-devotional: #DB2777;
+  --color-cat-local: #059669;
+  --color-cat-sports: #2563EB;
+
+  /* Typography */
+  --font-display: "Oswald", sans-serif;
+  --font-heading: "DM Sans", sans-serif;
+  --font-body: "Nunito Sans", sans-serif;
+  --font-telugu: "Noto Sans Telugu", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  /* Layout */
+  --max-content: 1360px;
+  --navbar-height: 60px;
+  --sidebar-width: 210px;
+
+  /* Border Radius */
+  --radius-card: 12px;
+  --radius-button: 8px;
+}
+
+/* Dark theme overrides */
+.dark {
+  --color-primary: #22D3EE;
+  --color-background: #0B1121;
+  --color-surface-1: #0F172A;
+  --color-surface-2: #1E293B;
+  --color-card: #15203A;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-border: #1E293B;
+  --color-navbar: #070D1A;
+  --color-footer: #060C18;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
