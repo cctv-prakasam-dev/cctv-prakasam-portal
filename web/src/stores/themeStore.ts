@@ -5,10 +5,12 @@ type Theme = "light" | "dark";
 const STORAGE_KEY = "cctv-prakasam-theme";
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined")
+    return "light";
 
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "dark" || stored === "light") return stored;
+  if (stored === "dark" || stored === "light")
+    return stored;
 
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
@@ -35,7 +37,7 @@ function setTheme(theme: Theme) {
   currentTheme = theme;
   localStorage.setItem(STORAGE_KEY, theme);
   applyTheme(theme);
-  listeners.forEach((listener) => listener());
+  listeners.forEach(listener => listener());
 }
 
 function toggleTheme() {

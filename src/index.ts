@@ -1,4 +1,5 @@
 import { serve } from "@hono/node-server";
+import { serveStatic } from "@hono/node-server/serve-static";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -15,10 +16,7 @@ const port = envData.PORT || 3000;
 app.use(logger());
 app.use("*", cors());
 
-app.get("/", (c) => {
-  return c.text("CCTV Prakasam Portal API is running");
-});
-
+// API routes
 app.route("/api", routes);
 
 app.onError((err: any, c: Context) => {
@@ -36,6 +34,12 @@ app.onError((err: any, c: Context) => {
     errData: err.errData || undefined,
   });
 });
+
+// Serve frontend static files
+app.use("/*", serveStatic({ root: "./web/dist" }));
+
+// SPA fallback — serve index.html for non-API routes
+app.get("/*", serveStatic({ root: "./web/dist", path: "index.html" }));
 
 console.log(`🚀 Server is running on port ${port} in ${envData.NODE_ENV} mode`);
 

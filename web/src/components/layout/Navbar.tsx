@@ -27,7 +27,7 @@ export default function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden items-center gap-0 min-[900px]:flex">
-            {navLinks.map((link) => (
+            {navLinks.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -78,7 +78,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="fixed inset-0 top-[var(--navbar-height)] z-190 flex flex-col gap-1 overflow-y-auto bg-[var(--color-background)] p-5 min-[900px]:hidden">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <Link
               key={link.to}
               to={link.to}

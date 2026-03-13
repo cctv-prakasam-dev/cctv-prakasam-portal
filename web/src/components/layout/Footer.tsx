@@ -36,7 +36,7 @@ export default function Footer() {
             Prakasam district's trusted digital news. Politics, entertainment, devotional & local coverage.
           </p>
           <div className="mt-3.5 flex gap-2">
-            {socialIcons.map((s) => (
+            {socialIcons.map(s => (
               <div
                 key={s.label}
                 className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-white/7 bg-white/5 text-[13px] text-slate-400 hover:bg-white/10"
@@ -52,7 +52,7 @@ export default function Footer() {
           <h4 className="mb-3.5 font-[var(--font-display)] text-[13px] tracking-[2px] text-cyan-400">
             QUICK LINKS
           </h4>
-          {quickLinks.map((link) => (
+          {quickLinks.map(link => (
             <Link
               key={link.to}
               to={link.to}
@@ -68,9 +68,11 @@ export default function Footer() {
           <h4 className="mb-3.5 font-[var(--font-display)] text-[13px] tracking-[2px] text-cyan-400">
             CATEGORIES
           </h4>
-          {categories.map((cat) => (
+          {categories.map(cat => (
             <div key={cat.name} className="py-1.5 font-[var(--font-body)] text-[13px] text-slate-400">
-              {cat.icon} {cat.name}
+              {cat.icon}
+              {" "}
+              {cat.name}
             </div>
           ))}
         </div>

@@ -2,44 +2,44 @@
 
 @theme {
   /* Primary Colors */
-  --color-primary: #0891B2;
-  --color-primary-dark: #0E7490;
-  --color-primary-light: #22D3EE;
-  --color-primary-bg: #ECFEFF;
+  --color-primary: #0891b2;
+  --color-primary-dark: #0e7490;
+  --color-primary-light: #22d3ee;
+  --color-primary-bg: #ecfeff;
 
   /* Accent */
-  --color-accent: #DB2777;
+  --color-accent: #db2777;
 
   /* Surfaces - Light */
-  --color-background: #FFFFFF;
-  --color-surface-1: #F8FAFC;
-  --color-surface-2: #F1F5F9;
-  --color-card: #FFFFFF;
+  --color-background: #ffffff;
+  --color-surface-1: #f8fafc;
+  --color-surface-2: #f1f5f9;
+  --color-card: #ffffff;
 
   /* Text - Light */
-  --color-text-primary: #0F172A;
+  --color-text-primary: #0f172a;
   --color-text-secondary: #475569;
-  --color-text-muted: #94A3B8;
+  --color-text-muted: #94a3b8;
 
   /* Border */
-  --color-border: #E2E8F0;
+  --color-border: #e2e8f0;
 
   /* Navbar & Footer */
-  --color-navbar: #0C1A2B;
-  --color-footer: #0C1A2B;
+  --color-navbar: #0c1a2b;
+  --color-footer: #0c1a2b;
 
   /* Status */
-  --color-live: #DC2626;
+  --color-live: #dc2626;
   --color-success: #059669;
-  --color-warning: #D97706;
+  --color-warning: #d97706;
 
   /* Category Colors */
-  --color-cat-general: #0891B2;
-  --color-cat-political: #6D28D9;
-  --color-cat-entertainment: #D97706;
-  --color-cat-devotional: #DB2777;
+  --color-cat-general: #0891b2;
+  --color-cat-political: #6d28d9;
+  --color-cat-entertainment: #d97706;
+  --color-cat-devotional: #db2777;
   --color-cat-local: #059669;
-  --color-cat-sports: #2563EB;
+  --color-cat-sports: #2563eb;
 
   /* Typography */
   --font-display: "Oswald", sans-serif;
@@ -60,17 +60,17 @@
 
 /* Dark theme overrides */
 .dark {
-  --color-primary: #22D3EE;
-  --color-background: #0B1121;
-  --color-surface-1: #0F172A;
-  --color-surface-2: #1E293B;
-  --color-card: #15203A;
-  --color-text-primary: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #64748B;
-  --color-border: #1E293B;
-  --color-navbar: #070D1A;
-  --color-footer: #060C18;
+  --color-primary: #22d3ee;
+  --color-background: #0b1121;
+  --color-surface-1: #0f172a;
+  --color-surface-2: #1e293b;
+  --color-card: #15203a;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-border: #1e293b;
+  --color-navbar: #070d1a;
+  --color-footer: #060c18;
 }
 
 /* Base styles */

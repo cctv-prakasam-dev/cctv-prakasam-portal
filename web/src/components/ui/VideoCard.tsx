@@ -86,7 +86,9 @@ export default function VideoCard({ video, onClick, large }: VideoCardProps) {
         {/* Stats */}
         <div className="flex justify-between">
           <span className="font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
-            👁 {video.view_count || "0"}
+            👁
+            {" "}
+            {video.view_count || "0"}
           </span>
           <span className="font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
             {video.published_at || ""}

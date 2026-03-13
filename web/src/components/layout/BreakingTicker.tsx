@@ -11,7 +11,7 @@ export default function BreakingTicker({ items }: BreakingTickerProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setOffset((prev) => prev - 1.2);
+      setOffset(prev => prev - 1.2);
     }, 25);
     return () => clearInterval(interval);
   }, []);
@@ -23,7 +23,8 @@ export default function BreakingTicker({ items }: BreakingTickerProps) {
     }
   }, [offset]);
 
-  if (items.length === 0) return null;
+  if (items.length === 0)
+    return null;
 
   return (
     <div className="flex h-9 select-none items-center overflow-hidden bg-gradient-to-r from-[#0E7490] to-[#0891B2]">
