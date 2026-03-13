@@ -8,7 +8,9 @@ import VideoCard from "@/components/ui/VideoCard";
 import { useBreakingNews } from "@/hooks/useBreakingNews";
 import { useCategories } from "@/hooks/useCategories";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
+import type { Video } from "@/hooks/useVideos";
 import { useFeaturedVideos, useTrendingVideos, useVideos } from "@/hooks/useVideos";
+import { formatViews, timeAgo } from "@/lib/format";
 
 export default function Home() {
   const { data: breakingNews } = useBreakingNews();
@@ -21,9 +23,17 @@ export default function Home() {
 
   const breakingItems = breakingNews?.data?.map(b => b.text_te || b.text) ?? [];
   const cats = categories?.data ?? [];
-  const featured = featuredData?.data ?? [];
-  const trending = trendingData?.data ?? [];
-  const latest = latestData?.data?.records ?? [];
+
+  // Build category lookup map
+  const catMap = new Map(cats.map(c => [c.id, c]));
+  function enrichVideo(v: Video) {
+    const cat = v.category_id ? catMap.get(v.category_id) : undefined;
+    return { ...v, category_name: cat?.name, category_color: cat?.color };
+  }
+
+  const featured = (featuredData?.data ?? []).map(enrichVideo);
+  const trending = (trendingData?.data ?? []).map(enrichVideo);
+  const latest = (latestData?.data?.records ?? []).map(enrichVideo);
   const mainFeature = featured[0];
   const sideVideos = (featured.length > 1 ? featured.slice(1, 5) : latest.slice(0, 4));
 
@@ -73,11 +83,11 @@ export default function Home() {
                         {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide" style={{ color: v.category_color }}>{v.category_name}</span>}
                         <h4 className="mt-0.5 truncate font-[var(--font-telugu)] text-xs font-semibold leading-snug text-[var(--color-text-primary)]">{v.title_te || v.title}</h4>
                         <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
-                          {v.view_count}
+                          {formatViews(v.view_count)}
                           {" "}
                           •
                           {" "}
-                          {v.published_at}
+                          {timeAgo(v.published_at)}
                         </span>
                       </div>
                     </div>

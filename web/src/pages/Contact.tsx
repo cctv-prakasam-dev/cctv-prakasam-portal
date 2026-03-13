@@ -4,10 +4,10 @@ import { Mail, MapPin, Phone, Youtube } from "lucide-react";
 import { apiPost } from "@/lib/apiClient";
 
 const contactInfo = [
-  { icon: Phone, label: "Phone", value: "+91 98765 43210", color: "var(--color-primary)" },
-  { icon: Mail, label: "Email", value: "contact@cctvprakasam.com", color: "#DB2777" },
-  { icon: MapPin, label: "Office", value: "Ongole, Prakasam Dist., AP", color: "#D97706" },
-  { icon: Youtube, label: "YouTube", value: "CCTV Prakasam", color: "#DC2626" },
+  { icon: Phone, label: "Phone", value: "+91 9032266619", sub: "Mon–Sat, 9AM–6PM", color: "var(--color-primary)" },
+  { icon: Mail, label: "Email", value: "cctvprakasam@gmail.com", sub: "Reply within 24 hours", color: "#DB2777" },
+  { icon: MapPin, label: "Office", value: "RTC Bus Stand Backside, Mulaguntapadu, Singarayakonda", sub: "Prakasam Dist, AP — 523101", color: "#D97706" },
+  { icon: Youtube, label: "YouTube", value: "@CctvPrakasam", sub: "Subscribe for daily updates", color: "#DC2626" },
 ];
 
 const initialForm = { name: "", email: "", phone: "", subject: "", message: "" };
@@ -191,6 +191,7 @@ export default function Contact() {
                   <div>
                     <div className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[1px] text-[var(--color-text-muted)]">{c.label}</div>
                     <div className="font-[var(--font-body)] text-sm text-[var(--color-text-primary)]">{c.value}</div>
+                    {c.sub && <div className="font-[var(--font-body)] text-xs text-[var(--color-text-muted)]">{c.sub}</div>}
                   </div>
                 </div>
               </div>

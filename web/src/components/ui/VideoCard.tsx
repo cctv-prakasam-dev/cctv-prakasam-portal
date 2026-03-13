@@ -1,5 +1,7 @@
 import { Play } from "lucide-react";
 
+import { formatDate, formatViews } from "@/lib/format";
+
 export interface VideoCardData {
   id: number;
   title: string;
@@ -88,10 +90,10 @@ export default function VideoCard({ video, onClick, large }: VideoCardProps) {
           <span className="font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
             👁
             {" "}
-            {video.view_count || "0"}
+            {formatViews(video.view_count)}
           </span>
           <span className="font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
-            {video.published_at || ""}
+            {formatDate(video.published_at)}
           </span>
         </div>
       </div>

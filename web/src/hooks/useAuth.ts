@@ -15,18 +15,22 @@ interface RegisterPayload {
   password: string;
 }
 
-interface AuthTokens {
-  access_token: string;
-  refresh_token: string;
+interface LoginResponse {
+  user: Record<string, unknown>;
+  tokens: {
+    access_token: string;
+    refresh_token: string;
+    refresh_token_expires_at: number;
+  };
 }
 
 export function useLogin() {
   return useMutation({
     mutationFn: (data: LoginPayload) =>
-      apiPost<AuthTokens>("/auth/login", data),
+      apiPost<LoginResponse>("/auth/login", data),
     onSuccess: (response) => {
-      if (response.data) {
-        setTokens(response.data.access_token, response.data.refresh_token);
+      if (response.data?.tokens) {
+        setTokens(response.data.tokens.access_token, response.data.tokens.refresh_token);
       }
     },
   });

@@ -10,14 +10,25 @@ export default function Videos() {
   const [filter, setFilter] = useState(search.category || "all");
   const [page, setPage] = useState(1);
   const { data: categories } = useCategories();
+  const cats = categories?.data ?? [];
+
+  // Resolve slug to category_id for the API
+  const selectedCat = filter !== "all" ? cats.find(c => c.slug === filter) : undefined;
   const { data: videosData, isLoading } = useVideos({
-    category: filter === "all" ? undefined : filter,
+    category: selectedCat ? String(selectedCat.id) : undefined,
     page,
     page_size: 12,
   });
 
-  const cats = categories?.data ?? [];
-  const videos = videosData?.data?.records ?? [];
+  const rawVideos = videosData?.data?.records ?? [];
+
+  // Enrich videos with category name/color
+  const catMap = new Map(cats.map(c => [c.id, c]));
+  const videos = rawVideos.map(v => ({
+    ...v,
+    category_name: v.category_id ? catMap.get(v.category_id)?.name : undefined,
+    category_color: v.category_id ? catMap.get(v.category_id)?.color : undefined,
+  }));
   const pagination = videosData?.data?.pagination_info;
 
   return (
