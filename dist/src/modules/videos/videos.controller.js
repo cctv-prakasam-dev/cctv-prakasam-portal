@@ -1,7 +1,7 @@
 import { CREATE_VIDEO_VALIDATION_ERROR, FEATURED_VIDEOS_FETCHED, TRENDING_VIDEOS_FETCHED, UPDATE_VIDEO_VALIDATION_ERROR, VIDEO_CREATED, VIDEO_DELETED, VIDEO_FETCHED, VIDEO_UPDATED, VIDEOS_FETCHED, } from "../../constants/appMessages.js";
 import { sendSuccessResp } from "../../utils/respUtils.js";
 import { validateRequest } from "../../validations/validateRequest.js";
-import { createVideo, deleteVideo, getFeaturedVideos, getTrendingVideos, getVideoById, getVideosPaginated, updateVideo, } from "./videos.service.js";
+import { createVideo, deleteVideo, getChannelStats, getFeaturedVideos, getTrendingVideos, getVideoById, getVideosPaginated, updateVideo, } from "./videos.service.js";
 async function getVideos(c) {
     const page = Number(c.req.query("page")) || 1;
     const limit = Number(c.req.query("limit")) || 10;
@@ -41,4 +41,8 @@ async function remove(c) {
     const result = await deleteVideo(id);
     return sendSuccessResp(c, 200, VIDEO_DELETED, result);
 }
-export { create, getFeatured, getTrending, getVideo, getVideos, remove, update, };
+async function getStats(c) {
+    const result = await getChannelStats();
+    return sendSuccessResp(c, 200, "Channel stats fetched", result);
+}
+export { create, getFeatured, getStats, getTrending, getVideo, getVideos, remove, update, };

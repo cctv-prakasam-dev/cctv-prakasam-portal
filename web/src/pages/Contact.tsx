@@ -46,7 +46,7 @@ export default function Contact() {
   return (
     <div>
       {/* Header */}
-      <div className="bg-[var(--color-primary-bg)] px-6 pt-12 pb-8 text-center dark:bg-[var(--color-surface-1)]">
+      <div className="contact-page-header px-6 pt-12 pb-8 text-center">
         <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">Get In Touch</span>
         <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">CONTACT US</h1>
         <p className="mx-auto max-w-[540px] font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
@@ -77,6 +77,7 @@ export default function Contact() {
                   value={form.name}
                   onChange={handleChange}
                   required
+                  minLength={2}
                   maxLength={100}
                   className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
                   placeholder="Your name"
@@ -127,6 +128,7 @@ export default function Contact() {
                   value={form.subject}
                   onChange={handleChange}
                   required
+                  minLength={3}
                   maxLength={200}
                   className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
                   placeholder="What's this about?"
@@ -145,6 +147,7 @@ export default function Contact() {
                 value={form.message}
                 onChange={handleChange}
                 required
+                minLength={10}
                 maxLength={2000}
                 rows={5}
                 className="w-full resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"

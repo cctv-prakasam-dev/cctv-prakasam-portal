@@ -29,8 +29,6 @@ async function request<T = unknown>(
     headers,
   });
 
-  const data: ApiResponse<T> = await response.json();
-
   // Handle token expiry — attempt refresh
   if (response.status === 401 && getRefreshToken()) {
     const refreshed = await refreshAccessToken();
@@ -40,10 +38,16 @@ async function request<T = unknown>(
         ...options,
         headers,
       });
-      return retryResponse.json();
+      const retryData: ApiResponse<T> = await retryResponse.json();
+      if (!retryResponse.ok) {
+        throw retryData;
+      }
+      return retryData;
     }
     removeTokens();
   }
+
+  const data: ApiResponse<T> = await response.json();
 
   if (!response.ok) {
     throw data;

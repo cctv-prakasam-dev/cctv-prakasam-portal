@@ -142,19 +142,19 @@ export default function ManageUsers() {
 
                       {/* Status */}
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${
+                        <div className="flex flex-col gap-1.5">
+                          <span className={`inline-flex w-fit items-center gap-1.5 rounded-md border px-3 py-1.5 font-[var(--font-heading)] text-[11px] font-bold ${
                             user.active
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                              ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400"
+                              : "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-400"
                           }`}
                           >
-                            <span className={`inline-block h-1.5 w-1.5 rounded-full ${user.active ? "bg-emerald-500" : "bg-red-500"}`} />
+                            <span className={`inline-block h-2 w-2 rounded-full ${user.active ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" : "bg-red-500"}`} />
                             {user.active ? "Active" : "Inactive"}
                           </span>
                           {user.is_verified && (
-                            <span className="rounded-full bg-cyan-100 px-2 py-0.5 text-[10px] font-bold text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400">
-                              Verified
+                            <span className="inline-flex w-fit items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 font-[var(--font-heading)] text-[10px] font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                              ✓ Verified
                             </span>
                           )}
                         </div>

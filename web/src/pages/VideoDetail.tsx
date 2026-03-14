@@ -1,11 +1,69 @@
+import { useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
-import { Play } from "lucide-react";
+import { Check, Copy, Play } from "lucide-react";
 
 import { useVideo, useVideos } from "@/hooks/useVideos";
 
+function ShareButtons({ title, youtubeId }: { title: string; youtubeId?: string }) {
+  const [copied, setCopied] = useState(false);
+  const pageUrl = window.location.href;
+  const ytUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : pageUrl;
+  const encodedUrl = encodeURIComponent(ytUrl);
+  const encodedTitle = encodeURIComponent(title);
+
+  function copyLink() {
+    navigator.clipboard.writeText(ytUrl);
+    setCopied(true);
+    setTimeout(setCopied, 2000, false);
+  }
+
+  const shareLinks = [
+    { label: "Facebook", color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
+    { label: "Twitter", color: "#000", href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}` },
+    { label: "WhatsApp", color: "#25D366", href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}` },
+  ];
+
+  return (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {shareLinks.map(s => (
+        <a
+          key={s.label}
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] no-underline transition-colors hover:border-current"
+          style={{ borderLeftWidth: 2, borderLeftColor: s.color }}
+        >
+          {s.label}
+        </a>
+      ))}
+      <button
+        onClick={copyLink}
+        className="flex cursor-pointer items-center gap-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-primary)]"
+      >
+        {copied
+          ? (
+              <>
+                <Check size={10} />
+                {" "}
+                Copied!
+              </>
+            )
+          : (
+              <>
+                <Copy size={10} />
+                {" "}
+                Copy Link
+              </>
+            )}
+      </button>
+    </div>
+  );
+}
+
 export default function VideoDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
-  const { data: videoData, isLoading } = useVideo(id);
+  const { data: videoData, isLoading, isError } = useVideo(id);
   const { data: relatedData } = useVideos({ page: 1, page_size: 7 });
 
   const video = videoData?.data;
@@ -13,6 +71,17 @@ export default function VideoDetail() {
 
   if (isLoading) {
     return <div className="flex min-h-[80vh] items-center justify-center font-[var(--font-body)] text-[var(--color-text-muted)]">Loading...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[80vh] flex-col items-center justify-center gap-3">
+        <p className="font-[var(--font-body)] text-[var(--color-text-muted)]">Failed to load video.</p>
+        <Link to="/videos" className="rounded-lg bg-[var(--color-primary)] px-5 py-2 font-[var(--font-heading)] text-xs font-bold text-white no-underline">
+          Browse Videos
+        </Link>
+      </div>
+    );
   }
 
   if (!video) {
@@ -29,7 +98,7 @@ export default function VideoDetail() {
         <div className="grid grid-cols-1 gap-7 min-[900px]:grid-cols-[1fr_340px]">
           {/* Main Content */}
           <div>
-            {/* YouTube Player Placeholder */}
+            {/* YouTube Player */}
             <div className="flex aspect-video items-center justify-center rounded-[14px] border border-[var(--color-border)] bg-[var(--color-surface-2)]">
               {video.youtube_id
                 ? (
@@ -96,13 +165,7 @@ export default function VideoDetail() {
               )}
 
               {/* Share Buttons */}
-              <div className="mt-4 flex gap-2">
-                {["Facebook", "Twitter", "WhatsApp", "Copy Link"].map(s => (
-                  <button key={s} className="cursor-pointer rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)]">
-                    {s}
-                  </button>
-                ))}
-              </div>
+              <ShareButtons title={video.title} youtubeId={video.youtube_id} />
             </div>
           </div>
 
@@ -114,7 +177,7 @@ export default function VideoDetail() {
                 <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
                   <div className="group flex gap-2.5 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] transition-all hover:border-[var(--color-primary)]">
                     <div className="relative flex h-[65px] w-[116px] shrink-0 items-center justify-center bg-[var(--color-surface-2)]">
-                      {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+                      {v.thumbnail_url && <img src={v.thumbnail_url} alt={v.title_te || v.title} className="absolute inset-0 h-full w-full object-cover" />}
                       <div className="z-1 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-primary)]/75 text-[9px] text-white">▶</div>
                       {v.duration && <span className="absolute right-0.5 bottom-0.5 rounded bg-black/80 px-1 py-px font-[var(--font-mono)] text-[8px] text-white">{v.duration}</span>}
                     </div>

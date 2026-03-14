@@ -17,11 +17,11 @@ async function sendOTP(htmlContent, email) {
     const response = await httpPost(url, emailData, {
         "api-key": emailConfig.api_key,
     });
-    const respData = await response.json();
     if (!response.ok) {
-        throw new BrevoErrorException(response.status, FP_EMAIL_ERROR, response.statusText, true, respData || null);
+        const respData = await response.json().catch(() => null);
+        throw new BrevoErrorException(response.status, FP_EMAIL_ERROR, response.statusText, true, respData);
     }
-    return respData;
+    return await response.json();
 }
 async function sendEmailNotification(htmlContent, email) {
     const emailData = {
@@ -42,10 +42,10 @@ async function sendEmailNotification(htmlContent, email) {
     const response = await httpPost(url, emailData, {
         "api-key": emailConfig.api_key,
     });
-    const respData = await response.json();
     if (!response.ok) {
-        throw new BrevoErrorException(response.status, FP_EMAIL, response.statusText, true, respData || null);
+        const respData = await response.json().catch(() => null);
+        throw new BrevoErrorException(response.status, FP_EMAIL, response.statusText, true, respData);
     }
-    return respData;
+    return await response.json();
 }
 export { sendEmailNotification, sendOTP };

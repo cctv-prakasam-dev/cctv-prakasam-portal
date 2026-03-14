@@ -1,15 +1,30 @@
+import { eq, sql } from "drizzle-orm";
 import { CATEGORY_NOT_FOUND } from "../../constants/appMessages.js";
+import { db } from "../../db/configuration.js";
 import { categories } from "../../db/schema/categories.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
-import { deleteRecordById, getRecordById, getRecordsConditionally, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
-import { parseOrderByQuery } from "../../utils/dbUtils.js";
+import { deleteRecordById, getRecordById, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
 async function getAllActiveCategories() {
-    const orderByQueryData = parseOrderByQuery(undefined, "sort_order", "asc");
-    const result = await getRecordsConditionally(categories, {
-        columns: ["is_active"],
-        values: [true],
-        operators: ["eq"],
-    }, undefined, orderByQueryData);
+    const result = await db
+        .select({
+        id: categories.id,
+        name: categories.name,
+        name_te: categories.name_te,
+        slug: categories.slug,
+        icon: categories.icon,
+        color: categories.color,
+        video_count: sql `COALESCE((
+        SELECT COUNT(*)::int FROM videos
+        WHERE videos.category_id = ${categories.id} AND videos.is_active = true
+      ), 0)`,
+        sort_order: categories.sort_order,
+        is_active: categories.is_active,
+        created_at: categories.created_at,
+        updated_at: categories.updated_at,
+    })
+        .from(categories)
+        .where(eq(categories.is_active, true))
+        .orderBy(categories.sort_order);
     return result;
 }
 async function getCategoryById(id) {

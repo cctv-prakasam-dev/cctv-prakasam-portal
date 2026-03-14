@@ -9,11 +9,14 @@ import routes from "./routes.js";
 const app = new Hono();
 const port = envData.PORT || 3000;
 app.use(logger());
-app.use("*", cors());
+app.use("*", cors({
+    origin: [envData.APP_BASE_URL, `http://localhost:${envData.PORT}`, "http://localhost:5173"],
+    credentials: true,
+}));
 // API routes
 app.route("/api", routes);
 app.onError((err, c) => {
-    const statusCode = err.status || 555;
+    const statusCode = err.status || 500;
     const errorMessage = err.message || DEF_ERROR_RESP;
     console.error("index", err);
     c.status(statusCode);

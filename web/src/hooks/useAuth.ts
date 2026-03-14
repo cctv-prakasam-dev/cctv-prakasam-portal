@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { apiPost } from "@/lib/apiClient";
 import { removeTokens, setTokens } from "@/lib/auth";
+import { clearAuthUser, setAuthUser } from "@/stores/authStore";
 
 interface LoginPayload {
   email: string;
@@ -32,6 +33,16 @@ export function useLogin() {
       if (response.data?.tokens) {
         setTokens(response.data.tokens.access_token, response.data.tokens.refresh_token);
       }
+      if (response.data?.user) {
+        const u = response.data.user;
+        setAuthUser({
+          id: u.id as number,
+          first_name: u.first_name as string,
+          last_name: u.last_name as string,
+          email: u.email as string,
+          user_type: u.user_type as string,
+        });
+      }
     },
   });
 }
@@ -48,6 +59,7 @@ export function useLogout() {
     mutationFn: () => apiPost("/auth/logout"),
     onSettled: () => {
       removeTokens();
+      clearAuthUser();
     },
   });
 }

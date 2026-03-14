@@ -28,6 +28,6 @@ routes.route("/contact", contactPublicRoutes);
 routes.route("/admin/dashboard", dashboardAdminRoutes);
 routes.route("/settings", settingsPublicRoutes);
 routes.route("/admin/settings", settingsAdminRoutes);
-routes.route("/admin/videos", youtubeAdminRoutes);
+routes.route("/admin/youtube", youtubeAdminRoutes);
 
 export default routes;

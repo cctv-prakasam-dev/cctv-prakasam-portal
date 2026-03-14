@@ -1,11 +1,23 @@
-import ceoPhoto from "@/assets/ceo-photo.svg";
+import { useQuery } from "@tanstack/react-query";
 
-const stats = [
-  { label: "Subscribers", value: "50K+", color: "var(--color-primary)" },
-  { label: "Videos", value: "1,200+", color: "#DB2777" },
-  { label: "Monthly Views", value: "500K+", color: "#D97706" },
-  { label: "Years", value: "5+", color: "#6D28D9" },
-];
+import ceoPhoto from "@/assets/ceo-photo.svg";
+import { apiGet } from "@/lib/apiClient";
+
+interface ChannelStats {
+  subscribers: number;
+  total_views: number;
+  video_count: number;
+}
+
+function formatNumber(num: number): string {
+  if (num >= 1_000_000) {
+    return `${(num / 1_000_000).toFixed(1).replace(/\.0$/, "")}M+`;
+  }
+  if (num >= 1_000) {
+    return `${(num / 1_000).toFixed(1).replace(/\.0$/, "")}K+`;
+  }
+  return `${num}+`;
+}
 
 const cards = [
   {
@@ -23,12 +35,27 @@ const cards = [
 ];
 
 export default function About() {
+  const { data: statsResp } = useQuery({
+    queryKey: ["channel-stats"],
+    queryFn: () => apiGet<ChannelStats>("/videos/channel-stats"),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const channelStats = statsResp?.data;
+
+  const stats = [
+    { label: "Subscribers", value: channelStats ? formatNumber(channelStats.subscribers) : "...", color: "var(--color-primary)" },
+    { label: "Videos", value: channelStats ? formatNumber(channelStats.video_count) : "...", color: "#DB2777" },
+    { label: "Total Views", value: channelStats ? formatNumber(channelStats.total_views) : "...", color: "#D97706" },
+    { label: "Years", value: "5+", color: "#6D28D9" },
+  ];
+
   return (
     <div>
       {/* Header */}
-      <div className="bg-[var(--color-primary-bg)] px-6 pt-12 pb-8 text-center dark:bg-[var(--color-surface-1)]">
+      <div className="about-page-header px-6 pt-12 pb-8 text-center">
         <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">About Us</span>
-        <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">CCTV PRAKASAM</h1>
+        <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">CCTV AP PRAKASAM</h1>
         <p className="mx-auto max-w-[540px] font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
           Prakasam district's most trusted digital news channel since 2021.
         </p>
@@ -63,7 +90,7 @@ export default function About() {
               <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[#DB2777]">Founder & CEO</span>
               <h2 className="mt-1.5 mb-4 font-[var(--font-display)] text-[30px] tracking-[2px] text-[var(--color-text-primary)]">OUR VISIONARY LEADER</h2>
               <p className="font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                With a passion for truth, our founder established CCTV Prakasam to deliver authentic local news. What started small has grown into Prakasam's go-to news source.
+                With a passion for truth, our founder established CCTV AP Prakasam to deliver authentic local news. What started small has grown into Prakasam's go-to news source.
               </p>
               <p className="mt-2 font-[var(--font-body)] text-[13px] leading-relaxed text-[var(--color-text-muted)]">
                 Dedication to unbiased reporting has earned the trust of thousands across Andhra Pradesh.

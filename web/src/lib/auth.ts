@@ -17,6 +17,7 @@ export function setTokens(accessToken: string, refreshToken: string) {
 export function removeTokens() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem("cctv_auth_user");
 }
 
 export function isAuthenticated(): boolean {

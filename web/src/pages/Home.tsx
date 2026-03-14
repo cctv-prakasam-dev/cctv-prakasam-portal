@@ -51,14 +51,14 @@ export default function Home() {
       <BreakingTicker items={breakingItems} />
 
       {/* Hero Section */}
-      <section className="relative bg-[var(--color-primary-bg)] px-6 pt-10 pb-12 dark:bg-[var(--color-surface-1)]">
+      <section className="hero-section relative px-6 pt-10 pb-12">
         <div className="mx-auto max-w-[var(--max-content)]">
           <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[1.6fr_1fr]">
             {/* Main Feature */}
             <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-red-50 px-3.5 py-1 dark:bg-red-900/10">
-                <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
-                <span className="font-[var(--font-display)] text-[11px] tracking-[1.5px] text-[var(--color-live)]">FEATURED STORY</span>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-red-50 px-3.5 py-1.5 dark:bg-red-500/10">
+                <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-600" />
+                <span className="font-[var(--font-display)] text-[11px] font-semibold tracking-[1.5px] text-red-600 dark:text-red-400">FEATURED STORY</span>
               </div>
               {mainFeature && (
                 <Link to="/videos/$id" params={{ id: String(mainFeature.id) }}>
@@ -73,14 +73,14 @@ export default function Home() {
               <div className="flex flex-col gap-2.5">
                 {sideVideos.map(v => (
                   <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                    <div className="group flex gap-3 overflow-hidden rounded-[10px] border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:border-[var(--color-primary)] hover:shadow-lg">
-                      <div className="relative flex h-[76px] w-[136px] shrink-0 items-center justify-center bg-[var(--color-surface-2)]">
-                        {v.thumbnail_url && <img src={v.thumbnail_url} alt="" className="absolute inset-0 h-full w-full object-cover" />}
-                        <div className="z-1 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[var(--color-primary)]/80 text-xs text-white">▶</div>
+                    <div className="group flex gap-3 overflow-hidden rounded-[10px] border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:border-[var(--color-primary)]/40 hover:shadow-md">
+                      <div className="relative flex h-[76px] w-[136px] shrink-0 items-center justify-center bg-slate-200 dark:bg-slate-700">
+                        {v.thumbnail_url && <img src={v.thumbnail_url} alt={v.title_te || v.title} className="absolute inset-0 h-full w-full object-cover" />}
+                        <div className="z-1 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-cyan-500/80 text-xs text-white">▶</div>
                         {v.duration && <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 font-[var(--font-mono)] text-[9px] text-white">{v.duration}</span>}
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-3">
-                        {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide" style={{ color: v.category_color }}>{v.category_name}</span>}
+                        {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary)]">{v.category_name}</span>}
                         <h4 className="mt-0.5 truncate font-[var(--font-telugu)] text-xs font-semibold leading-snug text-[var(--color-text-primary)]">{v.title_te || v.title}</h4>
                         <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
                           {formatViews(v.view_count)}
@@ -122,9 +122,20 @@ export default function Home() {
       {/* Trending */}
       <section className="bg-[var(--color-surface-1)] px-6 pt-10 pb-12">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <SectionHead title="Trending Now" subtitle="Most watched this week" accentColor="var(--color-live)" />
+          <div className="mb-6">
+            <div className="flex items-center gap-3">
+              <div className="h-6 w-1 rounded-sm bg-gradient-to-b from-red-500 to-orange-500" />
+              <h2 className="font-[var(--font-display)] text-[22px] uppercase tracking-[1.5px] text-[var(--color-text-primary)]">
+                Trending Now
+              </h2>
+              <span className="rounded-full bg-red-500/20 px-3 py-0.5 text-[10px] font-bold text-red-400">🔥 HOT</span>
+            </div>
+            <p className="mt-1 ml-4 font-[var(--font-body)] text-[13px] text-[var(--color-text-muted)]">
+              Most watched this week
+            </p>
+          </div>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
-            {trending.slice(0, 5).map(v => (
+            {trending.slice(0, 6).map(v => (
               <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
                 <VideoCard video={v} />
               </Link>
@@ -151,10 +162,10 @@ export default function Home() {
               <h2 className="mt-1.5 mb-4 font-[var(--font-display)] text-[30px] leading-tight tracking-[2px] text-[var(--color-text-primary)]">
                 THE VISION BEHIND
                 <br />
-                CCTV PRAKASAM
+                CCTV AP PRAKASAM
               </h2>
               <p className="max-w-[500px] font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                CCTV Prakasam was founded to deliver authentic, timely news to Prakasam district. Our commitment to truth and community-focused journalism drives every story.
+                CCTV AP Prakasam was founded to deliver authentic, timely news to Prakasam district. Our commitment to truth and community-focused journalism drives every story.
               </p>
               <p className="mt-2 font-[var(--font-body)] text-[13px] leading-relaxed text-[var(--color-text-muted)]">
                 From political developments to local events, devotional content to entertainment — comprehensive coverage you can trust.
@@ -168,7 +179,7 @@ export default function Home() {
       </section>
 
       {/* Newsletter */}
-      <section className="bg-[var(--color-primary-bg)] px-6 py-12 dark:bg-[var(--color-surface-1)]">
+      <section className="newsletter-section px-6 py-12">
         <div className="mx-auto max-w-[540px] text-center">
           <div className="mb-2 text-[32px]">📬</div>
           <h2 className="mb-1.5 font-[var(--font-display)] text-[26px] tracking-[2px] text-[var(--color-text-primary)]">STAY UPDATED</h2>

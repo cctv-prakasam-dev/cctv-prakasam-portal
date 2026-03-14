@@ -84,7 +84,7 @@ export function useSyncYouTubeVideos() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => apiPost("/admin/videos/sync-youtube"),
+    mutationFn: () => apiPost("/admin/youtube/sync-youtube"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "videos"] });
       queryClient.invalidateQueries({ queryKey: ["videos"] });

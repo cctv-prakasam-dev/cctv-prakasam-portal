@@ -21,6 +21,7 @@ import { validateRequest } from "../../validations/validateRequest.js";
 import {
   createVideo,
   deleteVideo,
+  getChannelStats,
   getFeaturedVideos,
   getTrendingVideos,
   getVideoById,
@@ -95,9 +96,16 @@ async function remove(c: Context) {
   return sendSuccessResp(c, 200, VIDEO_DELETED, result);
 }
 
+async function getStats(c: Context) {
+  const result = await getChannelStats();
+
+  return sendSuccessResp(c, 200, "Channel stats fetched", result);
+}
+
 export {
   create,
   getFeatured,
+  getStats,
   getTrending,
   getVideo,
   getVideos,

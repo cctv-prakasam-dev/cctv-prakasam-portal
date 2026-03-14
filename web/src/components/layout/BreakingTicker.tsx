@@ -27,7 +27,7 @@ export default function BreakingTicker({ items }: BreakingTickerProps) {
     return null;
 
   return (
-    <div className="flex h-9 select-none items-center overflow-hidden bg-gradient-to-r from-[#0E7490] to-[#0891B2]">
+    <div role="marquee" aria-live="polite" aria-label="Breaking news" className="flex h-9 select-none items-center overflow-hidden bg-gradient-to-r from-[#0E7490] to-[#0891B2]">
       {/* BREAKING Badge */}
       <div className="z-2 flex h-full shrink-0 items-center gap-1.5 bg-[#DB2777] px-4">
         <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />

@@ -1,4 +1,6 @@
+import { count, eq, sql } from "drizzle-orm";
 import { youtubeConfig } from "../../config/youtubeConfig.js";
+import { db } from "../../db/configuration.js";
 import { categories } from "../../db/schema/categories.js";
 import { videos } from "../../db/schema/videos.js";
 import { getMultipleRecordsByAColumnValue, getSingleRecordByAColumnValue, saveSingleRecord, updateRecordByColumnValue, } from "../../services/db/baseDbService.js";
@@ -145,6 +147,47 @@ async function syncYouTubeVideos() {
                 category_id: categoryId,
             });
             newVideos++;
+        }
+    }
+    // Auto-set featured: top 6 most recent videos with most views
+    await db.execute(sql `UPDATE videos SET is_featured = false WHERE is_featured = true`);
+    await db.execute(sql `
+    UPDATE videos SET is_featured = true
+    WHERE id IN (
+      SELECT id FROM videos WHERE is_active = true
+      ORDER BY published_at DESC LIMIT 6
+    )
+  `);
+    // Auto-set trending: top 6 videos by view count
+    await db.execute(sql `UPDATE videos SET is_trending = false WHERE is_trending = true`);
+    await db.execute(sql `
+    UPDATE videos SET is_trending = true
+    WHERE id IN (
+      SELECT id FROM videos WHERE is_active = true
+      ORDER BY
+        CASE WHEN view_count ~ '^[0-9.]+[KMB]?$' THEN
+          CASE
+            WHEN view_count LIKE '%M' THEN CAST(REPLACE(view_count, 'M', '') AS FLOAT) * 1000000
+            WHEN view_count LIKE '%K' THEN CAST(REPLACE(view_count, 'K', '') AS FLOAT) * 1000
+            ELSE CAST(view_count AS FLOAT)
+          END
+        ELSE 0 END DESC
+      LIMIT 6
+    )
+  `);
+    // Update category video counts
+    const categoryCounts = await db
+        .select({ category_id: videos.category_id, total: count() })
+        .from(videos)
+        .where(eq(videos.is_active, true))
+        .groupBy(videos.category_id);
+    // Reset all counts to 0 first
+    await db.execute(sql `UPDATE categories SET video_count = 0`);
+    for (const cc of categoryCounts) {
+        if (cc.category_id) {
+            await db.update(categories)
+                .set({ video_count: cc.total })
+                .where(eq(categories.id, cc.category_id));
         }
     }
     return {

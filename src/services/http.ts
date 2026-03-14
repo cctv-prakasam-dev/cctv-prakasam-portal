@@ -3,6 +3,11 @@ export async function httpGet(url: string, headers?: any) {
     method: "GET",
     headers,
   });
+
+  if (!response.ok) {
+    throw new Error(`HTTP GET ${url} failed with status ${response.status}`);
+  }
+
   return await response.json();
 }
 

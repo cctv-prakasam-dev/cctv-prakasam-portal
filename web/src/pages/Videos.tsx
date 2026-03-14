@@ -14,7 +14,7 @@ export default function Videos() {
 
   // Resolve slug to category_id for the API
   const selectedCat = filter !== "all" ? cats.find(c => c.slug === filter) : undefined;
-  const { data: videosData, isLoading } = useVideos({
+  const { data: videosData, isLoading, isError } = useVideos({
     category: selectedCat ? String(selectedCat.id) : undefined,
     page,
     page_size: 12,
@@ -34,7 +34,7 @@ export default function Videos() {
   return (
     <div className="min-h-[80vh] bg-[var(--color-background)]">
       {/* Header */}
-      <div className="bg-[var(--color-primary-bg)] px-6 pt-10 pb-8 dark:bg-[var(--color-surface-1)]">
+      <div className="videos-page-header px-6 pt-10 pb-8">
         <div className="mx-auto max-w-[var(--max-content)]">
           <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">YouTube Library</span>
           <h1 className="mt-1 mb-1.5 font-[var(--font-display)] text-[38px] tracking-[3px] text-[var(--color-text-primary)]">ALL VIDEOS</h1>
@@ -80,23 +80,27 @@ export default function Videos() {
             videos
           </p>
 
-          {isLoading
+          {isError
             ? (
-                <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">Loading videos...</div>
+                <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">Failed to load videos. Please try again later.</div>
               )
-            : videos.length === 0
+            : isLoading
               ? (
-                  <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">No videos found</div>
+                  <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">Loading videos...</div>
                 )
-              : (
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
-                    {videos.map(v => (
-                      <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                        <VideoCard video={v} />
-                      </Link>
-                    ))}
-                  </div>
-                )}
+              : videos.length === 0
+                ? (
+                    <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">No videos found</div>
+                  )
+                : (
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
+                      {videos.map(v => (
+                        <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
+                          <VideoCard video={v} />
+                        </Link>
+                      ))}
+                    </div>
+                  )}
 
           {/* Pagination */}
           {pagination && pagination.total_pages > 1 && (

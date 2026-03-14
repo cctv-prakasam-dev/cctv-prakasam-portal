@@ -100,3 +100,44 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
 }
+
+/* Section backgrounds matching prototype */
+.hero-section {
+  background: linear-gradient(170deg, #f0fdfa 0%, #ecfeff 35%, #ffffff 100%);
+}
+
+.dark .hero-section {
+  background: var(--color-surface-1);
+}
+
+.newsletter-section {
+  background: linear-gradient(135deg, #ecfeff, #f0fdfa);
+}
+
+.dark .newsletter-section {
+  background: var(--color-surface-1);
+}
+
+.videos-page-header {
+  background: linear-gradient(180deg, #ecfeff, var(--color-background));
+}
+
+.dark .videos-page-header {
+  background: var(--color-surface-1);
+}
+
+.about-page-header {
+  background: linear-gradient(180deg, #ecfeff, var(--color-background));
+}
+
+.dark .about-page-header {
+  background: var(--color-surface-1);
+}
+
+.contact-page-header {
+  background: linear-gradient(180deg, #ecfeff, var(--color-background));
+}
+
+.dark .contact-page-header {
+  background: var(--color-surface-1);
+}

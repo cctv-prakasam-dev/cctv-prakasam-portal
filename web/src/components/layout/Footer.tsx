@@ -10,19 +10,19 @@ const quickLinks = [
 ] as const;
 
 const categories = [
-  { icon: "📰", name: "General News" },
-  { icon: "🏛️", name: "Political" },
-  { icon: "🎬", name: "Entertainment" },
-  { icon: "🙏", name: "Devotional" },
-  { icon: "📍", name: "Local News" },
-  { icon: "🏏", name: "Sports" },
+  { icon: "📰", name: "General News", slug: "general-news" },
+  { icon: "🏛️", name: "Political", slug: "political-news" },
+  { icon: "🎬", name: "Entertainment", slug: "entertainment" },
+  { icon: "🙏", name: "Devotional", slug: "devotional" },
+  { icon: "📍", name: "Local News", slug: "local-news" },
+  { icon: "🏏", name: "Sports", slug: "sports" },
 ];
 
 const socialIcons = [
-  { icon: "▶", label: "YouTube" },
-  { icon: "f", label: "Facebook" },
-  { icon: "𝕏", label: "Twitter" },
-  { icon: "📷", label: "Instagram" },
+  { icon: "▶", label: "YouTube", href: "https://www.youtube.com/@CctvPrakasam" },
+  { icon: "f", label: "Facebook", href: "https://www.facebook.com/cctvprakasam" },
+  { icon: "𝕏", label: "Twitter", href: "https://twitter.com/cctvprakasam" },
+  { icon: "📷", label: "Instagram", href: "https://www.instagram.com/cctv_prakasam" },
 ];
 
 export default function Footer() {
@@ -31,18 +31,22 @@ export default function Footer() {
       <div className="mx-auto mb-8 grid max-w-[var(--max-content)] grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-8">
         {/* Logo & Socials */}
         <div>
-          <img src={logo} alt="CCTV Prakasam" className="mb-3.5 h-[42px] object-contain" />
+          <img src={logo} alt="CCTV AP Prakasam" className="mb-3.5 h-[42px] object-contain" />
           <p className="font-[var(--font-body)] text-[13px] leading-relaxed text-slate-400">
             Prakasam district's trusted digital news. Politics, entertainment, devotional & local coverage.
           </p>
           <div className="mt-3.5 flex gap-2">
             {socialIcons.map(s => (
-              <div
+              <a
                 key={s.label}
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-white/7 bg-white/5 text-[13px] text-slate-400 hover:bg-white/10"
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                className="flex h-8 w-8 items-center justify-center rounded-md border border-white/7 bg-white/5 text-[13px] text-slate-400 no-underline hover:bg-white/10 hover:text-white"
               >
                 {s.icon}
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -69,11 +73,16 @@ export default function Footer() {
             CATEGORIES
           </h4>
           {categories.map(cat => (
-            <div key={cat.name} className="py-1.5 font-[var(--font-body)] text-[13px] text-slate-400">
+            <Link
+              key={cat.slug}
+              to="/videos"
+              search={{ category: cat.slug }}
+              className="block py-1.5 font-[var(--font-body)] text-[13px] text-slate-400 no-underline hover:text-white"
+            >
               {cat.icon}
               {" "}
               {cat.name}
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -95,7 +104,7 @@ export default function Footer() {
       {/* Copyright */}
       <div className="flex flex-wrap justify-between gap-2 border-t border-white/6 pt-3.5">
         <span className="font-[var(--font-body)] text-[11px] text-slate-600">
-          © 2026 CCTV Prakasam. All rights reserved.
+          © 2026 CCTV AP Prakasam. All rights reserved.
         </span>
         <span className="font-[var(--font-body)] text-[11px] text-slate-600">
           Privacy • Terms • Cookies

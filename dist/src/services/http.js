@@ -3,6 +3,9 @@ export async function httpGet(url, headers) {
         method: "GET",
         headers,
     });
+    if (!response.ok) {
+        throw new Error(`HTTP GET ${url} failed with status ${response.status}`);
+    }
     return await response.json();
 }
 export async function httpPost(url, body, customHeaders) {

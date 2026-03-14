@@ -6,7 +6,7 @@ import StatsCard from "@/components/admin/StatsCard";
 import { useAdminDashboardStats } from "@/hooks/useAdminDashboard";
 
 export default function Dashboard() {
-  const { data: statsResp, isLoading } = useAdminDashboardStats();
+  const { data: statsResp, isLoading, isError } = useAdminDashboardStats();
   const stats = statsResp?.data;
 
   const chartData = useMemo(() => {
@@ -35,6 +35,14 @@ export default function Dashboard() {
       color: day === "Sat" || day === "Sun" ? "#22D3EE" : "#0891B2",
     }));
   }, [stats]);
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="font-[var(--font-body)] text-[var(--color-text-muted)]">Failed to load dashboard data. Please try again later.</p>
+      </div>
+    );
+  }
 
   return (
     <div>

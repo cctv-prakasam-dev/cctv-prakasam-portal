@@ -1,9 +1,11 @@
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { useLogout } from "@/hooks/useAuth";
+import { useAuthUser } from "@/stores/authStore";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -15,6 +17,17 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const user = useAuthUser();
+  const logout = useLogout();
+
+  function handleLogout() {
+    logout.mutate(undefined, {
+      onSettled: () => {
+        navigate({ to: "/" });
+      },
+    });
+  }
 
   return (
     <>
@@ -22,7 +35,7 @@ export default function Navbar() {
         <div className="mx-auto flex h-[var(--navbar-height)] max-w-[var(--max-content)] items-center justify-between px-6">
           {/* Logo */}
           <Link to="/" className="flex shrink-0 items-center">
-            <img src={logo} alt="CCTV Prakasam" className="h-11 object-contain" />
+            <img src={logo} alt="CCTV AP Prakasam" className="h-11 object-contain" />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -56,13 +69,36 @@ export default function Navbar() {
               ▶ Subscribe
             </a>
 
-            {/* Dashboard Button - Desktop */}
-            <Link
-              to="/admin"
-              className="hidden rounded-md bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wider text-white no-underline transition-all hover:from-[#0E7490] hover:to-[#0891B2] min-[900px]:block"
-            >
-              Dashboard
-            </Link>
+            {/* Login / Dashboard Button - Desktop */}
+            {user
+              ? (
+                  <Link
+                    to="/admin"
+                    className="hidden rounded-md bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wider text-white no-underline transition-all hover:from-[#0E7490] hover:to-[#0891B2] min-[900px]:block"
+                  >
+                    Dashboard
+                  </Link>
+                )
+              : (
+                  <Link
+                    to="/admin/login"
+                    className="hidden rounded-md bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wider text-white no-underline transition-all hover:from-[#0E7490] hover:to-[#0891B2] min-[900px]:block"
+                  >
+                    Login
+                  </Link>
+                )}
+
+            {/* Logout Button - Desktop (visible when logged in) */}
+            {user && (
+              <button
+                onClick={handleLogout}
+                disabled={logout.isPending}
+                className="hidden cursor-pointer items-center gap-1.5 rounded-md border border-white/15 bg-white/10 px-4 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wide text-white transition-all hover:bg-red-500/80 disabled:opacity-50 min-[900px]:flex"
+              >
+                <LogOut size={13} />
+                Logout
+              </button>
+            )}
 
             {/* Mobile Hamburger */}
             <button
@@ -92,13 +128,35 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/admin"
-            onClick={() => setMobileOpen(false)}
-            className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
-          >
-            🔐 Dashboard
-          </Link>
+          {user
+            ? (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
+                >
+                  🔐 Dashboard
+                </Link>
+              )
+            : (
+                <Link
+                  to="/admin/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
+                >
+                  🔐 Login
+                </Link>
+              )}
+          {user && (
+            <button
+              onClick={() => { setMobileOpen(false); handleLogout(); }}
+              disabled={logout.isPending}
+              className="mt-1 flex cursor-pointer items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-5 py-4 font-[var(--font-heading)] text-base font-bold text-red-600 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400"
+            >
+              <LogOut size={18} />
+              {logout.isPending ? "Logging out..." : "Logout"}
+            </button>
+          )}
         </div>
       )}
     </>
