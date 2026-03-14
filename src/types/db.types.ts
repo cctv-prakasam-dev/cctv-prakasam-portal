@@ -46,8 +46,7 @@ export type DBNewRecords
 export type SortDirection = "asc" | "desc";
 
 export type UserType
-  = | "SUPER_ADMIN"
-    | "ADMIN"
+  = | "ADMIN"
     | "MANAGER"
     | "CUSTOMER";
 

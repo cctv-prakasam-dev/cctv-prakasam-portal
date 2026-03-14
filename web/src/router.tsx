@@ -10,7 +10,10 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import ForgotPassword from "@/pages/ForgotPassword";
 import Home from "@/pages/Home";
+import Register from "@/pages/Register";
+import ResetPassword from "@/pages/ResetPassword";
 import VideoDetail from "@/pages/VideoDetail";
 import Videos from "@/pages/Videos";
 import Dashboard from "@/pages/admin/Dashboard";
@@ -92,11 +95,29 @@ const contactRoute = createRoute({
   component: Contact,
 });
 
-// Admin login (no sidebar)
+// Auth pages (bare layout — no navbar/footer/sidebar)
 const adminLoginRoute = createRoute({
   getParentRoute: () => adminBareLayout,
   path: "/admin/login",
   component: AdminLogin,
+});
+
+const registerRoute = createRoute({
+  getParentRoute: () => adminBareLayout,
+  path: "/register",
+  component: Register,
+});
+
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => adminBareLayout,
+  path: "/forgot-password",
+  component: ForgotPassword,
+});
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => adminBareLayout,
+  path: "/reset-password",
+  component: ResetPassword,
 });
 
 // Admin protected routes
@@ -158,6 +179,9 @@ const routeTree = rootRoute.addChildren([
   ]),
   adminBareLayout.addChildren([
     adminLoginRoute,
+    registerRoute,
+    forgotPasswordRoute,
+    resetPasswordRoute,
   ]),
   adminProtectedLayout.addChildren([
     adminDashboardRoute,

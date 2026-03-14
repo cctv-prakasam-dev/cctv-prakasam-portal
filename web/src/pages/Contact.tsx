@@ -50,7 +50,7 @@ export default function Contact() {
         <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">Get In Touch</span>
         <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">CONTACT US</h1>
         <p className="mx-auto max-w-[540px] font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
-          Have a news tip, feedback, or just want to say hello? We&apos;d love to hear from you.
+          Have a news tip, feedback, or just want to say hello? CCTV AP Prakasam would love to hear from you.
         </p>
       </div>
 
@@ -197,12 +197,18 @@ export default function Contact() {
               </div>
             ))}
 
-            {/* Map Placeholder */}
-            <div className="flex h-[200px] items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-1)]">
-              <div className="text-center">
-                <MapPin size={28} className="mx-auto mb-2 text-[var(--color-text-muted)]" />
-                <span className="font-[var(--font-body)] text-xs text-[var(--color-text-muted)]">Google Maps</span>
-              </div>
+            {/* Google Maps Embed */}
+            <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]">
+              <iframe
+                title="CCTV AP Prakasam Office Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3844.8!2d79.99!3d15.66!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSingarayakonda%2C%20Prakasam!5e0!3m2!1sen!2sin!4v1700000000000"
+                width="100%"
+                height="200"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>

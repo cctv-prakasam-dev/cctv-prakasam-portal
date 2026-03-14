@@ -66,16 +66,16 @@ async function seed() {
             console.log(`   ○ ${setting.key} (already exists)`);
         }
     }
-    // ── 4. Mark first 3 videos as featured, next 4 as trending ──
+    // ── 4. Mark first 6 videos as featured, next 6 as trending ──
     console.log("\n🎬 Marking featured & trending videos...");
-    const allVideos = await db.select({ id: videos.id }).from(videos).orderBy(videos.published_at).limit(10);
+    const allVideos = await db.select({ id: videos.id }).from(videos).orderBy(videos.published_at).limit(15);
     if (allVideos.length > 0) {
-        // Mark first 3 as featured
-        const featuredIds = allVideos.slice(0, Math.min(3, allVideos.length)).map(v => v.id);
+        // Mark first 6 as featured
+        const featuredIds = allVideos.slice(0, Math.min(6, allVideos.length)).map(v => v.id);
         await db.update(videos).set({ is_featured: true }).where(sql `${videos.id} IN (${sql.join(featuredIds.map(id => sql `${id}`), sql `, `)})`);
         console.log(`   ✓ Marked ${featuredIds.length} videos as featured`);
-        // Mark next 4 as trending
-        const trendingIds = allVideos.slice(3, Math.min(7, allVideos.length)).map(v => v.id);
+        // Mark next 6 as trending
+        const trendingIds = allVideos.slice(6, Math.min(12, allVideos.length)).map(v => v.id);
         if (trendingIds.length > 0) {
             await db.update(videos).set({ is_trending: true }).where(sql `${videos.id} IN (${sql.join(trendingIds.map(id => sql `${id}`), sql `, `)})`);
             console.log(`   ✓ Marked ${trendingIds.length} videos as trending`);

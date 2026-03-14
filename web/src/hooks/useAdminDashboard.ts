@@ -7,6 +7,8 @@ interface DashboardStats {
   users: number;
   newsletter_subscribers: number;
   breaking_news: number;
+  weekly_videos: { day: string; count: number }[];
+  youtube_subscribers: number;
 }
 
 export function useAdminDashboardStats() {

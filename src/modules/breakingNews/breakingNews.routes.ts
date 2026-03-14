@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
-import isAdmin from "../../middlewares/isAdmin.js";
 import isAuthorized from "../../middlewares/isAuthorized.js";
+import isManager from "../../middlewares/isManager.js";
 import {
   create,
   getBreakingNews,
@@ -16,7 +16,7 @@ const breakingNewsAdminRoutes = new Hono();
 breakingNewsPublicRoutes.get("/", getBreakingNews);
 
 // Admin routes (protected)
-breakingNewsAdminRoutes.use("*", isAuthorized, isAdmin);
+breakingNewsAdminRoutes.use("*", isAuthorized, isManager);
 breakingNewsAdminRoutes.post("/", create);
 breakingNewsAdminRoutes.put("/:id", update);
 breakingNewsAdminRoutes.delete("/:id", remove);

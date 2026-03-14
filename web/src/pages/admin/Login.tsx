@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
 import { useLogin } from "@/hooks/useAuth";
@@ -66,7 +66,7 @@ export default function AdminLogin() {
             />
           </div>
 
-          <div className="mb-6">
+          <div className="mb-2">
             <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
               Password
             </label>
@@ -78,6 +78,15 @@ export default function AdminLogin() {
               className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
               placeholder="••••••••"
             />
+          </div>
+
+          <div className="mb-5 text-right">
+            <Link
+              to="/forgot-password"
+              className="font-[var(--font-body)] text-xs text-[var(--color-primary)] no-underline hover:underline"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           {error && (
@@ -95,13 +104,21 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <a
-            href="/"
+        <div className="mt-5 text-center font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">
+          Don't have an account?
+          {" "}
+          <Link to="/register" className="font-medium text-[var(--color-primary)] no-underline hover:underline">
+            Register
+          </Link>
+        </div>
+
+        <div className="mt-3 text-center">
+          <Link
+            to="/"
             className="font-[var(--font-body)] text-xs text-[var(--color-text-muted)] no-underline hover:text-[var(--color-primary)]"
           >
             ← Back to Website
-          </a>
+          </Link>
         </div>
       </div>
     </div>

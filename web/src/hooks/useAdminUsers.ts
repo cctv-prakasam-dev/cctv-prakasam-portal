@@ -54,8 +54,8 @@ export function useUpdateUserRole() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, role }: { id: number; role: string }) =>
-      apiPut(`/admin/dashboard/users/${id}`, { role }),
+    mutationFn: ({ id, user_type }: { id: number; user_type: string }) =>
+      apiPut(`/admin/dashboard/users/${id}`, { user_type }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
     },

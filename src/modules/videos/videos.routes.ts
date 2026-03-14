@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 
-import isAdmin from "../../middlewares/isAdmin.js";
 import isAuthorized from "../../middlewares/isAuthorized.js";
+import isManager from "../../middlewares/isManager.js";
 import {
   create,
   getFeatured,
@@ -22,7 +22,7 @@ videoPublicRoutes.get("/trending", getTrending);
 videoPublicRoutes.get("/:id", getVideo);
 
 // Admin routes (protected)
-videoAdminRoutes.use("*", isAuthorized, isAdmin);
+videoAdminRoutes.use("*", isAuthorized, isManager);
 videoAdminRoutes.post("/", create);
 videoAdminRoutes.put("/:id", update);
 videoAdminRoutes.delete("/:id", remove);

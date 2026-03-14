@@ -35,7 +35,7 @@ export default function Home() {
   const trending = (trendingData?.data ?? []).map(enrichVideo);
   const latest = (latestData?.data?.records ?? []).map(enrichVideo);
   const mainFeature = featured[0];
-  const sideVideos = (featured.length > 1 ? featured.slice(1, 5) : latest.slice(0, 4));
+  const sideVideos = (featured.length > 1 ? featured.slice(1, 6) : latest.slice(0, 5));
 
   function handleSubscribe() {
     if (!email)
