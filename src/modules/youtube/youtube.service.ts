@@ -270,8 +270,51 @@ async function syncYouTubeVideos(): Promise<{ newVideos: number; updatedVideos: 
   };
 }
 
+// ── Sync status tracking ──────────────────────────────────────
+interface SyncStatusData {
+  is_syncing: boolean;
+  last_sync_at: string | null;
+  last_result: { newVideos: number; updatedVideos: number; totalVideos: number } | null;
+  last_error: string | null;
+}
+
+const syncStatus: SyncStatusData = {
+  is_syncing: false,
+  last_sync_at: null,
+  last_result: null,
+  last_error: null,
+};
+
+function getSyncStatus(): SyncStatusData {
+  return { ...syncStatus };
+}
+
+function triggerManualSync(): void {
+  if (syncStatus.is_syncing)
+    return;
+  syncStatus.is_syncing = true;
+
+  syncYouTubeVideos()
+    .then((result) => {
+      syncStatus.last_result = result;
+      syncStatus.last_sync_at = new Date().toISOString();
+      syncStatus.last_error = null;
+      // eslint-disable-next-line no-console
+      console.log(`[Manual-Sync] YouTube sync completed: ${result.newVideos} new, ${result.updatedVideos} updated`);
+    })
+    .catch((err: Error) => {
+      syncStatus.last_error = err.message;
+      console.error("[Manual-Sync] YouTube sync failed:", err);
+    })
+    .finally(() => {
+      syncStatus.is_syncing = false;
+    });
+}
+
 export {
   formatViewCount,
+  getSyncStatus,
   parseIsoDuration,
   syncYouTubeVideos,
+  triggerManualSync,
 };

@@ -1,8 +1,9 @@
-import { Grid3X3, List, RefreshCw, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { CheckCircle, Grid3X3, List, RefreshCw, Trash2, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import DataTable from "@/components/admin/DataTable";
-import { useAdminVideos, useDeleteVideo, useSyncYouTubeVideos } from "@/hooks/useAdminVideos";
+import { useAdminVideos, useDeleteVideo, useSyncStatus, useSyncYouTubeVideos } from "@/hooks/useAdminVideos";
 import type { Video } from "@/hooks/useVideos";
 
 function VideoCard({ video, onDelete }: { video: Video; onDelete: () => void }) {
@@ -65,9 +66,44 @@ function VideoCard({ video, onDelete }: { video: Video; onDelete: () => void }) 
 export default function ManageVideos() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
+  const [syncing, setSyncing] = useState(false);
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const { data: resp, isLoading } = useAdminVideos({ page, page_size: viewMode === "card" ? 12 : 10 });
   const deleteVideo = useDeleteVideo();
   const syncVideos = useSyncYouTubeVideos();
+  const { data: statusData } = useSyncStatus(syncing);
+  const queryClient = useQueryClient();
+
+  // Poll sync status — when sync finishes, show toast and refresh videos
+  useEffect(() => {
+    if (!syncing || !statusData?.data)
+      return;
+    const status = statusData.data;
+    if (!status.is_syncing) {
+      setSyncing(false);
+      if (status.last_error) {
+        setToast({ type: "error", message: `Sync failed: ${status.last_error}` });
+      }
+      else if (status.last_result) {
+        setToast({ type: "success", message: `Synced! ${status.last_result.newVideos} new, ${status.last_result.updatedVideos} updated` });
+        queryClient.invalidateQueries({ queryKey: ["admin", "videos"] });
+        queryClient.invalidateQueries({ queryKey: ["videos"] });
+      }
+    }
+  }, [syncing, statusData, queryClient]);
+
+  // Auto-dismiss toast after 5 seconds
+  useEffect(() => {
+    if (!toast)
+      return;
+    const timer = setTimeout(setToast, 5000, null);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  function handleSync() {
+    setSyncing(true);
+    syncVideos.mutate();
+  }
 
   const videos = resp?.data?.records ?? [];
   const pagination = resp?.data?.pagination_info;
@@ -158,12 +194,12 @@ export default function ManageVideos() {
           </div>
 
           <button
-            onClick={() => syncVideos.mutate()}
-            disabled={syncVideos.isPending}
+            onClick={handleSync}
+            disabled={syncing}
             className="flex cursor-pointer items-center gap-2 rounded-lg border-none bg-[var(--color-primary)] px-4 py-2.5 font-[var(--font-heading)] text-xs font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            <RefreshCw size={14} className={syncVideos.isPending ? "animate-spin" : ""} />
-            {syncVideos.isPending ? "Syncing..." : "Sync YouTube"}
+            <RefreshCw size={14} className={syncing ? "animate-spin" : ""} />
+            {syncing ? "Syncing..." : "Sync YouTube"}
           </button>
         </div>
       </div>
@@ -216,6 +252,27 @@ export default function ManageVideos() {
           >
             Next
           </button>
+        </div>
+      )}
+
+      {/* Syncing indicator - fixed bottom right corner */}
+      {syncing && (
+        <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 shadow-lg">
+          <RefreshCw size={16} className="animate-spin text-[var(--color-primary)]" />
+          <span className="font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-primary)]">Syncing YouTube videos...</span>
+        </div>
+      )}
+
+      {/* Toast notification - fixed bottom right corner */}
+      {toast && (
+        <div className={`fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-xl border px-4 py-3 shadow-lg ${toast.type === "success" ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/30" : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/30"}`}>
+          {toast.type === "success"
+            ? <CheckCircle size={16} className="text-green-600 dark:text-green-400" />
+            : <XCircle size={16} className="text-red-600 dark:text-red-400" />}
+          <span className={`font-[var(--font-heading)] text-xs font-semibold ${toast.type === "success" ? "text-green-700 dark:text-green-300" : "text-red-700 dark:text-red-300"}`}>
+            {toast.message}
+          </span>
+          <button onClick={() => setToast(null)} className="ml-2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">×</button>
         </div>
       )}
     </div>

@@ -1,7 +1,8 @@
-import { Link, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 
 import VideoCard from "@/components/ui/VideoCard";
+import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useCategories } from "@/hooks/useCategories";
 import { useVideos } from "@/hooks/useVideos";
 
@@ -9,6 +10,7 @@ export default function Videos() {
   const search = useSearch({ strict: false }) as { category?: string };
   const [filter, setFilter] = useState(search.category || "all");
   const [page, setPage] = useState(1);
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
   const { data: categories } = useCategories();
   const cats = categories?.data ?? [];
 
@@ -95,9 +97,11 @@ export default function Videos() {
                 : (
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
                       {videos.map(v => (
-                        <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                          <VideoCard video={v} />
-                        </Link>
+                        <VideoCard
+                          key={v.id}
+                          video={v}
+                          onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                        />
                       ))}
                     </div>
                   )}
@@ -132,6 +136,15 @@ export default function Videos() {
           )}
         </div>
       </div>
+
+      {/* Video Player Modal */}
+      {playingVideo && (
+        <VideoPlayerModal
+          youtubeId={playingVideo.youtubeId}
+          title={playingVideo.title}
+          onClose={() => setPlayingVideo(null)}
+        />
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import ceoPhoto from "@/assets/ceo-photo.svg";
 import BreakingTicker from "@/components/layout/BreakingTicker";
 import SectionHead from "@/components/ui/SectionHead";
 import VideoCard from "@/components/ui/VideoCard";
+import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useBreakingNews } from "@/hooks/useBreakingNews";
 import { useCategories } from "@/hooks/useCategories";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
@@ -20,6 +21,7 @@ export default function Home() {
   const { data: latestData } = useVideos({ page: 1, page_size: 8 });
   const subscribe = useSubscribeNewsletter();
   const [email, setEmail] = useState("");
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
 
   const breakingItems = breakingNews?.data?.map(b => b.text_te || b.text) ?? [];
   const cats = categories?.data ?? [];
@@ -61,9 +63,11 @@ export default function Home() {
                 <span className="font-[var(--font-display)] text-[11px] font-semibold tracking-[1.5px] text-red-600 dark:text-red-400">FEATURED STORY</span>
               </div>
               {mainFeature && (
-                <Link to="/videos/$id" params={{ id: String(mainFeature.id) }}>
-                  <VideoCard video={mainFeature} large />
-                </Link>
+                <VideoCard
+                  video={mainFeature}
+                  large
+                  onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
+                />
               )}
             </div>
 
@@ -72,26 +76,28 @@ export default function Home() {
               <div className="mb-3 font-[var(--font-display)] text-xs tracking-[2px] text-[var(--color-primary)]">📺 LATEST UPDATES</div>
               <div className="flex flex-col gap-2.5">
                 {sideVideos.map(v => (
-                  <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                    <div className="group flex gap-3 overflow-hidden rounded-[10px] border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:border-[var(--color-primary)]/40 hover:shadow-md">
-                      <div className="relative flex h-[76px] w-[136px] shrink-0 items-center justify-center bg-slate-200 dark:bg-slate-700">
-                        {v.thumbnail_url && <img src={v.thumbnail_url} alt={v.title_te || v.title} className="absolute inset-0 h-full w-full object-cover" />}
-                        <div className="z-1 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-cyan-500/80 text-xs text-white">▶</div>
-                        {v.duration && <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 font-[var(--font-mono)] text-[9px] text-white">{v.duration}</span>}
-                      </div>
-                      <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-3">
-                        {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary)]">{v.category_name}</span>}
-                        <h4 className="mt-0.5 truncate font-[var(--font-telugu)] text-xs font-semibold leading-snug text-[var(--color-text-primary)]">{v.title_te || v.title}</h4>
-                        <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
-                          {formatViews(v.view_count)}
-                          {" "}
-                          •
-                          {" "}
-                          {timeAgo(v.published_at)}
-                        </span>
-                      </div>
+                  <div
+                    key={v.id}
+                    className="group flex cursor-pointer gap-3 overflow-hidden rounded-[10px] border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:border-[var(--color-primary)]/40 hover:shadow-md"
+                    onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                  >
+                    <div className="relative flex h-[76px] w-[136px] shrink-0 items-center justify-center bg-slate-200 dark:bg-slate-700">
+                      {v.thumbnail_url && <img src={v.thumbnail_url} alt={v.title_te || v.title} className="absolute inset-0 h-full w-full object-cover" />}
+                      <div className="z-1 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-cyan-500/80 text-xs text-white">▶</div>
+                      {v.duration && <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 font-[var(--font-mono)] text-[9px] text-white">{v.duration}</span>}
                     </div>
-                  </Link>
+                    <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-3">
+                      {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary)]">{v.category_name}</span>}
+                      <h4 className="mt-0.5 truncate font-[var(--font-telugu)] text-xs font-semibold leading-snug text-[var(--color-text-primary)]">{v.title_te || v.title}</h4>
+                      <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
+                        {formatViews(v.view_count)}
+                        {" "}
+                        •
+                        {" "}
+                        {timeAgo(v.published_at)}
+                      </span>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -136,9 +142,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
             {trending.slice(0, 6).map(v => (
-              <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                <VideoCard video={v} />
-              </Link>
+              <VideoCard
+                key={v.id}
+                video={v}
+                onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+              />
             ))}
           </div>
         </div>
@@ -210,9 +218,11 @@ export default function Home() {
           <SectionHead title="Latest Videos" />
           <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
             {latest.map(v => (
-              <Link key={v.id} to="/videos/$id" params={{ id: String(v.id) }} className="no-underline">
-                <VideoCard video={v} />
-              </Link>
+              <VideoCard
+                key={v.id}
+                video={v}
+                onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+              />
             ))}
           </div>
           <div className="mt-7 text-center">
@@ -222,6 +232,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Video Player Modal */}
+      {playingVideo && (
+        <VideoPlayerModal
+          youtubeId={playingVideo.youtubeId}
+          title={playingVideo.title}
+          onClose={() => setPlayingVideo(null)}
+        />
+      )}
     </div>
   );
 }

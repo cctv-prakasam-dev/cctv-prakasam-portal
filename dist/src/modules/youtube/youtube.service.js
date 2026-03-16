@@ -196,4 +196,33 @@ async function syncYouTubeVideos() {
         totalVideos: videoDetails.length,
     };
 }
-export { formatViewCount, parseIsoDuration, syncYouTubeVideos, };
+const syncStatus = {
+    is_syncing: false,
+    last_sync_at: null,
+    last_result: null,
+    last_error: null,
+};
+function getSyncStatus() {
+    return { ...syncStatus };
+}
+function triggerManualSync() {
+    if (syncStatus.is_syncing)
+        return;
+    syncStatus.is_syncing = true;
+    syncYouTubeVideos()
+        .then((result) => {
+        syncStatus.last_result = result;
+        syncStatus.last_sync_at = new Date().toISOString();
+        syncStatus.last_error = null;
+        // eslint-disable-next-line no-console
+        console.log(`[Manual-Sync] YouTube sync completed: ${result.newVideos} new, ${result.updatedVideos} updated`);
+    })
+        .catch((err) => {
+        syncStatus.last_error = err.message;
+        console.error("[Manual-Sync] YouTube sync failed:", err);
+    })
+        .finally(() => {
+        syncStatus.is_syncing = false;
+    });
+}
+export { formatViewCount, getSyncStatus, parseIsoDuration, syncYouTubeVideos, triggerManualSync, };

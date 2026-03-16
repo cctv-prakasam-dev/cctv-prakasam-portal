@@ -91,3 +91,19 @@ export function useSyncYouTubeVideos() {
     },
   });
 }
+
+interface SyncStatus {
+  is_syncing: boolean;
+  last_sync_at: string | null;
+  last_result: { newVideos: number; updatedVideos: number; totalVideos: number } | null;
+  last_error: string | null;
+}
+
+export function useSyncStatus(enabled: boolean) {
+  return useQuery({
+    queryKey: ["admin", "sync-status"],
+    queryFn: () => apiGet<SyncStatus>("/admin/youtube/sync-status"),
+    refetchInterval: enabled ? 3000 : false,
+    enabled,
+  });
+}
