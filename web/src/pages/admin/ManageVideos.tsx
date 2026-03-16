@@ -1,12 +1,12 @@
-import { CheckCircle, Grid3X3, List, Play, RefreshCw, Trash2, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { Grid3X3, List, Play, RefreshCw, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 import DataTable from "@/components/admin/DataTable";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
-import { useAdminVideos, useDeleteVideo, useSyncStatus, useSyncYouTubeVideos, useUpdateVideo } from "@/hooks/useAdminVideos";
+import { useAdminVideos, useDeleteVideo, useSyncYouTubeVideos, useUpdateVideo } from "@/hooks/useAdminVideos";
 import { useCategories } from "@/hooks/useCategories";
 import type { Video } from "@/hooks/useVideos";
+import { useSyncStore } from "@/stores/syncStore";
 
 interface CategoryOption {
   id: number;
@@ -90,16 +90,13 @@ function VideoCard({ video, onDelete, onPlay, categories, onCategoryChange }: {
 export default function ManageVideos() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
-  const [syncing, setSyncing] = useState(false);
-  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
+  const { isSyncing: syncing } = useSyncStore();
   const { data: resp, isLoading } = useAdminVideos({ page, page_size: viewMode === "card" ? 12 : 10 });
   const deleteVideo = useDeleteVideo();
   const updateVideo = useUpdateVideo();
   const syncVideos = useSyncYouTubeVideos();
-  const { data: statusData } = useSyncStatus(syncing);
   const { data: categoriesResp } = useCategories();
-  const queryClient = useQueryClient();
 
   const cats = categoriesResp?.data ?? [];
 
@@ -107,34 +104,7 @@ export default function ManageVideos() {
     updateVideo.mutate({ id: videoId, category_id: categoryId || undefined });
   }
 
-  // Poll sync status — when sync finishes, show toast and refresh videos
-  useEffect(() => {
-    if (!syncing || !statusData?.data)
-      return;
-    const status = statusData.data;
-    if (!status.is_syncing) {
-      setSyncing(false);
-      if (status.last_error) {
-        setToast({ type: "error", message: `Sync failed: ${status.last_error}` });
-      }
-      else if (status.last_result) {
-        setToast({ type: "success", message: `Synced! ${status.last_result.newVideos} new, ${status.last_result.updatedVideos} updated` });
-        queryClient.invalidateQueries({ queryKey: ["admin", "videos"] });
-        queryClient.invalidateQueries({ queryKey: ["videos"] });
-      }
-    }
-  }, [syncing, statusData, queryClient]);
-
-  // Auto-dismiss toast after 5 seconds
-  useEffect(() => {
-    if (!toast)
-      return;
-    const timer = setTimeout(setToast, 5000, null);
-    return () => clearTimeout(timer);
-  }, [toast]);
-
   function handleSync() {
-    setSyncing(true);
     syncVideos.mutate();
   }
 
@@ -223,9 +193,9 @@ export default function ManageVideos() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-[var(--font-display)] text-2xl tracking-[2px] text-[var(--color-text-primary)]">
+          <h1 className="font-[var(--font-display)] text-xl tracking-[2px] text-[var(--color-text-primary)] sm:text-2xl">
             MANAGE VIDEOS
           </h1>
           <p className="mt-1 font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">
@@ -274,7 +244,7 @@ export default function ManageVideos() {
                     <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">No videos found</div>
                   )
                 : (
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] sm:gap-4">
                       {videos.map(v => (
                         <VideoCard key={v.id} video={v} onDelete={() => deleteVideo.mutate(v.id)} onPlay={() => setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })} categories={cats} onCategoryChange={handleCategoryChange} />
                       ))}
@@ -308,27 +278,6 @@ export default function ManageVideos() {
           >
             Next
           </button>
-        </div>
-      )}
-
-      {/* Syncing indicator - fixed bottom right corner */}
-      {syncing && (
-        <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 shadow-lg">
-          <RefreshCw size={16} className="animate-spin text-[var(--color-primary)]" />
-          <span className="font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-primary)]">Syncing YouTube videos...</span>
-        </div>
-      )}
-
-      {/* Toast notification - fixed bottom right corner */}
-      {toast && (
-        <div className={`fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-xl border px-4 py-3 shadow-lg ${toast.type === "success" ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/30" : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/30"}`}>
-          {toast.type === "success"
-            ? <CheckCircle size={16} className="text-green-600 dark:text-green-400" />
-            : <XCircle size={16} className="text-red-600 dark:text-red-400" />}
-          <span className={`font-[var(--font-heading)] text-xs font-semibold ${toast.type === "success" ? "text-green-700 dark:text-green-300" : "text-red-700 dark:text-red-300"}`}>
-            {toast.message}
-          </span>
-          <button onClick={() => setToast(null)} className="ml-2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">×</button>
         </div>
       )}
 

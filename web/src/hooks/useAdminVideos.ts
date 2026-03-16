@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/apiClient";
+import { startSyncing } from "@/stores/syncStore";
 
 import type { Video } from "./useVideos";
 
@@ -81,13 +82,10 @@ export function useDeleteVideo() {
 }
 
 export function useSyncYouTubeVideos() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: () => apiPost("/admin/youtube/sync-youtube"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "videos"] });
-      queryClient.invalidateQueries({ queryKey: ["videos"] });
+      startSyncing();
     },
   });
 }
@@ -103,7 +101,7 @@ export function useSyncStatus(enabled: boolean) {
   return useQuery({
     queryKey: ["admin", "sync-status"],
     queryFn: () => apiGet<SyncStatus>("/admin/youtube/sync-status"),
-    refetchInterval: enabled ? 3000 : false,
+    refetchInterval: enabled ? 5000 : false,
     enabled,
   });
 }

@@ -19,6 +19,9 @@ export async function httpPost(url, body, customHeaders) {
         headers,
         body: JSON.stringify(body),
     });
+    if (!response.ok) {
+        throw new Error(`HTTP POST ${url} failed with status ${response.status}`);
+    }
     return response;
 }
 export async function httpPatch(url, body, customHeaders) {
@@ -32,5 +35,8 @@ export async function httpPatch(url, body, customHeaders) {
         headers,
         body: JSON.stringify(body),
     });
+    if (!response.ok) {
+        throw new Error(`HTTP PATCH ${url} failed with status ${response.status}`);
+    }
     return response;
 }
