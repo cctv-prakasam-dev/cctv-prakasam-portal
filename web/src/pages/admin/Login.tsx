@@ -3,7 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
 import { useLogin } from "@/hooks/useAuth";
-import { isAuthenticated } from "@/lib/auth";
+import { useAuthUser } from "@/stores/authStore";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -11,9 +11,10 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const login = useLogin();
   const navigate = useNavigate();
+  const user = useAuthUser();
 
   // Redirect if already logged in
-  if (isAuthenticated()) {
+  if (user) {
     navigate({ to: "/admin" });
     return null;
   }

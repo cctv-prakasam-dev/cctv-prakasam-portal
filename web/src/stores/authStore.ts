@@ -8,6 +8,7 @@ interface AuthUser {
   user_type: string;
 }
 
+// Must match AUTH_USER_KEY in lib/auth.ts
 const STORAGE_KEY = "cctv_auth_user";
 
 function getStoredUser(): AuthUser | null {

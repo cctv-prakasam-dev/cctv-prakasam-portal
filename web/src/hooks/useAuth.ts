@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { apiPost } from "@/lib/apiClient";
-import { removeTokens, setTokens } from "@/lib/auth";
+import { removeTokens } from "@/lib/auth";
 import { clearAuthUser, setAuthUser } from "@/stores/authStore";
 
 interface LoginPayload {
@@ -16,32 +16,23 @@ interface RegisterPayload {
   password: string;
 }
 
-interface LoginResponse {
-  user: Record<string, unknown>;
-  tokens: {
-    access_token: string;
-    refresh_token: string;
-    refresh_token_expires_at: number;
+interface AuthResponse {
+  user: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    user_type: string;
   };
 }
 
 export function useLogin() {
   return useMutation({
     mutationFn: (data: LoginPayload) =>
-      apiPost<LoginResponse>("/auth/login", data),
+      apiPost<AuthResponse>("/auth/login", data),
     onSuccess: (response) => {
-      if (response.data?.tokens) {
-        setTokens(response.data.tokens.access_token, response.data.tokens.refresh_token);
-      }
       if (response.data?.user) {
-        const u = response.data.user;
-        setAuthUser({
-          id: u.id as number,
-          first_name: u.first_name as string,
-          last_name: u.last_name as string,
-          email: u.email as string,
-          user_type: u.user_type as string,
-        });
+        setAuthUser(response.data.user);
       }
     },
   });
@@ -50,7 +41,12 @@ export function useLogin() {
 export function useRegister() {
   return useMutation({
     mutationFn: (data: RegisterPayload) =>
-      apiPost("/auth/register", data),
+      apiPost<AuthResponse>("/auth/register", data),
+    onSuccess: (response) => {
+      if (response.data?.user) {
+        setAuthUser(response.data.user);
+      }
+    },
   });
 }
 

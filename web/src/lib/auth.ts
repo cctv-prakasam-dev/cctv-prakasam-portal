@@ -1,25 +1,12 @@
-const ACCESS_TOKEN_KEY = "cctv_access_token";
-const REFRESH_TOKEN_KEY = "cctv_refresh_token";
-
-export function getAccessToken(): string | null {
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
-}
-
-export function getRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-}
-
-export function setTokens(accessToken: string, refreshToken: string) {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-}
+const AUTH_USER_KEY = "cctv_auth_user";
 
 export function removeTokens() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-  localStorage.removeItem("cctv_auth_user");
+  localStorage.removeItem(AUTH_USER_KEY);
+  // Clean up legacy token keys if present
+  localStorage.removeItem("cctv_access_token");
+  localStorage.removeItem("cctv_refresh_token");
 }
 
 export function isAuthenticated(): boolean {
-  return !!getAccessToken();
+  return !!localStorage.getItem(AUTH_USER_KEY);
 }

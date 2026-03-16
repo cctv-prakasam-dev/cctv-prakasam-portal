@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import {
   createRootRoute,
   createRoute,
@@ -8,23 +9,34 @@ import {
 import AdminLayout from "@/components/admin/AdminLayout";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import About from "@/pages/About";
-import Contact from "@/pages/Contact";
-import ForgotPassword from "@/pages/ForgotPassword";
-import Home from "@/pages/Home";
-import Register from "@/pages/Register";
-import ResetPassword from "@/pages/ResetPassword";
-import VideoDetail from "@/pages/VideoDetail";
-import Videos from "@/pages/Videos";
-import Dashboard from "@/pages/admin/Dashboard";
-import FeaturedContent from "@/pages/admin/FeaturedContent";
-import AdminLogin from "@/pages/admin/Login";
-import ManageBreakingNews from "@/pages/admin/ManageBreakingNews";
-import ManageCategories from "@/pages/admin/ManageCategories";
-import ManageNewsletter from "@/pages/admin/ManageNewsletter";
-import ManageUsers from "@/pages/admin/ManageUsers";
-import ManageVideos from "@/pages/admin/ManageVideos";
-import AdminSettings from "@/pages/admin/Settings";
+
+// Lazy-loaded pages
+const Home = lazy(() => import("@/pages/Home"));
+const Videos = lazy(() => import("@/pages/Videos"));
+const VideoDetail = lazy(() => import("@/pages/VideoDetail"));
+const About = lazy(() => import("@/pages/About"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Register = lazy(() => import("@/pages/Register"));
+const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const AdminLogin = lazy(() => import("@/pages/admin/Login"));
+const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const ManageVideos = lazy(() => import("@/pages/admin/ManageVideos"));
+const ManageCategories = lazy(() => import("@/pages/admin/ManageCategories"));
+const ManageNewsletter = lazy(() => import("@/pages/admin/ManageNewsletter"));
+const ManageUsers = lazy(() => import("@/pages/admin/ManageUsers"));
+const FeaturedContent = lazy(() => import("@/pages/admin/FeaturedContent"));
+const ManageBreakingNews = lazy(() => import("@/pages/admin/ManageBreakingNews"));
+const AdminSettings = lazy(() => import("@/pages/admin/Settings"));
+
+function LazyPage({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<div className="flex min-h-[40vh] items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--color-primary)] border-t-transparent" /></div>}>
+      {children}
+    </Suspense>
+  );
+}
 
 // Public layout with Navbar + Footer
 function PublicLayout() {
@@ -32,7 +44,7 @@ function PublicLayout() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        <Outlet />
+        <LazyPage><Outlet /></LazyPage>
       </main>
       <Footer />
     </div>
@@ -54,7 +66,7 @@ const publicLayout = createRoute({
 const adminBareLayout = createRoute({
   getParentRoute: () => rootRoute,
   id: "admin-bare",
-  component: () => <Outlet />,
+  component: () => <LazyPage><Outlet /></LazyPage>,
 });
 
 // Admin protected layout (sidebar + auth guard)
@@ -195,7 +207,10 @@ const routeTree = rootRoute.addChildren([
   ]),
 ]);
 
-export const router = createRouter({ routeTree });
+export const router = createRouter({
+  routeTree,
+  defaultNotFoundComponent: NotFound,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {

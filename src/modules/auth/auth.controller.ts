@@ -1,9 +1,10 @@
 import type { Context } from "hono";
 
+import { getCookie } from "hono/cookie";
+
 import type {
   ValidatedForgotPasswordSchema,
   ValidatedLoginSchema,
-  ValidatedRefreshTokenSchema,
   ValidatedRegisterSchema,
   ValidatedResetPasswordSchema,
   ValidatedVerifyEmailSchema,
@@ -16,12 +17,13 @@ import {
   LOGIN_VALIDATION_ERROR,
   LOGOUT_DONE,
   PASSWORD_RESET_DONE,
-  REFRESH_TOKEN_VALIDATION_ERROR,
   REGISTER_DONE,
   REGISTER_VALIDATION_ERROR,
   RESET_PASSWORD_VALIDATION_ERROR,
+  TOKENS_GENERATED,
   VERIFY_EMAIL_VALIDATION_ERROR,
 } from "../../constants/appMessages.js";
+import { clearAuthCookies, setAuthCookies } from "../../utils/cookieUtils.js";
 import { sendSuccessResp } from "../../utils/respUtils.js";
 import { validateRequest } from "../../validations/validateRequest.js";
 import {
@@ -44,7 +46,9 @@ async function register(c: Context) {
 
   const result = await registerUser(validatedData);
 
-  return sendSuccessResp(c, 201, REGISTER_DONE, result);
+  setAuthCookies(c, result.tokens.access_token, result.tokens.refresh_token);
+
+  return sendSuccessResp(c, 201, REGISTER_DONE, { user: result.user });
 }
 
 async function login(c: Context) {
@@ -58,21 +62,24 @@ async function login(c: Context) {
 
   const result = await loginUser(validatedData);
 
-  return sendSuccessResp(c, 200, LOGIN_DONE, result);
+  setAuthCookies(c, result.tokens.access_token, result.tokens.refresh_token);
+
+  return sendSuccessResp(c, 200, LOGIN_DONE, { user: result.user });
 }
 
 async function refreshToken(c: Context) {
-  const reqData = await c.req.json();
+  const refreshTokenValue = getCookie(c, "refresh_token");
 
-  const validatedData = await validateRequest<ValidatedRefreshTokenSchema>(
-    "refresh-token",
-    reqData,
-    REFRESH_TOKEN_VALIDATION_ERROR,
-  );
+  if (!refreshTokenValue) {
+    c.status(401);
+    return c.json({ status: 401, success: false, message: "Refresh token missing" });
+  }
 
-  const tokens = await refreshTokens(validatedData.refresh_token);
+  const tokens = await refreshTokens(refreshTokenValue);
 
-  return sendSuccessResp(c, 200, LOGIN_DONE, tokens);
+  setAuthCookies(c, tokens.access_token, tokens.refresh_token);
+
+  return sendSuccessResp(c, 200, TOKENS_GENERATED);
 }
 
 async function forgotPasswordHandler(c: Context) {
@@ -118,6 +125,7 @@ async function verifyEmailHandler(c: Context) {
 }
 
 async function logout(c: Context) {
+  clearAuthCookies(c);
   return sendSuccessResp(c, 200, LOGOUT_DONE);
 }
 

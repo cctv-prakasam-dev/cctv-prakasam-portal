@@ -1,3 +1,4 @@
+import { getCookie } from "hono/cookie";
 import { sign, verify } from "hono/jwt";
 import { JwtTokenExpired, JwtTokenInvalid, JwtTokenSignatureMismatched, } from "hono/utils/jwt/types";
 import { jwtConfig } from "../config/jwtConfig.js";
@@ -51,8 +52,12 @@ async function verifyJWTToken(token) {
     }
 }
 async function getUserDetailsFromToken(c) {
-    const authHeader = c.req.header("Authorization");
-    const token = authHeader?.substring(7, authHeader.length);
+    // Read token from httpOnly cookie first, fall back to Authorization header
+    let token = getCookie(c, "access_token");
+    if (!token) {
+        const authHeader = c.req.header("Authorization");
+        token = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : undefined;
+    }
     if (!token) {
         throw new UnauthorizedException(TOKEN_MISSING);
     }

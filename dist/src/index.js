@@ -36,15 +36,24 @@ app.route("/api", routes);
 app.onError((err, c) => {
     const statusCode = err.status || 500;
     const errorMessage = err.message || DEF_ERROR_RESP;
-    console.error("index", err);
-    c.status(statusCode);
-    return c.json({
+    if (isProduction) {
+        console.error(`[Error] ${statusCode}: ${errorMessage}`);
+    }
+    else {
+        console.error("index", err);
+    }
+    const response = {
         status: statusCode,
         success: false,
         message: errorMessage,
-        name: err.name,
-        errData: err.errData || undefined,
-    });
+    };
+    // Only expose error details in development
+    if (!isProduction) {
+        response.name = err.name;
+        response.errData = err.errData || undefined;
+    }
+    c.status(statusCode);
+    return c.json(response);
 });
 // Serve frontend static files
 app.use("/*", serveStatic({ root: "./web/dist" }));

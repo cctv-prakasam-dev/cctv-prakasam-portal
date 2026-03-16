@@ -10,16 +10,21 @@ import * as settingsSchema from "./schema/settings.js";
 import * as usersSchema from "./schema/users.js";
 import * as videosSchema from "./schema/videos.js";
 const { Pool } = pg;
+let sslConfig = false;
+try {
+    const ca = fs.readFileSync("./ca.pem").toString();
+    sslConfig = { rejectUnauthorized: true, ca };
+}
+catch {
+    console.error("Warning: ca.pem not found. SSL disabled for database connection.");
+}
 const dbClient = new Pool({
     host: dbConfig.host,
     port: dbConfig.port,
     user: dbConfig.user,
     password: dbConfig.password,
     database: dbConfig.database,
-    ssl: {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync("./ca.pem").toString(),
-    },
+    ssl: sslConfig,
 });
 export const db = drizzle(dbClient, {
     schema: {
