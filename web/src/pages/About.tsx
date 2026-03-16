@@ -7,6 +7,8 @@ interface ChannelStats {
   subscribers: number;
   total_views: number;
   video_count: number;
+  years: number;
+  channel_created_at: string | null;
 }
 
 function formatNumber(num: number): string {
@@ -47,7 +49,7 @@ export default function About() {
     { label: "Subscribers", value: channelStats ? formatNumber(channelStats.subscribers) : "...", color: "var(--color-primary)" },
     { label: "Videos", value: channelStats ? formatNumber(channelStats.video_count) : "...", color: "#DB2777" },
     { label: "Total Views", value: channelStats ? formatNumber(channelStats.total_views) : "...", color: "#D97706" },
-    { label: "Years", value: "5+", color: "#6D28D9" },
+    { label: "Years", value: channelStats ? `${channelStats.years}+` : "...", color: "#6D28D9" },
   ];
 
   return (

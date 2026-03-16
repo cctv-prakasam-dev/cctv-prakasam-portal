@@ -1,20 +1,39 @@
-import { CheckCircle, Grid3X3, List, RefreshCw, Trash2, XCircle } from "lucide-react";
+import { CheckCircle, Grid3X3, List, Play, RefreshCw, Trash2, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import DataTable from "@/components/admin/DataTable";
-import { useAdminVideos, useDeleteVideo, useSyncStatus, useSyncYouTubeVideos } from "@/hooks/useAdminVideos";
+import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
+import { useAdminVideos, useDeleteVideo, useSyncStatus, useSyncYouTubeVideos, useUpdateVideo } from "@/hooks/useAdminVideos";
+import { useCategories } from "@/hooks/useCategories";
 import type { Video } from "@/hooks/useVideos";
 
-function VideoCard({ video, onDelete }: { video: Video; onDelete: () => void }) {
+interface CategoryOption {
+  id: number;
+  name: string;
+}
+
+function VideoCard({ video, onDelete, onPlay, categories, onCategoryChange }: {
+  video: Video;
+  onDelete: () => void;
+  onPlay: () => void;
+  categories: CategoryOption[];
+  onCategoryChange: (videoId: number, categoryId: number) => void;
+}) {
   return (
     <div className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:shadow-md">
-      <div className="relative">
+      <div className="group relative cursor-pointer" onClick={onPlay}>
         <img
           src={video.thumbnail_url || `https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg`}
           alt={video.title}
           className="aspect-video w-full object-cover"
         />
+        {/* Play button overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/30">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)]/85 text-white opacity-70 shadow-lg transition-all group-hover:scale-110 group-hover:opacity-100">
+            <Play size={16} fill="white" />
+          </div>
+        </div>
         {video.duration && (
           <span className="absolute right-1.5 bottom-1.5 rounded bg-black/80 px-1.5 py-0.5 font-[var(--font-mono)] text-[10px] text-white">
             {video.duration}
@@ -38,19 +57,24 @@ function VideoCard({ video, onDelete }: { video: Video; onDelete: () => void }) 
             {video.title_te}
           </p>
         )}
+        <div className="mb-2">
+          <select
+            value={video.category_id || ""}
+            onChange={e => onCategoryChange(video.id, Number(e.target.value))}
+            className="w-full cursor-pointer rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-2 py-1 font-[var(--font-heading)] text-[10px] text-[var(--color-text-secondary)] outline-none"
+          >
+            <option value="">No Category</option>
+            {categories.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {video.category_name && (
-              <span className="rounded-full bg-[var(--color-surface-2)] px-2 py-0.5 text-[9px] font-semibold text-[var(--color-text-secondary)]">
-                {video.category_name}
-              </span>
-            )}
-            <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
-              {video.view_count || "0"}
-              {" "}
-              views
-            </span>
-          </div>
+          <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
+            {video.view_count || "0"}
+            {" "}
+            views
+          </span>
           <button
             onClick={onDelete}
             className="cursor-pointer rounded-lg border-none bg-red-50 p-1.5 text-red-500 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30"
@@ -68,11 +92,20 @@ export default function ManageVideos() {
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [syncing, setSyncing] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
   const { data: resp, isLoading } = useAdminVideos({ page, page_size: viewMode === "card" ? 12 : 10 });
   const deleteVideo = useDeleteVideo();
+  const updateVideo = useUpdateVideo();
   const syncVideos = useSyncYouTubeVideos();
   const { data: statusData } = useSyncStatus(syncing);
+  const { data: categoriesResp } = useCategories();
   const queryClient = useQueryClient();
+
+  const cats = categoriesResp?.data ?? [];
+
+  function handleCategoryChange(videoId: number, categoryId: number) {
+    updateVideo.mutate({ id: videoId, category_id: categoryId || undefined });
+  }
 
   // Poll sync status — when sync finishes, show toast and refresh videos
   useEffect(() => {
@@ -113,11 +146,19 @@ export default function ManageVideos() {
       key: "thumbnail_url",
       label: "Thumbnail",
       render: (row: Video) => (
-        <img
-          src={row.thumbnail_url || `https://img.youtube.com/vi/${row.youtube_id}/mqdefault.jpg`}
-          alt={row.title}
-          className="h-10 w-16 rounded object-cover"
-        />
+        <div
+          className="group relative cursor-pointer"
+          onClick={() => setPlayingVideo({ youtubeId: row.youtube_id, title: row.title })}
+        >
+          <img
+            src={row.thumbnail_url || `https://img.youtube.com/vi/${row.youtube_id}/mqdefault.jpg`}
+            alt={row.title}
+            className="h-10 w-16 rounded object-cover"
+          />
+          <div className="absolute inset-0 flex items-center justify-center rounded bg-black/0 transition-colors group-hover:bg-black/40">
+            <Play size={14} fill="white" className="text-white opacity-0 group-hover:opacity-100" />
+          </div>
+        </div>
       ),
     },
     {
@@ -132,7 +173,22 @@ export default function ManageVideos() {
         </div>
       ),
     },
-    { key: "category_name", label: "Category" },
+    {
+      key: "category_name",
+      label: "Category",
+      render: (row: Video) => (
+        <select
+          value={row.category_id || ""}
+          onChange={e => handleCategoryChange(row.id, Number(e.target.value))}
+          className="cursor-pointer rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-2 py-1 font-[var(--font-heading)] text-[11px] text-[var(--color-text-secondary)] outline-none"
+        >
+          <option value="">No Category</option>
+          {cats.map(c => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      ),
+    },
     {
       key: "is_featured",
       label: "Featured",
@@ -220,7 +276,7 @@ export default function ManageVideos() {
                 : (
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
                       {videos.map(v => (
-                        <VideoCard key={v.id} video={v} onDelete={() => deleteVideo.mutate(v.id)} />
+                        <VideoCard key={v.id} video={v} onDelete={() => deleteVideo.mutate(v.id)} onPlay={() => setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })} categories={cats} onCategoryChange={handleCategoryChange} />
                       ))}
                     </div>
                   )
@@ -274,6 +330,15 @@ export default function ManageVideos() {
           </span>
           <button onClick={() => setToast(null)} className="ml-2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">×</button>
         </div>
+      )}
+
+      {/* Video Player Modal */}
+      {playingVideo && (
+        <VideoPlayerModal
+          youtubeId={playingVideo.youtubeId}
+          title={playingVideo.title}
+          onClose={() => setPlayingVideo(null)}
+        />
       )}
     </div>
   );

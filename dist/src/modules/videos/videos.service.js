@@ -73,14 +73,16 @@ async function getChannelStats() {
     let subscribers = 0;
     let totalViews = 0;
     let videoCount = 0;
+    let channelCreatedAt = null;
     try {
-        const url = `${youtubeConfig.baseUrl}/channels?part=statistics&id=${youtubeConfig.channelId}&key=${youtubeConfig.apiKey}`;
+        const url = `${youtubeConfig.baseUrl}/channels?part=statistics,snippet&id=${youtubeConfig.channelId}&key=${youtubeConfig.apiKey}`;
         const data = await httpGet(url);
         if (data.items && data.items.length > 0) {
             const stats = data.items[0].statistics;
             subscribers = Number.parseInt(stats.subscriberCount || "0", 10);
             totalViews = Number.parseInt(stats.viewCount || "0", 10);
             videoCount = Number.parseInt(stats.videoCount || "0", 10);
+            channelCreatedAt = data.items[0].snippet?.publishedAt || null;
         }
     }
     catch {
@@ -88,6 +90,13 @@ async function getChannelStats() {
         const [dbCount] = await db.select({ total: count() }).from(videos);
         videoCount = dbCount.total;
     }
-    return { subscribers, total_views: totalViews, video_count: videoCount };
+    // Calculate years since channel creation
+    let years = 0;
+    if (channelCreatedAt) {
+        const created = new Date(channelCreatedAt);
+        const now = new Date();
+        years = Math.floor((now.getTime() - created.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+    }
+    return { subscribers, total_views: totalViews, video_count: videoCount, years, channel_created_at: channelCreatedAt };
 }
 export { createVideo, deleteVideo, getChannelStats, getFeaturedVideos, getTrendingVideos, getVideoById, getVideosPaginated, updateVideo, };
