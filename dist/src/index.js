@@ -2,20 +2,21 @@ import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
+import { logger as honoLogger } from "hono/logger";
 import { DEF_ERROR_RESP } from "./constants/appMessages.js";
 import envData from "./env.js";
 import { apiRateLimiter, authRateLimiter } from "./middlewares/rateLimiter.js";
 import securityHeaders from "./middlewares/securityHeaders.js";
 import { syncYouTubeVideos } from "./modules/youtube/youtube.service.js";
 import routes from "./routes.js";
+import logger from "./utils/logger.js";
 const app = new Hono();
 const port = envData.PORT || 3000;
 const isProduction = envData.NODE_ENV === "production";
 // Security headers
 app.use("*", securityHeaders);
 // Logger
-app.use(logger());
+app.use(honoLogger());
 // CORS — only allow APP_BASE_URL in production
 const allowedOrigins = isProduction
     ? [envData.APP_BASE_URL]
@@ -37,10 +38,10 @@ app.onError((err, c) => {
     const statusCode = err.status || 500;
     const errorMessage = err.message || DEF_ERROR_RESP;
     if (isProduction) {
-        console.error(`[Error] ${statusCode}: ${errorMessage}`);
+        logger.error("http", errorMessage, { status: statusCode });
     }
     else {
-        console.error("index", err);
+        logger.error("http", errorMessage, { status: statusCode, name: err.name, stack: err.stack });
     }
     const response = {
         status: statusCode,
@@ -59,7 +60,7 @@ app.onError((err, c) => {
 app.use("/*", serveStatic({ root: "./web/dist" }));
 // SPA fallback — serve index.html for non-API routes
 app.get("/*", serveStatic({ root: "./web/dist", path: "index.html" }));
-console.log(`Server is running on port ${port} in ${envData.NODE_ENV} mode`);
+logger.info("server", `Server is running on port ${port} in ${envData.NODE_ENV} mode`);
 // Auto-sync YouTube videos every 30 minutes
 const SYNC_INTERVAL_MS = 30 * 60 * 1000;
 let isSyncing = false;
@@ -69,10 +70,10 @@ async function autoSync() {
     isSyncing = true;
     try {
         const result = await syncYouTubeVideos();
-        console.log(`[Auto-Sync] YouTube sync completed: ${result.newVideos} new, ${result.updatedVideos} updated, ${result.totalVideos} total`);
+        logger.info("auto-sync", "YouTube sync completed", { newVideos: result.newVideos, updatedVideos: result.updatedVideos, totalVideos: result.totalVideos });
     }
     catch (err) {
-        console.error("[Auto-Sync] YouTube sync failed:", err);
+        logger.error("auto-sync", "YouTube sync failed", { error: String(err) });
     }
     finally {
         isSyncing = false;
@@ -87,16 +88,16 @@ const server = serve({
 });
 // Graceful shutdown
 function gracefulShutdown(signal) {
-    console.log(`${signal} received. Shutting down gracefully...`);
+    logger.info("server", `${signal} received. Shutting down gracefully...`);
     clearTimeout(syncTimeout);
     clearInterval(syncInterval);
     server.close(() => {
-        console.log("Server closed.");
+        logger.info("server", "Server closed.");
         process.exit(0);
     });
     // Force exit after 10 seconds
     setTimeout(() => {
-        console.error("Forced shutdown after timeout.");
+        logger.error("server", "Forced shutdown after timeout.");
         process.exit(1);
     }, 10_000);
 }

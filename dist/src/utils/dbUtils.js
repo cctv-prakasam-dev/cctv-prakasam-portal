@@ -1,5 +1,6 @@
 import { and, eq, getTableName, gt, gte, ilike, inArray, isNull, like, lt, lte, ne, not, notInArray, sql } from "drizzle-orm";
 import { db } from "../db/configuration.js";
+import logger from "./logger.js";
 function prepareSelectColumnsForQuery(table, columnsToSelect) {
     if (!columnsToSelect) {
         return null;
@@ -136,17 +137,16 @@ async function executeQuery(table, whereQuery, columnsRequired, orderByCondition
         return results;
     }
     catch (error) {
-        console.error("Database query error details:");
-        console.error("Table:", getTableName(table));
-        // Attempt to log the query string and parameters if possible
+        const meta = { table: getTableName(table) };
         try {
             const sqlQuery = dQuery.toSQL();
-            console.error("SQL:", sqlQuery.sql);
-            console.error("Params:", sqlQuery.params);
+            meta.sql = sqlQuery.sql;
+            meta.params = sqlQuery.params;
         }
-        catch (e) {
-            console.error("Could not stringify query:", e);
+        catch {
+            // Query could not be stringified
         }
+        logger.error("db", "Database query error", meta);
         throw error;
     }
 }

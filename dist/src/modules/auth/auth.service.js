@@ -8,6 +8,7 @@ import NotFoundException from "../../exceptions/notFoundException.js";
 import UnauthorizedException from "../../exceptions/unauthorizedException.js";
 import { getSingleRecordByAColumnValue, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
+import logger from "../../utils/logger.js";
 import { genJWTTokensForUser, verifyJWTToken } from "../../utils/jwtUtils.js";
 const SALT_ROUNDS = 10;
 const RE_AMP = /&/g;
@@ -50,7 +51,7 @@ async function registerUser(data) {
     sendEmailNotification(htmlContent, {
         to: data.email,
         subject: "Verify your email - CCTV Prakasam",
-    }).catch(console.error);
+    }).catch((err) => logger.error("email", "Failed to send email", { error: err.message }));
     const tokens = await genJWTTokensForUser(newUser.id);
     const { password_hash, created_at, updated_at, deleted_at, ...userWithoutSensitive } = newUser;
     return { user: userWithoutSensitive, tokens };
@@ -99,7 +100,7 @@ async function forgotPassword(data) {
     sendEmailNotification(htmlContent, {
         to: data.email,
         subject: "Reset your password - CCTV Prakasam",
-    }).catch(console.error);
+    }).catch((err) => logger.error("email", "Failed to send email", { error: err.message }));
     return FP_EMAIL_SENT;
 }
 async function resetPassword(data) {

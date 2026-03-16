@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
-const YOUTUBE_ID_REGEX = /^[a-zA-Z0-9_-]{11}$/;
+const YOUTUBE_ID_REGEX = /^[\w-]{11}$/;
 
 interface VideoPlayerModalProps {
   youtubeId: string;

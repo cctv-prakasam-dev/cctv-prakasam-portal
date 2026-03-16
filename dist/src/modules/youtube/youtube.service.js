@@ -1,5 +1,6 @@
 import { count, eq, sql } from "drizzle-orm";
 import { youtubeConfig } from "../../config/youtubeConfig.js";
+import logger from "../../utils/logger.js";
 import { db } from "../../db/configuration.js";
 import { categories } from "../../db/schema/categories.js";
 import { videos } from "../../db/schema/videos.js";
@@ -214,12 +215,11 @@ function triggerManualSync() {
         syncStatus.last_result = result;
         syncStatus.last_sync_at = new Date().toISOString();
         syncStatus.last_error = null;
-        // eslint-disable-next-line no-console
-        console.log(`[Manual-Sync] YouTube sync completed: ${result.newVideos} new, ${result.updatedVideos} updated`);
+        logger.info("manual-sync", "YouTube sync completed", { newVideos: result.newVideos, updatedVideos: result.updatedVideos });
     })
         .catch((err) => {
         syncStatus.last_error = err.message;
-        console.error("[Manual-Sync] YouTube sync failed:", err);
+        logger.error("manual-sync", "YouTube sync failed", { error: err.message });
     })
         .finally(() => {
         syncStatus.is_syncing = false;

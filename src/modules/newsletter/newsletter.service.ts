@@ -12,6 +12,7 @@ import {
 } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
 import { parseOrderByQuery } from "../../utils/dbUtils.js";
+import logger from "../../utils/logger.js";
 
 async function subscribe(data: ValidatedSubscribeNewsletterSchema): Promise<NewsletterSubscriber> {
   const subscriber = await saveSingleRecord<NewsletterSubscriber>(newsletterSubscribers, {
@@ -29,7 +30,7 @@ async function subscribe(data: ValidatedSubscribeNewsletterSchema): Promise<News
   sendEmailNotification(htmlContent, {
     to: data.email,
     subject: "Welcome to CCTV Prakasam Newsletter",
-  }).catch(console.error);
+  }).catch((err: Error) => logger.error("email", "Failed to send newsletter welcome", { error: err.message }));
 
   return subscriber;
 }

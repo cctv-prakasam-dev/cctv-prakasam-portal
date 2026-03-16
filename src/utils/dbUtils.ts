@@ -5,6 +5,7 @@ import { and, eq, getTableName, gt, gte, ilike, inArray, isNull, like, lt, lte, 
 import type { DBTable, DBTableColumns, DBTableRow, InQueryData, OrderByQueryData, SortDirection, Transaction, WhereQueryData } from "../types/db.types.js";
 
 import { db } from "../db/configuration.js";
+import logger from "./logger.js";
 
 function prepareSelectColumnsForQuery(table: DBTable, columnsToSelect?: any) {
   if (!columnsToSelect) {
@@ -193,17 +194,16 @@ async function executeQuery<R extends DBTableRow, C extends keyof R = keyof R>(
     return results as R[];
   }
   catch (error) {
-    console.error("Database query error details:");
-    console.error("Table:", getTableName(table));
-    // Attempt to log the query string and parameters if possible
+    const meta: Record<string, unknown> = { table: getTableName(table) };
     try {
       const sqlQuery = dQuery.toSQL();
-      console.error("SQL:", sqlQuery.sql);
-      console.error("Params:", sqlQuery.params);
+      meta.sql = sqlQuery.sql;
+      meta.params = sqlQuery.params;
     }
-    catch (e) {
-      console.error("Could not stringify query:", e);
+    catch {
+      // Query could not be stringified
     }
+    logger.error("db", "Database query error", meta);
     throw error;
   }
 }

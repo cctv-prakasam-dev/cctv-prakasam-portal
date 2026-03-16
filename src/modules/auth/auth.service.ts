@@ -29,6 +29,7 @@ import {
   updateRecordById,
 } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
+import logger from "../../utils/logger.js";
 import { genJWTTokensForUser, verifyJWTToken } from "../../utils/jwtUtils.js";
 
 const SALT_ROUNDS = 10;
@@ -80,7 +81,7 @@ async function registerUser(data: ValidatedRegisterSchema): Promise<{ user: Omit
   sendEmailNotification(htmlContent, {
     to: data.email,
     subject: "Verify your email - CCTV Prakasam",
-  }).catch(console.error);
+  }).catch((err: Error) => logger.error("email", "Failed to send email", { error: err.message }));
 
   const tokens = await genJWTTokensForUser(newUser.id);
 
@@ -157,7 +158,7 @@ async function forgotPassword(data: ValidatedForgotPasswordSchema): Promise<stri
   sendEmailNotification(htmlContent, {
     to: data.email,
     subject: "Reset your password - CCTV Prakasam",
-  }).catch(console.error);
+  }).catch((err: Error) => logger.error("email", "Failed to send email", { error: err.message }));
 
   return FP_EMAIL_SENT;
 }

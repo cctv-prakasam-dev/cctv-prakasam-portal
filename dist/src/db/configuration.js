@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import fs from "node:fs";
 import pg from "pg";
 import { dbConfig } from "../config/dbConfig.js";
+import logger from "../utils/logger.js";
 import * as breakingNewsSchema from "./schema/breakingNews.js";
 import * as categoriesSchema from "./schema/categories.js";
 import * as featuredContentSchema from "./schema/featuredContent.js";
@@ -16,7 +17,7 @@ try {
     sslConfig = { rejectUnauthorized: true, ca };
 }
 catch {
-    console.error("Warning: ca.pem not found. SSL disabled for database connection.");
+    logger.warn("db", "ca.pem not found. SSL disabled for database connection.");
 }
 const dbClient = new Pool({
     host: dbConfig.host,

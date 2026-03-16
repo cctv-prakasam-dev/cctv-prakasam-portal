@@ -10,7 +10,9 @@
     "migrations:gen": "dotenvx run -- tsx node_modules/drizzle-kit/bin.cjs generate",
     "migrations:apply": "dotenvx run -- drizzle-kit migrate",
     "db:studio": "tsx node_modules/drizzle-kit/bin.cjs studio",
-    "seed": "dotenvx run -- tsx seeders/seed.ts"
+    "seed": "dotenvx run -- tsx seeders/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.54.1",
@@ -31,6 +33,7 @@
     "eslint": "^9.39.4",
     "eslint-plugin-format": "^2.0.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.0"
   }
 }

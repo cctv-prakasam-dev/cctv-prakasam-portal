@@ -4,6 +4,7 @@ import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getPaginatedRecordsConditionally, getRecordById, saveSingleRecord, } from "../../services/db/baseDbService.js";
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
 import { parseOrderByQuery } from "../../utils/dbUtils.js";
+import logger from "../../utils/logger.js";
 async function subscribe(data) {
     const subscriber = await saveSingleRecord(newsletterSubscribers, {
         email: data.email,
@@ -18,7 +19,7 @@ async function subscribe(data) {
     sendEmailNotification(htmlContent, {
         to: data.email,
         subject: "Welcome to CCTV Prakasam Newsletter",
-    }).catch(console.error);
+    }).catch((err) => logger.error("email", "Failed to send newsletter welcome", { error: err.message }));
     return subscriber;
 }
 async function getAllSubscribers(page, pageSize) {
