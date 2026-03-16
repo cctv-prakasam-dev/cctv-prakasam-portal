@@ -6,14 +6,14 @@ import { users } from "../db/schema/users.js";
 import UnauthorizedException from "../exceptions/unauthorizedException.js";
 import { getRecordById } from "../services/db/baseDbService.js";
 async function genJWTTokens(payload) {
-    const access_token_expiry = Math.floor(Date.now() / 1000) + jwtConfig.expires_in; // 30 days
+    const now = Math.floor(Date.now() / 1000);
     const access_token_payload = {
         ...payload,
-        exp: access_token_expiry,
+        exp: now + jwtConfig.access_token_expires_in,
     };
     const refresh_token_payload = {
         ...payload,
-        exp: Math.floor(Date.now() / 1000) + jwtConfig.expires_in * 3, // 90 days
+        exp: now + jwtConfig.refresh_token_expires_in,
     };
     const access_token = await sign(access_token_payload, jwtConfig.secret, "HS256");
     const refresh_token = await sign(refresh_token_payload, jwtConfig.secret, "HS256");

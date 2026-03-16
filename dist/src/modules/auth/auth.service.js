@@ -1,7 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import { randomBytes } from "node:crypto";
 import { appConfig } from "../../config/appConfig.js";
-import { FP_EMAIL_SENT, INVALID_RESET_TOKEN, INVALID_VERIFICATION_TOKEN, LOGIN_EMAIL_NOT_FOUND, PASSWORD_INVALID, USER_INACTIVE, } from "../../constants/appMessages.js";
+import { FP_EMAIL_SENT, INVALID_CREDENTIALS, INVALID_RESET_TOKEN, INVALID_VERIFICATION_TOKEN, USER_INACTIVE, } from "../../constants/appMessages.js";
 import { users } from "../../db/schema/users.js";
 import ForbiddenException from "../../exceptions/forbiddenException.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
@@ -10,6 +10,19 @@ import { getSingleRecordByAColumnValue, saveSingleRecord, updateRecordById, } fr
 import { sendEmailNotification } from "../../services/brevo/brevoEmailService.js";
 import { genJWTTokensForUser, verifyJWTToken } from "../../utils/jwtUtils.js";
 const SALT_ROUNDS = 10;
+const RE_AMP = /&/g;
+const RE_LT = /</g;
+const RE_GT = />/g;
+const RE_QUOT = /"/g;
+const RE_APOS = /'/g;
+function escapeHtml(str) {
+    return str
+        .replace(RE_AMP, "&amp;")
+        .replace(RE_LT, "&lt;")
+        .replace(RE_GT, "&gt;")
+        .replace(RE_QUOT, "&quot;")
+        .replace(RE_APOS, "&#039;");
+}
 function generateToken() {
     return randomBytes(32).toString("hex");
 }
@@ -29,7 +42,7 @@ async function registerUser(data) {
     const verifyUrl = `${appConfig.app_base_url}/verify-email?token=${verificationToken}`;
     const htmlContent = `
     <h2>Welcome to CCTV Prakasam!</h2>
-    <p>Hi ${data.first_name},</p>
+    <p>Hi ${escapeHtml(data.first_name)},</p>
     <p>Thank you for registering. Please verify your email by clicking the link below:</p>
     <a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#0891B2;color:#fff;text-decoration:none;border-radius:6px;">Verify Email</a>
     <p>If you did not create this account, you can safely ignore this email.</p>
@@ -44,18 +57,15 @@ async function registerUser(data) {
 }
 async function loginUser(data) {
     const user = await getSingleRecordByAColumnValue(users, "email", data.email, "eq");
-    if (!user) {
-        throw new NotFoundException(LOGIN_EMAIL_NOT_FOUND);
+    if (!user || !user.password_hash) {
+        throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
     if (!user.active) {
         throw new ForbiddenException(USER_INACTIVE);
     }
-    if (!user.password_hash) {
-        throw new UnauthorizedException(PASSWORD_INVALID);
-    }
     const isPasswordValid = await compare(data.password, user.password_hash);
     if (!isPasswordValid) {
-        throw new UnauthorizedException(PASSWORD_INVALID);
+        throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
     const tokens = await genJWTTokensForUser(user.id);
     const { password_hash, created_at, updated_at, deleted_at, ...userWithoutSensitive } = user;
@@ -68,11 +78,9 @@ async function refreshTokens(refreshToken) {
 }
 async function forgotPassword(data) {
     const user = await getSingleRecordByAColumnValue(users, "email", data.email, "eq");
-    if (!user) {
-        throw new NotFoundException(LOGIN_EMAIL_NOT_FOUND);
-    }
-    if (!user.active) {
-        throw new ForbiddenException(USER_INACTIVE);
+    // Always return success to prevent email enumeration
+    if (!user || !user.active) {
+        return FP_EMAIL_SENT;
     }
     const resetToken = generateToken();
     const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
@@ -83,7 +91,7 @@ async function forgotPassword(data) {
     const resetUrl = `${appConfig.app_base_url}/reset-password?token=${resetToken}`;
     const htmlContent = `
     <h2>Reset Your Password</h2>
-    <p>Hi ${user.first_name || "User"},</p>
+    <p>Hi ${escapeHtml(user.first_name || "User")},</p>
     <p>You requested a password reset. Click the link below to set a new password:</p>
     <a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#0891B2;color:#fff;text-decoration:none;border-radius:6px;">Reset Password</a>
     <p>This link expires in 1 hour. If you did not request this, you can safely ignore this email.</p>

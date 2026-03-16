@@ -9,7 +9,12 @@ const VEnvSchema = object({
     DB_USER: string(),
     DB_PASSWORD: string(),
     DB_NAME: string(),
-    JWT_SECRET: string(),
+    JWT_SECRET: pipe(string(), transform((val) => {
+        if (val.length < 32) {
+            throw new Error("JWT_SECRET must be at least 32 characters long");
+        }
+        return val;
+    })),
     BREVO_API_KEY: string(),
     APP_BASE_URL: string(),
     YOUTUBE_API_KEY: string(),

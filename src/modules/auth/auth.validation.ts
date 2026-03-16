@@ -23,7 +23,7 @@ export const VRegisterSchema = pipeAsync(
     password: pipe(
       string("Password must be a string"),
       nonEmpty("Password is required"),
-      minLength(6, "Password must be at least 6 characters"),
+      minLength(8, "Password must be at least 8 characters"),
     ),
   }),
   rawTransformAsync(async ({ dataset, addIssue }) => {
@@ -79,7 +79,7 @@ export const VResetPasswordSchema = object({
   password: pipe(
     string("Password must be a string"),
     nonEmpty("Password is required"),
-    minLength(6, "Password must be at least 6 characters"),
+    minLength(8, "Password must be at least 8 characters"),
   ),
 });
 

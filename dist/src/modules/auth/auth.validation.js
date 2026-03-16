@@ -5,7 +5,7 @@ export const VRegisterSchema = pipeAsync(object({
     first_name: pipe(string("First name must be a string"), nonEmpty("First name is required")),
     last_name: pipe(string("Last name must be a string"), nonEmpty("Last name is required")),
     email: pipe(string("Email must be a string"), nonEmpty("Email is required"), email("Invalid email format")),
-    password: pipe(string("Password must be a string"), nonEmpty("Password is required"), minLength(6, "Password must be at least 6 characters")),
+    password: pipe(string("Password must be a string"), nonEmpty("Password is required"), minLength(8, "Password must be at least 8 characters")),
 }), rawTransformAsync(async ({ dataset, addIssue }) => {
     const { email: emailValue } = dataset.value;
     const emailAlreadyExists = await userEmailExists(emailValue);
@@ -26,7 +26,7 @@ export const VForgotPasswordSchema = object({
 });
 export const VResetPasswordSchema = object({
     token: pipe(string("Token must be a string"), nonEmpty("Token is required")),
-    password: pipe(string("Password must be a string"), nonEmpty("Password is required"), minLength(6, "Password must be at least 6 characters")),
+    password: pipe(string("Password must be a string"), nonEmpty("Password is required"), minLength(8, "Password must be at least 8 characters")),
 });
 export const VVerifyEmailSchema = object({
     token: pipe(string("Token must be a string"), nonEmpty("Token is required")),

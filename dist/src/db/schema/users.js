@@ -34,4 +34,6 @@ export const users = pgTable("users", {
     index("users_deleted_at_idx").on(t.deleted_at),
     index("users_first_name_idx").on(t.first_name),
     index("users_last_name_idx").on(t.last_name),
+    index("users_verification_token_idx").on(t.verification_token),
+    index("users_reset_token_idx").on(t.reset_token),
 ]);

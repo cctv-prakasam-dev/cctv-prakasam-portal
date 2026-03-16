@@ -29,6 +29,8 @@ async function getRecordsConditionally(table, whereQueryData, columnsToSelect, o
     return results;
 }
 async function getPaginatedRecordsConditionally(table, page, pageSize, orderByQueryData, whereQueryData, columnsToSelect, inQueryData) {
+    const MAX_PAGE_SIZE = 100;
+    pageSize = Math.min(Math.max(pageSize, 1), MAX_PAGE_SIZE);
     let countQuery = db
         .select({ total: count(table.id) })
         .from(table)
