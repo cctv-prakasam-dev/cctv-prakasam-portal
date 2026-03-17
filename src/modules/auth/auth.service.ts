@@ -3,22 +3,10 @@ import { randomBytes } from "node:crypto";
 
 import type { User } from "../../db/schema/users.js";
 import type { AuthTokens } from "../../types/app.types.js";
-import type {
-  ValidatedForgotPasswordSchema,
-  ValidatedLoginSchema,
-  ValidatedRegisterSchema,
-  ValidatedResetPasswordSchema,
-  ValidatedVerifyEmailSchema,
-} from "./auth.validation.js";
+import type { ValidatedForgotPasswordSchema, ValidatedLoginSchema, ValidatedRegisterSchema, ValidatedResetPasswordSchema, ValidatedVerifyEmailSchema } from "./auth.validation.js";
 
 import { appConfig } from "../../config/appConfig.js";
-import {
-  FP_EMAIL_SENT,
-  INVALID_CREDENTIALS,
-  INVALID_RESET_TOKEN,
-  INVALID_VERIFICATION_TOKEN,
-  USER_INACTIVE,
-} from "../../constants/appMessages.js";
+import { FP_EMAIL_SENT, INVALID_CREDENTIALS, INVALID_RESET_TOKEN, INVALID_VERIFICATION_TOKEN, USER_INACTIVE } from "../../constants/appMessages.js";
 import { users } from "../../db/schema/users.js";
 import ForbiddenException from "../../exceptions/forbiddenException.js";
 import NotFoundException from "../../exceptions/notFoundException.js";

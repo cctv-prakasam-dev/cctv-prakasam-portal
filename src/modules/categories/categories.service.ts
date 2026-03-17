@@ -1,12 +1,11 @@
 import type { Category } from "../../db/schema/categories.js";
 import type { ValidatedCreateCategorySchema, ValidatedUpdateCategorySchema } from "./categories.validation.js";
 
-import { count, eq, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { CATEGORY_NOT_FOUND } from "../../constants/appMessages.js";
 import { db } from "../../db/configuration.js";
 import { categories } from "../../db/schema/categories.js";
-import { videos } from "../../db/schema/videos.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import {
   deleteRecordById,
