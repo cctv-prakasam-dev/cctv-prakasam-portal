@@ -45,7 +45,7 @@ export default function AdminSidebar() {
   }
 
   return (
-    <aside className="fixed left-0 top-0 z-100 flex h-screen w-[var(--sidebar-width)] flex-col border-r border-[var(--color-border)] bg-[var(--color-navbar)]">
+    <aside className="flex h-screen w-[var(--sidebar-width)] flex-col border-r border-[var(--color-border)] bg-[var(--color-navbar)]">
       {/* Logo */}
       <div className="flex h-[var(--navbar-height)] items-center justify-center border-b border-white/10 px-4">
         <Link to="/admin">
