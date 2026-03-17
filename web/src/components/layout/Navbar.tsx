@@ -3,15 +3,18 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useLogout } from "@/hooks/useAuth";
+import { t } from "@/lib/i18n";
 import { useAuthUser } from "@/stores/authStore";
+import { useLanguage } from "@/stores/languageStore";
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/videos", label: "Videos" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", key: "nav.home" },
+  { to: "/videos", key: "nav.videos" },
+  { to: "/about", key: "nav.about" },
+  { to: "/contact", key: "nav.contact" },
 ] as const;
 
 export default function Navbar() {
@@ -20,6 +23,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const user = useAuthUser();
   const logout = useLogout();
+  const { language } = useLanguage();
 
   function handleLogout() {
     logout.mutate(undefined, {
@@ -50,13 +54,14 @@ export default function Navbar() {
                     : "text-slate-300 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                {link.label}
+                {t(link.key, language)}
               </Link>
             ))}
           </div>
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            <LanguageToggle />
             <ThemeToggle />
 
             {/* Subscribe Button - Desktop */}
@@ -66,7 +71,9 @@ export default function Navbar() {
               rel="noreferrer"
               className="hidden items-center gap-1.5 rounded-md bg-[#DB2777] px-4.5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wide text-white no-underline transition-all hover:bg-[#BE185D] min-[900px]:flex"
             >
-              ▶ Subscribe
+              ▶
+              {" "}
+              {t("nav.subscribe", language)}
             </a>
 
             {/* Login / Dashboard Button - Desktop */}
@@ -76,7 +83,7 @@ export default function Navbar() {
                     to="/admin"
                     className="hidden rounded-md bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wider text-white no-underline transition-all hover:from-[#0E7490] hover:to-[#0891B2] min-[900px]:block"
                   >
-                    Dashboard
+                    {t("nav.dashboard", language)}
                   </Link>
                 )
               : (
@@ -84,7 +91,7 @@ export default function Navbar() {
                     to="/admin/login"
                     className="hidden rounded-md bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wider text-white no-underline transition-all hover:from-[#0E7490] hover:to-[#0891B2] min-[900px]:block"
                   >
-                    Login
+                    {t("nav.login", language)}
                   </Link>
                 )}
 
@@ -125,7 +132,7 @@ export default function Navbar() {
                   : "text-[var(--color-text-primary)] hover:bg-[var(--color-surface-1)]"
               }`}
             >
-              {link.label}
+              {t(link.key, language)}
             </Link>
           ))}
           {user
@@ -135,7 +142,9 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
                 >
-                  🔐 Dashboard
+                  🔐
+                  {" "}
+                  {t("nav.dashboard", language)}
                 </Link>
               )
             : (
@@ -144,7 +153,9 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
                 >
-                  🔐 Login
+                  🔐
+                  {" "}
+                  {t("nav.login", language)}
                 </Link>
               )}
           {user && (

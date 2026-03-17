@@ -1,17 +1,24 @@
 import { useSearch } from "@tanstack/react-router";
+import { Search, X } from "lucide-react";
 import { useState } from "react";
 
 import VideoCard from "@/components/ui/VideoCard";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useCategories } from "@/hooks/useCategories";
+import { useDebounce } from "@/hooks/useDebounce";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useVideos } from "@/hooks/useVideos";
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/stores/languageStore";
 
 export default function Videos() {
   usePageMeta({ title: "Videos", description: "Browse all CCTV AP Prakasam news videos. Filter by category — politics, entertainment, devotional & more." });
+  const { language } = useLanguage();
   const search = useSearch({ strict: false }) as { category?: string };
   const [filter, setFilter] = useState(search.category || "all");
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchQuery = useDebounce(searchTerm, 300);
   const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
   const { data: categories } = useCategories();
   const cats = categories?.data ?? [];
@@ -22,6 +29,7 @@ export default function Videos() {
     category: selectedCat ? String(selectedCat.id) : undefined,
     page,
     page_size: 12,
+    search: searchQuery || undefined,
   });
 
   const rawVideos = videosData?.data?.records ?? [];
@@ -40,9 +48,31 @@ export default function Videos() {
       {/* Header */}
       <div className="videos-page-header px-6 pt-10 pb-8">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">YouTube Library</span>
-          <h1 className="mt-1 mb-1.5 font-[var(--font-display)] text-[38px] tracking-[3px] text-[var(--color-text-primary)]">ALL VIDEOS</h1>
-          <p className="font-[var(--font-body)] text-[13px] text-[var(--color-text-muted)]">Auto-fetched via YouTube Data API v3</p>
+          <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">{t("videos.library", language)}</span>
+          <h1 className="mt-1 mb-1.5 font-[var(--font-display)] text-[38px] tracking-[3px] text-[var(--color-text-primary)]">{t("videos.all", language)}</h1>
+          <p className="font-[var(--font-body)] text-[13px] text-[var(--color-text-muted)]">{t("videos.api_desc", language)}</p>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mx-auto max-w-[var(--max-content)] px-6 pb-3">
+        <div className="relative">
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <input
+            type="text"
+            placeholder={t("videos.search", language)}
+            value={searchTerm}
+            onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
+            className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] py-2.5 pl-10 pr-10 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => { setSearchTerm(""); setPage(1); }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -57,7 +87,7 @@ export default function Videos() {
                 : "border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]"
             }`}
           >
-            All
+            {t("videos.all_filter", language)}
           </button>
           {cats.map(c => (
             <button
@@ -69,7 +99,7 @@ export default function Videos() {
                   : "border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-text-secondary)]"
               }`}
             >
-              {c.name}
+              {language === "te" && c.name_te ? c.name_te : c.name}
             </button>
           ))}
         </div>
@@ -81,20 +111,20 @@ export default function Videos() {
           <p className="mb-3.5 font-[var(--font-body)] text-xs text-[var(--color-text-muted)]">
             {pagination?.total_records ?? 0}
             {" "}
-            videos
+            {t("common.videos", language)}
           </p>
 
           {isError
             ? (
-                <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">Failed to load videos. Please try again later.</div>
+                <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">{t("videos.error", language)}</div>
               )
             : isLoading
               ? (
-                  <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">Loading videos...</div>
+                  <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">{t("videos.loading", language)}</div>
                 )
               : videos.length === 0
                 ? (
-                    <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">No videos found</div>
+                    <div className="py-20 text-center font-[var(--font-body)] text-[var(--color-text-muted)]">{t("videos.no_results", language)}</div>
                   )
                 : (
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
@@ -116,14 +146,14 @@ export default function Videos() {
                 disabled={!pagination.prev_page}
                 className="cursor-pointer rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-2 font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-secondary)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                ← Previous
+                {t("videos.prev", language)}
               </button>
               <span className="font-[var(--font-body)] text-xs text-[var(--color-text-muted)]">
-                Page
+                {t("common.page", language)}
                 {" "}
                 {pagination.current_page}
                 {" "}
-                of
+                {t("common.of", language)}
                 {" "}
                 {pagination.total_pages}
               </span>
@@ -132,7 +162,7 @@ export default function Videos() {
                 disabled={!pagination.next_page}
                 className="cursor-pointer rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-2 font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-secondary)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Next →
+                {t("videos.next", language)}
               </button>
             </div>
           )}

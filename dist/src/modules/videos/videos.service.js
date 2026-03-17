@@ -1,4 +1,4 @@
-import { count } from "drizzle-orm";
+import { and, count, eq, ilike, or, sql } from "drizzle-orm";
 import { youtubeConfig } from "../../config/youtubeConfig.js";
 import { VIDEO_NOT_FOUND } from "../../constants/appMessages.js";
 import { db } from "../../db/configuration.js";
@@ -7,7 +7,42 @@ import NotFoundException from "../../exceptions/notFoundException.js";
 import { deleteRecordById, getMultipleRecordsByAColumnValue, getPaginatedRecordsConditionally, getRecordById, saveSingleRecord, updateRecordById, } from "../../services/db/baseDbService.js";
 import { httpGet } from "../../services/http.js";
 import { parseOrderByQuery } from "../../utils/dbUtils.js";
-async function getVideosPaginated(page, pageSize, categoryId, sort) {
+async function getVideosPaginated(page, pageSize, categoryId, sort, search) {
+    // When search is provided, use a direct Drizzle query with ILIKE
+    if (search && search.trim()) {
+        const pattern = `%${search.trim()}%`;
+        const conditions = [
+            eq(videos.is_active, true),
+            or(ilike(videos.title, pattern), ilike(videos.title_te, pattern), ilike(videos.description, pattern)),
+        ];
+        if (categoryId) {
+            conditions.push(eq(videos.category_id, categoryId));
+        }
+        const whereClause = and(...conditions);
+        const offset = (page - 1) * pageSize;
+        const [totalResult] = await db.select({ total: count() }).from(videos).where(whereClause);
+        const records = await db
+            .select()
+            .from(videos)
+            .where(whereClause)
+            .orderBy(sql `${videos.published_at} DESC`)
+            .limit(pageSize)
+            .offset(offset);
+        const totalRecords = totalResult.total;
+        const totalPages = Math.ceil(totalRecords / pageSize);
+        return {
+            pagination_info: {
+                total_records: totalRecords,
+                total_pages: totalPages,
+                page_size: pageSize,
+                current_page: page,
+                next_page: page < totalPages ? page + 1 : null,
+                prev_page: page > 1 ? page - 1 : null,
+            },
+            records,
+        };
+    }
+    // Standard paginated query (no search)
     const whereQueryData = {
         columns: ["is_active"],
         values: [true],

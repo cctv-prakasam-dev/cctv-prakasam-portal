@@ -13,9 +13,12 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import type { Video } from "@/hooks/useVideos";
 import { useFeaturedVideos, useTrendingVideos, useVideos } from "@/hooks/useVideos";
 import { formatViews, timeAgo } from "@/lib/format";
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/stores/languageStore";
 
 export default function Home() {
   usePageMeta({ title: "Home", description: "Prakasam district's trusted digital news channel. Latest politics, entertainment, devotional & local coverage from Andhra Pradesh." });
+  const { language } = useLanguage();
   const { data: breakingNews } = useBreakingNews();
   const { data: categories } = useCategories();
   const { data: featuredData } = useFeaturedVideos();
@@ -62,7 +65,7 @@ export default function Home() {
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-red-50 px-3.5 py-1.5 dark:bg-red-500/10">
                 <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-600" />
-                <span className="font-[var(--font-display)] text-[11px] font-semibold tracking-[1.5px] text-red-600 dark:text-red-400">FEATURED STORY</span>
+                <span className="font-[var(--font-display)] text-[11px] font-semibold tracking-[1.5px] text-red-600 dark:text-red-400">{t("home.featured", language)}</span>
               </div>
               {mainFeature && (
                 <VideoCard
@@ -75,7 +78,10 @@ export default function Home() {
 
             {/* Side Stack */}
             <div>
-              <div className="mb-3 font-[var(--font-display)] text-xs tracking-[2px] text-[var(--color-primary)]">📺 LATEST UPDATES</div>
+              <div className="mb-3 font-[var(--font-display)] text-xs tracking-[2px] text-[var(--color-primary)]">
+                📺
+                {t("home.latest_updates", language)}
+              </div>
               <div className="flex flex-col gap-2.5">
                 {sideVideos.map(v => (
                   <div
@@ -110,15 +116,15 @@ export default function Home() {
       {/* Categories */}
       <section className="bg-[var(--color-background)] px-6 pt-10 pb-11">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <SectionHead title="Browse Categories" subtitle="Explore news by topic" />
+          <SectionHead title={t("home.browse_categories", language)} subtitle={t("home.explore_by_topic", language)} />
           <div className="grid grid-cols-[repeat(auto-fill,minmax(165px,1fr))] gap-3">
             {cats.map(c => (
               <Link key={c.id} to="/videos" search={{ category: c.slug }} className="no-underline">
                 <div className="group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-card)] p-4.5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-current hover:shadow-lg" style={{ borderTopColor: c.color }}>
                   <div className="absolute inset-x-0 top-0 h-[3px]" style={{ backgroundColor: c.color }} />
                   <div className="mb-1.5 text-[26px]">{c.icon}</div>
-                  <div className="font-[var(--font-heading)] text-xs font-bold text-[var(--color-text-primary)]">{c.name}</div>
-                  <div className="font-[var(--font-telugu)] text-[10px] text-[var(--color-text-muted)]">{c.name_te}</div>
+                  <div className="font-[var(--font-heading)] text-xs font-bold text-[var(--color-text-primary)]">{language === "te" && c.name_te ? c.name_te : c.name}</div>
+                  {language === "en" && c.name_te && <div className="font-[var(--font-telugu)] text-[10px] text-[var(--color-text-muted)]">{c.name_te}</div>}
                   <div className="mt-1 font-[var(--font-mono)] text-[10px] font-semibold" style={{ color: c.color }}>{c.video_count}</div>
                 </div>
               </Link>
@@ -134,12 +140,15 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <div className="h-6 w-1 rounded-sm bg-gradient-to-b from-red-500 to-orange-500" />
               <h2 className="font-[var(--font-display)] text-[22px] uppercase tracking-[1.5px] text-[var(--color-text-primary)]">
-                Trending Now
+                {t("home.trending", language)}
               </h2>
-              <span className="rounded-full bg-red-500/20 px-3 py-0.5 text-[10px] font-bold text-red-400">🔥 HOT</span>
+              <span className="rounded-full bg-red-500/20 px-3 py-0.5 text-[10px] font-bold text-red-400">
+                🔥
+                {t("home.hot", language)}
+              </span>
             </div>
             <p className="mt-1 ml-4 font-[var(--font-body)] text-[13px] text-[var(--color-text-muted)]">
-              Most watched this week
+              {t("home.most_watched", language)}
             </p>
           </div>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
@@ -192,8 +201,8 @@ export default function Home() {
       <section className="newsletter-section px-6 py-12">
         <div className="mx-auto max-w-[540px] text-center">
           <div className="mb-2 text-[32px]">📬</div>
-          <h2 className="mb-1.5 font-[var(--font-display)] text-[26px] tracking-[2px] text-[var(--color-text-primary)]">STAY UPDATED</h2>
-          <p className="mb-5.5 font-[var(--font-body)] text-sm text-[var(--color-text-secondary)]">Subscribe and never miss a story.</p>
+          <h2 className="mb-1.5 font-[var(--font-display)] text-[26px] tracking-[2px] text-[var(--color-text-primary)]">{t("home.stay_updated", language)}</h2>
+          <p className="mb-5.5 font-[var(--font-body)] text-sm text-[var(--color-text-secondary)]">{t("home.subscribe_desc", language)}</p>
           <div className="flex gap-2.5">
             <input
               type="email"
@@ -207,7 +216,7 @@ export default function Home() {
               disabled={subscribe.isPending}
               className="cursor-pointer whitespace-nowrap rounded-lg bg-gradient-to-r from-[#0891B2] to-[#06B6D4] px-6 py-3 font-[var(--font-heading)] text-[13px] font-bold text-white disabled:opacity-50"
             >
-              {subscribe.isPending ? "..." : "Subscribe"}
+              {subscribe.isPending ? "..." : t("home.subscribe_btn", language)}
             </button>
           </div>
           {subscribe.isSuccess && <p className="mt-2 text-sm text-[var(--color-success)]">Subscribed successfully!</p>}
@@ -217,7 +226,7 @@ export default function Home() {
       {/* Latest Videos */}
       <section className="bg-[var(--color-background)] px-6 pt-11 pb-14">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <SectionHead title="Latest Videos" />
+          <SectionHead title={t("home.latest_videos", language)} />
           <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
             {latest.map(v => (
               <VideoCard
@@ -229,7 +238,7 @@ export default function Home() {
           </div>
           <div className="mt-7 text-center">
             <Link to="/videos" className="rounded-lg border border-[var(--color-primary)]/30 bg-[var(--color-primary-bg)] px-8 py-2.5 font-[var(--font-heading)] text-[13px] font-bold text-[var(--color-primary)] no-underline transition-all hover:bg-[var(--color-primary)] hover:text-white">
-              View All Videos →
+              {t("home.view_all", language)}
             </Link>
           </div>
         </div>

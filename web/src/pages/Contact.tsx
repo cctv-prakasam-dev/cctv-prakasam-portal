@@ -3,6 +3,8 @@ import { Mail, MapPin, Phone, Youtube } from "lucide-react";
 
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { apiPost } from "@/lib/apiClient";
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/stores/languageStore";
 
 const contactInfo = [
   { icon: Phone, label: "Phone", value: "+91 9032266619", sub: "Mon–Sat, 9AM–6PM", color: "var(--color-primary)" },
@@ -15,6 +17,7 @@ const initialForm = { name: "", email: "", phone: "", subject: "", message: "" }
 
 export default function Contact() {
   usePageMeta({ title: "Contact Us", description: "Get in touch with CCTV AP Prakasam. News tips, feedback, or inquiries — we'd love to hear from you." });
+  const { language } = useLanguage();
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -49,10 +52,10 @@ export default function Contact() {
     <div>
       {/* Header */}
       <div className="contact-page-header px-6 pt-12 pb-8 text-center">
-        <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">Get In Touch</span>
-        <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">CONTACT US</h1>
+        <span className="font-[var(--font-heading)] text-[11px] font-bold uppercase tracking-[2px] text-[var(--color-primary)]">{t("contact.title", language)}</span>
+        <h1 className="mt-1.5 mb-2.5 font-[var(--font-display)] text-[42px] tracking-[3px] text-[var(--color-text-primary)]">{t("contact.heading", language)}</h1>
         <p className="mx-auto max-w-[540px] font-[var(--font-body)] text-sm leading-relaxed text-[var(--color-text-secondary)]">
-          Have a news tip, feedback, or just want to say hello? CCTV AP Prakasam would love to hear from you.
+          {t("contact.desc", language)}
         </p>
       </div>
 
@@ -64,7 +67,7 @@ export default function Contact() {
             onSubmit={handleSubmit}
             className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-8 shadow-sm"
           >
-            <h2 className="mb-6 font-[var(--font-display)] text-xl tracking-[2px] text-[var(--color-text-primary)]">SEND A MESSAGE</h2>
+            <h2 className="mb-6 font-[var(--font-display)] text-xl tracking-[2px] text-[var(--color-text-primary)]">{t("contact.send", language)}</h2>
 
             <div className="grid grid-cols-1 gap-4 min-[600px]:grid-cols-2">
               <div>
@@ -159,7 +162,7 @@ export default function Contact() {
 
             {status === "success" && (
               <div className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
-                Message sent successfully! We&apos;ll get back to you soon.
+                {t("contact.success", language)}
               </div>
             )}
 
@@ -174,7 +177,7 @@ export default function Contact() {
               disabled={status === "sending"}
               className="mt-6 rounded-lg bg-[var(--color-primary)] px-8 py-3 font-[var(--font-heading)] text-sm font-bold uppercase tracking-[1px] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              {status === "sending" ? "Sending..." : "Send Message"}
+              {status === "sending" ? t("contact.sending", language) : t("contact.send_btn", language)}
             </button>
           </form>
 

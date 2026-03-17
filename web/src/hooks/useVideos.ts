@@ -38,6 +38,7 @@ interface UseVideosParams {
   page?: number;
   page_size?: number;
   sort?: string;
+  search?: string;
 }
 
 export function useVideos(params: UseVideosParams = {}) {
@@ -50,6 +51,8 @@ export function useVideos(params: UseVideosParams = {}) {
     searchParams.set("page_size", String(params.page_size));
   if (params.sort)
     searchParams.set("sort", params.sort);
+  if (params.search)
+    searchParams.set("search", params.search);
 
   const query = searchParams.toString();
 

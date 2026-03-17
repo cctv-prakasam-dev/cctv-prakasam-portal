@@ -3,6 +3,7 @@ import { USER_NOT_FOUND } from "../../constants/appMessages.js";
 import { youtubeConfig } from "../../config/youtubeConfig.js";
 import { db } from "../../db/configuration.js";
 import { breakingNews } from "../../db/schema/breakingNews.js";
+import { categories } from "../../db/schema/categories.js";
 import { newsletterSubscribers } from "../../db/schema/newsletterSubscribers.js";
 import { users } from "../../db/schema/users.js";
 import { videos } from "../../db/schema/videos.js";
@@ -42,6 +43,20 @@ async function getDashboardStats() {
         .orderBy(sql `TO_CHAR(${videos.published_at}, 'D')`);
     // YouTube channel subscriber count
     const youtube_subscribers = await getYouTubeSubscriberCount();
+    // Category distribution (video count per category)
+    const categoryDistribution = await db
+        .select({
+        id: categories.id,
+        name: categories.name,
+        color: categories.color,
+        icon: categories.icon,
+        video_count: count(videos.id),
+    })
+        .from(categories)
+        .leftJoin(videos, sql `${videos.category_id} = ${categories.id} AND ${videos.is_active} = true`)
+        .where(sql `${categories.is_active} = true`)
+        .groupBy(categories.id, categories.name, categories.color, categories.icon)
+        .orderBy(sql `count(${videos.id}) DESC`);
     return {
         videos: videoCount.total,
         users: userCount.total,
@@ -49,6 +64,7 @@ async function getDashboardStats() {
         breaking_news: breakingNewsCount.total,
         weekly_videos: weeklyVideos,
         youtube_subscribers,
+        category_distribution: categoryDistribution,
     };
 }
 async function getUsers(page, pageSize, sort) {

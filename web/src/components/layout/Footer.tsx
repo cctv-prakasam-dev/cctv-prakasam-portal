@@ -1,22 +1,16 @@
 import { Link } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
+import { useCategories } from "@/hooks/useCategories";
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/stores/languageStore";
 
 const quickLinks = [
-  { to: "/", label: "Home" },
-  { to: "/videos", label: "Videos" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", key: "nav.home" },
+  { to: "/videos", key: "nav.videos" },
+  { to: "/about", key: "nav.about" },
+  { to: "/contact", key: "nav.contact" },
 ] as const;
-
-const categories = [
-  { icon: "📰", name: "General News", slug: "general-news" },
-  { icon: "🏛️", name: "Political", slug: "political-news" },
-  { icon: "🎬", name: "Entertainment", slug: "entertainment" },
-  { icon: "🙏", name: "Devotional", slug: "devotional" },
-  { icon: "📍", name: "Local News", slug: "local-news" },
-  { icon: "🏏", name: "Sports", slug: "sports" },
-];
 
 const socialIcons = [
   { icon: "▶", label: "YouTube", href: "https://www.youtube.com/@CctvPrakasam" },
@@ -26,6 +20,10 @@ const socialIcons = [
 ];
 
 export default function Footer() {
+  const { language } = useLanguage();
+  const { data: categoriesData } = useCategories();
+  const categories = (categoriesData?.data ?? []).filter(c => c.is_active !== false);
+
   return (
     <footer className="border-t-3 border-t-[var(--color-primary)] bg-[var(--color-footer)] px-6 pt-13 pb-6">
       <div className="mx-auto mb-8 grid max-w-[var(--max-content)] grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-8">
@@ -33,7 +31,7 @@ export default function Footer() {
         <div>
           <img src={logo} alt="CCTV AP Prakasam" className="mb-3.5 h-[42px] object-contain" />
           <p className="font-[var(--font-body)] text-[13px] leading-relaxed text-slate-400">
-            Prakasam district's trusted digital news. Politics, entertainment, devotional & local coverage.
+            {t("footer.tagline", language)}
           </p>
           <div className="mt-3.5 flex gap-2">
             {socialIcons.map(s => (
@@ -54,7 +52,7 @@ export default function Footer() {
         {/* Quick Links */}
         <div>
           <h4 className="mb-3.5 font-[var(--font-display)] text-[13px] tracking-[2px] text-cyan-400">
-            QUICK LINKS
+            {t("footer.quick_links", language)}
           </h4>
           {quickLinks.map(link => (
             <Link
@@ -62,7 +60,7 @@ export default function Footer() {
               to={link.to}
               className="block py-1.5 font-[var(--font-body)] text-[13px] text-slate-400 no-underline hover:text-white"
             >
-              {link.label}
+              {t(link.key, language)}
             </Link>
           ))}
         </div>
@@ -70,7 +68,7 @@ export default function Footer() {
         {/* Categories */}
         <div>
           <h4 className="mb-3.5 font-[var(--font-display)] text-[13px] tracking-[2px] text-cyan-400">
-            CATEGORIES
+            {t("footer.categories", language)}
           </h4>
           {categories.map(cat => (
             <Link
@@ -79,9 +77,8 @@ export default function Footer() {
               search={{ category: cat.slug }}
               className="block py-1.5 font-[var(--font-body)] text-[13px] text-slate-400 no-underline hover:text-white"
             >
-              {cat.icon}
-              {" "}
-              {cat.name}
+              {cat.icon && `${cat.icon} `}
+              {language === "te" && cat.name_te ? cat.name_te : cat.name}
             </Link>
           ))}
         </div>
@@ -89,7 +86,7 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <h4 className="mb-3.5 font-[var(--font-display)] text-[13px] tracking-[2px] text-cyan-400">
-            CONTACT
+            {t("footer.contact", language)}
           </h4>
           <div className="font-[var(--font-body)] text-xs leading-8 text-slate-400">
             📞 +91 9032266619

@@ -9,6 +9,7 @@ interface DashboardStats {
   breaking_news: number;
   weekly_videos: { day: string; count: number }[];
   youtube_subscribers: number;
+  category_distribution: { id: number; name: string; color: string | null; icon: string | null; video_count: number }[];
 }
 
 export function useAdminDashboardStats() {

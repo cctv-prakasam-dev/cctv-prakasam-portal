@@ -7,7 +7,8 @@ async function getVideos(c) {
     const limit = Number(c.req.query("limit")) || 10;
     const categoryId = c.req.query("category") ? Number(c.req.query("category")) : undefined;
     const sort = c.req.query("sort");
-    const result = await getVideosPaginated(page, limit, categoryId, sort);
+    const search = c.req.query("search");
+    const result = await getVideosPaginated(page, limit, categoryId, sort, search);
     return sendSuccessResp(c, 200, VIDEOS_FETCHED, result);
 }
 async function getVideo(c) {

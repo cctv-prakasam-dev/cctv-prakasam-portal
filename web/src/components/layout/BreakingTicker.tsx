@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/stores/languageStore";
+
 interface BreakingTickerProps {
   items: string[];
 }
 
 export default function BreakingTicker({ items }: BreakingTickerProps) {
+  const { language } = useLanguage();
   const [offset, setOffset] = useState(0);
 
   const text = items.join("   ◆   ");
@@ -32,7 +36,7 @@ export default function BreakingTicker({ items }: BreakingTickerProps) {
       <div className="z-2 flex h-full shrink-0 items-center gap-1.5 bg-[#DB2777] px-4">
         <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
         <span className="font-[var(--font-display)] text-[11px] font-medium tracking-[2.5px] text-white">
-          BREAKING
+          {t("ticker.breaking", language)}
         </span>
       </div>
 

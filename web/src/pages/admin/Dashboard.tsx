@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Activity, Clock, Eye, Mail, Megaphone, TrendingUp, Users, Video, Youtube } from "lucide-react";
 
 import BarChart from "@/components/admin/BarChart";
+import CategoryDistribution from "@/components/admin/CategoryDistribution";
 import StatsCard from "@/components/admin/StatsCard";
 import { useAdminDashboardStats } from "@/hooks/useAdminDashboard";
 
@@ -188,33 +189,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Platform Summary */}
-        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm">
-          <div className="mb-4 flex items-center gap-2">
-            <Youtube size={16} className="text-red-500" />
-            <h3 className="font-[var(--font-display)] text-sm uppercase tracking-[1.5px] text-[var(--color-text-primary)]">
-              CHANNEL HIGHLIGHTS
-            </h3>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Link to="/admin/videos" className="rounded-xl bg-gradient-to-br from-cyan-50 to-sky-50 p-4 text-center no-underline transition-all hover:scale-[1.03] hover:shadow-sm dark:from-cyan-900/20 dark:to-sky-900/20">
-              <p className="font-[var(--font-display)] text-2xl text-[#0891B2]">{isLoading ? "..." : (stats?.videos ?? 0).toLocaleString()}</p>
-              <p className="mt-0.5 font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">Total Videos</p>
-            </Link>
-            <Link to="/admin/videos" className="rounded-xl bg-gradient-to-br from-red-50 to-pink-50 p-4 text-center no-underline transition-all hover:scale-[1.03] hover:shadow-sm dark:from-red-900/20 dark:to-pink-900/20">
-              <p className="font-[var(--font-display)] text-2xl text-[#DC2626]">{isLoading ? "..." : (stats?.youtube_subscribers ?? 0).toLocaleString()}</p>
-              <p className="mt-0.5 font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">Subscribers</p>
-            </Link>
-            <Link to="/admin/users" className="rounded-xl bg-gradient-to-br from-violet-50 to-purple-50 p-4 text-center no-underline transition-all hover:scale-[1.03] hover:shadow-sm dark:from-violet-900/20 dark:to-purple-900/20">
-              <p className="font-[var(--font-display)] text-2xl text-[#6D28D9]">{isLoading ? "..." : (stats?.users ?? 0).toLocaleString()}</p>
-              <p className="mt-0.5 font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">Users</p>
-            </Link>
-            <Link to="/admin/breaking-news" className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center no-underline transition-all hover:scale-[1.03] hover:shadow-sm dark:from-amber-900/20 dark:to-orange-900/20">
-              <p className="font-[var(--font-display)] text-2xl text-[#D97706]">{isLoading ? "..." : (stats?.breaking_news ?? 0).toLocaleString()}</p>
-              <p className="mt-0.5 font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">Breaking News</p>
-            </Link>
-          </div>
-        </div>
+        {/* Category Distribution */}
+        <CategoryDistribution data={stats?.category_distribution ?? []} isLoading={isLoading} />
       </div>
     </div>
   );
