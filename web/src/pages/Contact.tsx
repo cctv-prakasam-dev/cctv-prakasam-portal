@@ -200,17 +200,15 @@ export default function Contact() {
               </div>
             ))}
 
-            {/* Google Maps Embed */}
+            {/* Google Maps - OpenStreetMap embed (no API key needed) */}
             <div className="overflow-hidden rounded-2xl border border-[var(--color-border)]">
               <iframe
                 title="CCTV AP Prakasam Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15380!2d80.0267!3d15.2336!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4a819e5a0e1b23%3A0x4c1d5e2a3b6f8e9d!2sSingarayakonda%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=80.01%2C15.22%2C80.05%2C15.25&layer=mapnik&marker=15.2336%2C80.0267"
                 width="100%"
                 height="200"
                 style={{ border: 0 }}
-                allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </div>
