@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useSearch } from "@tanstack/react-router";
-import { ArrowLeft, CheckCircle, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 
 import logo from "@/assets/logo.svg";
+import PasswordInput from "@/components/ui/PasswordInput";
 import { useResetPassword } from "@/hooks/useAuth";
 
 export default function ResetPassword() {
@@ -11,7 +12,6 @@ export default function ResetPassword() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const resetPassword = useResetPassword();
@@ -105,36 +105,23 @@ export default function ResetPassword() {
                   <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
                     New Password
                   </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 pr-10 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
-                      placeholder="Min 8 characters"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)]"
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
+                  <PasswordInput
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    autoComplete="new-password"
+                    placeholder="Min 8 characters"
+                  />
                 </div>
 
                 <div className="mb-5">
                   <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
                     Confirm Password
                   </label>
-                  <input
-                    type="password"
+                  <PasswordInput
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
-                    required
-                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
+                    name="confirm_password"
+                    autoComplete="new-password"
                     placeholder="Re-enter password"
                   />
                 </div>

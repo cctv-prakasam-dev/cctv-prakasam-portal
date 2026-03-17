@@ -141,3 +141,13 @@ body {
 .dark .contact-page-header {
   background: var(--color-surface-1);
 }
+
+/* Breaking news ticker animation */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

@@ -74,6 +74,7 @@ export default function VideoCard({ video, onClick, large }: VideoCardProps) {
         {/* Telugu Title */}
         {video.title_te && (
           <h3
+            title={video.title_te}
             className={`line-clamp-2 font-[var(--font-telugu)] font-bold leading-relaxed text-[var(--color-text-primary)] ${large ? "mb-0.5 text-[15px]" : "mb-0.5 text-[13px]"}`}
           >
             {video.title_te}
@@ -81,7 +82,7 @@ export default function VideoCard({ video, onClick, large }: VideoCardProps) {
         )}
 
         {/* English Title */}
-        <p className="mb-2 font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
+        <p title={video.title} className="mb-2 truncate font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">
           {video.title}
         </p>
 

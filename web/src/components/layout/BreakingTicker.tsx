@@ -1,27 +1,9 @@
-import { useEffect, useState } from "react";
-
 interface BreakingTickerProps {
   items: string[];
 }
 
 export default function BreakingTicker({ items }: BreakingTickerProps) {
-  const [offset, setOffset] = useState(0);
-
   const text = items.join("   ◆   ");
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset(prev => prev - 1.2);
-    }, 25);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Reset offset to prevent infinite negative values
-  useEffect(() => {
-    if (offset < -4000) {
-      setOffset(0);
-    }
-  }, [offset]);
 
   if (items.length === 0)
     return null;
@@ -36,11 +18,8 @@ export default function BreakingTicker({ items }: BreakingTickerProps) {
         </span>
       </div>
 
-      {/* Scrolling Text */}
-      <div
-        className="inline-flex whitespace-nowrap font-[var(--font-telugu)] text-[13px] font-semibold tracking-wide text-white"
-        style={{ transform: `translateX(${offset % 4000}px)` }}
-      >
+      {/* Scrolling Text - CSS animation instead of JS interval */}
+      <div className="inline-flex animate-[ticker_40s_linear_infinite] whitespace-nowrap font-[var(--font-telugu)] text-[13px] font-semibold tracking-wide text-white">
         <span className="pl-5">{text}</span>
         <span className="pl-15">{text}</span>
       </div>

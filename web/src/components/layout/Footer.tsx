@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
+import { useCategories } from "@/hooks/useCategories";
 
 const quickLinks = [
   { to: "/", label: "Home" },
@@ -8,15 +9,6 @@ const quickLinks = [
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
-
-const categories = [
-  { icon: "📰", name: "General News", slug: "general-news" },
-  { icon: "🏛️", name: "Political", slug: "political-news" },
-  { icon: "🎬", name: "Entertainment", slug: "entertainment" },
-  { icon: "🙏", name: "Devotional", slug: "devotional" },
-  { icon: "📍", name: "Local News", slug: "local-news" },
-  { icon: "🏏", name: "Sports", slug: "sports" },
-];
 
 const socialIcons = [
   { icon: "▶", label: "YouTube", href: "https://www.youtube.com/@CctvPrakasam" },
@@ -26,6 +18,9 @@ const socialIcons = [
 ];
 
 export default function Footer() {
+  const { data: categoriesData } = useCategories();
+  const categories = (categoriesData?.data ?? []).filter(c => c.is_active !== false);
+
   return (
     <footer className="border-t-3 border-t-[var(--color-primary)] bg-[var(--color-footer)] px-6 pt-13 pb-6">
       <div className="mx-auto mb-8 grid max-w-[var(--max-content)] grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-8">
@@ -79,8 +74,7 @@ export default function Footer() {
               search={{ category: cat.slug }}
               className="block py-1.5 font-[var(--font-body)] text-[13px] text-slate-400 no-underline hover:text-white"
             >
-              {cat.icon}
-              {" "}
+              {cat.icon && `${cat.icon} `}
               {cat.name}
             </Link>
           ))}
