@@ -106,8 +106,12 @@ export default function Footer() {
         <span className="font-[var(--font-body)] text-[11px] text-slate-600">
           © 2026 CCTV AP Prakasam. All rights reserved.
         </span>
-        <span className="font-[var(--font-body)] text-[11px] text-slate-600">
-          Privacy • Terms • Cookies
+        <span className="flex gap-2 font-[var(--font-body)] text-[11px] text-slate-600">
+          <Link to="/privacy" className="text-slate-600 no-underline hover:text-white">Privacy</Link>
+          <span>•</span>
+          <Link to="/terms" className="text-slate-600 no-underline hover:text-white">Terms</Link>
+          <span>•</span>
+          <Link to="/cookies" className="text-slate-600 no-underline hover:text-white">Cookies</Link>
         </span>
       </div>
     </footer>

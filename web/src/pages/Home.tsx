@@ -9,11 +9,13 @@ import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useBreakingNews } from "@/hooks/useBreakingNews";
 import { useCategories } from "@/hooks/useCategories";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import type { Video } from "@/hooks/useVideos";
 import { useFeaturedVideos, useTrendingVideos, useVideos } from "@/hooks/useVideos";
 import { formatViews, timeAgo } from "@/lib/format";
 
 export default function Home() {
+  usePageMeta({ title: "Home", description: "Prakasam district's trusted digital news channel. Latest politics, entertainment, devotional & local coverage from Andhra Pradesh." });
   const { data: breakingNews } = useBreakingNews();
   const { data: categories } = useCategories();
   const { data: featuredData } = useFeaturedVideos();

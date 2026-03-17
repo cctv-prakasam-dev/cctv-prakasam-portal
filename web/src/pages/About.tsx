@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import ceoPhoto from "@/assets/ceo-photo.svg";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { apiGet } from "@/lib/apiClient";
 
 interface ChannelStats {
@@ -37,6 +38,7 @@ const cards = [
 ];
 
 export default function About() {
+  usePageMeta({ title: "About Us", description: "Learn about CCTV AP Prakasam — Prakasam district's most trusted digital news channel since 2021." });
   const { data: statsResp } = useQuery({
     queryKey: ["channel-stats"],
     queryFn: () => apiGet<ChannelStats>("/videos/channel-stats"),

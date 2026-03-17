@@ -4,9 +4,11 @@ import { useState } from "react";
 import VideoCard from "@/components/ui/VideoCard";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useCategories } from "@/hooks/useCategories";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useVideos } from "@/hooks/useVideos";
 
 export default function Videos() {
+  usePageMeta({ title: "Videos", description: "Browse all CCTV AP Prakasam news videos. Filter by category — politics, entertainment, devotional & more." });
   const search = useSearch({ strict: false }) as { category?: string };
   const [filter, setFilter] = useState(search.category || "all");
   const [page, setPage] = useState(1);

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 import { Check, Copy, Play } from "lucide-react";
 
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useVideo, useVideos } from "@/hooks/useVideos";
 
 function ShareButtons({ title, youtubeId }: { title: string; youtubeId?: string }) {
@@ -67,6 +68,11 @@ export default function VideoDetail() {
   const { data: relatedData } = useVideos({ page: 1, page_size: 7 });
 
   const video = videoData?.data;
+  usePageMeta({
+    title: video?.title_te || video?.title || "Video",
+    description: video?.description?.slice(0, 160) || undefined,
+    image: video?.thumbnail_url || undefined,
+  });
   const related = (relatedData?.data?.records ?? []).filter(v => v.id !== Number(id)).slice(0, 6);
 
   if (isLoading) {

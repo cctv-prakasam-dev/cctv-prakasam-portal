@@ -7,6 +7,6 @@ const securityHeaders = createMiddleware(async (c, next) => {
     c.header("Referrer-Policy", "strict-origin-when-cross-origin");
     c.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
     c.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-    c.header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' https://img.youtube.com https://i.ytimg.com data:; frame-src https://www.youtube.com; connect-src 'self'; font-src 'self'");
+    c.header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://img.youtube.com https://i.ytimg.com data:; frame-src https://www.youtube.com https://www.openstreetmap.org; connect-src 'self'; font-src 'self' https://fonts.gstatic.com");
 });
 export default securityHeaders;

@@ -19,6 +19,9 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const Register = lazy(() => import("@/pages/Register"));
 const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const Cookies = lazy(() => import("@/pages/Cookies"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 const AdminLogin = lazy(() => import("@/pages/admin/Login"));
 const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
@@ -107,6 +110,24 @@ const contactRoute = createRoute({
   component: Contact,
 });
 
+const privacyRoute = createRoute({
+  getParentRoute: () => publicLayout,
+  path: "/privacy",
+  component: Privacy,
+});
+
+const termsRoute = createRoute({
+  getParentRoute: () => publicLayout,
+  path: "/terms",
+  component: Terms,
+});
+
+const cookiesRoute = createRoute({
+  getParentRoute: () => publicLayout,
+  path: "/cookies",
+  component: Cookies,
+});
+
 // Auth pages (bare layout — no navbar/footer/sidebar)
 const adminLoginRoute = createRoute({
   getParentRoute: () => adminBareLayout,
@@ -188,6 +209,9 @@ const routeTree = rootRoute.addChildren([
     videoDetailRoute,
     aboutRoute,
     contactRoute,
+    privacyRoute,
+    termsRoute,
+    cookiesRoute,
   ]),
   adminBareLayout.addChildren([
     adminLoginRoute,

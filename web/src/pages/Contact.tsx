@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, MapPin, Phone, Youtube } from "lucide-react";
 
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { apiPost } from "@/lib/apiClient";
 
 const contactInfo = [
@@ -13,6 +14,7 @@ const contactInfo = [
 const initialForm = { name: "", email: "", phone: "", subject: "", message: "" };
 
 export default function Contact() {
+  usePageMeta({ title: "Contact Us", description: "Get in touch with CCTV AP Prakasam. News tips, feedback, or inquiries — we'd love to hear from you." });
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
