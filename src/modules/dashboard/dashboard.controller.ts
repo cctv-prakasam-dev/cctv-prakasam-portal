@@ -1,13 +1,17 @@
 import type { Context } from "hono";
 
+import type { ValidatedRegisterSchema } from "../auth/auth.validation.js";
 import type { ValidatedUpdateUserRoleSchema } from "./dashboard.validation.js";
 
 import {
   DASHBOARD_STATS_FETCHED,
+  REGISTER_DONE,
+  REGISTER_VALIDATION_ERROR,
   UPDATE_USER_ROLE_VALIDATION_ERROR,
   USER_ROLE_UPDATED,
   USERS_FETCHED,
 } from "../../constants/appMessages.js";
+import { registerUser } from "../auth/auth.service.js";
 import { sendSuccessResp } from "../../utils/respUtils.js";
 import { validateRequest } from "../../validations/validateRequest.js";
 import {
@@ -47,7 +51,23 @@ async function updateRole(c: Context) {
   return sendSuccessResp(c, 200, USER_ROLE_UPDATED, result);
 }
 
+async function createUser(c: Context) {
+  const reqData = await c.req.json();
+
+  const validatedData = await validateRequest<ValidatedRegisterSchema>(
+    "register",
+    reqData,
+    REGISTER_VALIDATION_ERROR,
+  );
+
+  const result = await registerUser(validatedData);
+
+  // Admin endpoint — do NOT set auth cookies (keep admin session)
+  return sendSuccessResp(c, 201, REGISTER_DONE, { user: result.user });
+}
+
 export {
+  createUser,
   getStats,
   listUsers,
   updateRole,

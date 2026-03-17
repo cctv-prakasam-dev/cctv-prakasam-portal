@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import isAdmin from "../../middlewares/isAdmin.js";
 import isAuthorized from "../../middlewares/isAuthorized.js";
 import {
+  createUser,
   getStats,
   listUsers,
   updateRole,
@@ -14,6 +15,7 @@ const dashboardAdminRoutes = new Hono();
 dashboardAdminRoutes.use("*", isAuthorized, isAdmin);
 dashboardAdminRoutes.get("/stats", getStats);
 dashboardAdminRoutes.get("/users", listUsers);
+dashboardAdminRoutes.post("/users", createUser);
 dashboardAdminRoutes.put("/users/:id", updateRole);
 
 export { dashboardAdminRoutes };
