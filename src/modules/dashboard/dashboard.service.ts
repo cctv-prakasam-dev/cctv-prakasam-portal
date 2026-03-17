@@ -1,7 +1,7 @@
 import type { User } from "../../db/schema/users.js";
 import type { ValidatedUpdateUserRoleSchema } from "./dashboard.validation.js";
 
-import { count, gte, sql } from "drizzle-orm";
+import { count, desc, gte, sql } from "drizzle-orm";
 
 import { USER_NOT_FOUND } from "../../constants/appMessages.js";
 import { youtubeConfig } from "../../config/youtubeConfig.js";
@@ -72,6 +72,60 @@ async function getDashboardStats() {
     .groupBy(categories.id, categories.name, categories.color, categories.icon)
     .orderBy(sql`count(${videos.id}) DESC`);
 
+  // Recent activity — derive from latest records across tables
+  const recentVideos = await db
+    .select({
+      type: sql<string>`'video_published'`,
+      title: videos.title,
+      detail: videos.title_te,
+      created_at: videos.created_at,
+    })
+    .from(videos)
+    .orderBy(desc(videos.created_at))
+    .limit(5);
+
+  const recentUsers = await db
+    .select({
+      type: sql<string>`'new_user'`,
+      title: sql<string>`COALESCE(${users.first_name} || ' ' || ${users.last_name}, ${users.email})`,
+      detail: users.email,
+      created_at: users.created_at,
+    })
+    .from(users)
+    .orderBy(desc(users.created_at))
+    .limit(5);
+
+  const recentSubscribers = await db
+    .select({
+      type: sql<string>`'subscriber'`,
+      title: newsletterSubscribers.email,
+      detail: sql<string>`'Newsletter subscription'`,
+      created_at: newsletterSubscribers.created_at,
+    })
+    .from(newsletterSubscribers)
+    .orderBy(desc(newsletterSubscribers.created_at))
+    .limit(5);
+
+  const recentCategories = await db
+    .select({
+      type: sql<string>`'category_added'`,
+      title: categories.name,
+      detail: categories.name_te,
+      created_at: categories.created_at,
+    })
+    .from(categories)
+    .orderBy(desc(categories.created_at))
+    .limit(3);
+
+  // Merge and sort by created_at descending, take top 10
+  const recentActivity = [...recentVideos, ...recentUsers, ...recentSubscribers, ...recentCategories]
+    .sort((a, b) => {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return dateB - dateA;
+    })
+    .slice(0, 10);
+
   return {
     videos: videoCount.total,
     users: userCount.total,
@@ -80,6 +134,7 @@ async function getDashboardStats() {
     weekly_videos: weeklyVideos,
     youtube_subscribers,
     category_distribution: categoryDistribution,
+    recent_activity: recentActivity,
   };
 }
 

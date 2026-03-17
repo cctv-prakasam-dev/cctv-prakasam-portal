@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { Activity, Clock, Eye, Mail, Megaphone, TrendingUp, Users, Video, Youtube } from "lucide-react";
+import { Activity, Eye, Mail, Megaphone, TrendingUp, Users, Video, Youtube } from "lucide-react";
 
 import BarChart from "@/components/admin/BarChart";
 import CategoryDistribution from "@/components/admin/CategoryDistribution";
+import RecentActivity from "@/components/admin/RecentActivity";
 import StatsCard from "@/components/admin/StatsCard";
 import { useAdminDashboardStats } from "@/hooks/useAdminDashboard";
 
@@ -156,41 +157,10 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Activity Timeline / Recent Info */}
+      {/* Activity & Category Distribution */}
       <div className="grid grid-cols-1 gap-4 min-[900px]:grid-cols-2">
-        {/* Sync Status */}
-        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm">
-          <div className="mb-4 flex items-center gap-2">
-            <Clock size={16} className="text-[var(--color-primary)]" />
-            <h3 className="font-[var(--font-display)] text-sm uppercase tracking-[1.5px] text-[var(--color-text-primary)]">
-              SYSTEM INFO
-            </h3>
-          </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between rounded-xl bg-[var(--color-surface-1)] px-4 py-3">
-              <span className="font-[var(--font-body)] text-[12px] text-[var(--color-text-secondary)]">YouTube Auto-Sync</span>
-              <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400">
-                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-                Active (30 min)
-              </span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-[var(--color-surface-1)] px-4 py-3">
-              <span className="font-[var(--font-body)] text-[12px] text-[var(--color-text-secondary)]">Categories</span>
-              <span className="font-[var(--font-heading)] text-[11px] font-semibold text-[var(--color-primary)]">Auto-detected</span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-[var(--color-surface-1)] px-4 py-3">
-              <span className="font-[var(--font-body)] text-[12px] text-[var(--color-text-secondary)]">Featured Videos</span>
-              <span className="font-[var(--font-heading)] text-[11px] font-semibold text-[var(--color-primary)]">Top 6 latest</span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-[var(--color-surface-1)] px-4 py-3">
-              <span className="font-[var(--font-body)] text-[12px] text-[var(--color-text-secondary)]">Trending Videos</span>
-              <span className="font-[var(--font-heading)] text-[11px] font-semibold text-[var(--color-primary)]">Top 6 by views</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Category Distribution */}
         <CategoryDistribution data={stats?.category_distribution ?? []} isLoading={isLoading} />
+        <RecentActivity data={stats?.recent_activity ?? []} isLoading={isLoading} />
       </div>
     </div>
   );
