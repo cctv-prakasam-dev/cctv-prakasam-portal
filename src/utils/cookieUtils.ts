@@ -5,12 +5,12 @@ import { deleteCookie, setCookie } from "hono/cookie";
 import { jwtConfig } from "../config/jwtConfig.js";
 import envData from "../env.js";
 
-const isProduction = envData.NODE_ENV === "production";
+const isSecure = envData.APP_BASE_URL.startsWith("https://");
 
 export function setAuthCookies(c: Context, accessToken: string, refreshToken: string) {
   setCookie(c, "access_token", accessToken, {
     httpOnly: true,
-    secure: isProduction,
+    secure: isSecure,
     sameSite: "Lax",
     path: "/",
     maxAge: jwtConfig.access_token_expires_in,
@@ -18,7 +18,7 @@ export function setAuthCookies(c: Context, accessToken: string, refreshToken: st
 
   setCookie(c, "refresh_token", refreshToken, {
     httpOnly: true,
-    secure: isProduction,
+    secure: isSecure,
     sameSite: "Lax",
     path: "/api/auth/refresh-token",
     maxAge: jwtConfig.refresh_token_expires_in,
