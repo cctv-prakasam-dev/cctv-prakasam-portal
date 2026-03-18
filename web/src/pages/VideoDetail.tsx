@@ -90,7 +90,7 @@ export default function VideoDetail() {
     return (
       <div className="flex min-h-[80vh] flex-col items-center justify-center gap-3">
         <p className="font-[var(--font-body)] text-[var(--color-text-muted)]">Failed to load video.</p>
-        <Link to="/videos" className="rounded-lg bg-[var(--color-primary)] px-5 py-2 font-[var(--font-heading)] text-xs font-bold text-white no-underline">
+        <Link to="/videos" search={{ category: undefined }} className="rounded-lg bg-[var(--color-primary)] px-5 py-2 font-[var(--font-heading)] text-xs font-bold text-white no-underline">
           Browse Videos
         </Link>
       </div>
@@ -104,7 +104,7 @@ export default function VideoDetail() {
   return (
     <div className="min-h-[80vh] bg-[var(--color-background)] px-6 pt-7 pb-14">
       <div className="mx-auto max-w-[var(--max-content)]">
-        <Link to="/videos" className="mb-5 inline-block rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-1.5 font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-primary)] no-underline">
+        <Link to="/videos" search={{ category: undefined }} className="mb-5 inline-block rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-4 py-1.5 font-[var(--font-heading)] text-xs font-semibold text-[var(--color-text-primary)] no-underline">
           ← Back to Videos
         </Link>
 

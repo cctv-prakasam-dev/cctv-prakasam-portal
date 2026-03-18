@@ -24,13 +24,15 @@ export default function VideoPlayerModal({ youtubeId, title, onClose }: VideoPla
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
     };
-  }, [onClose]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
       <div className="relative w-full max-w-[900px]" onClick={e => e.stopPropagation()}>
         {/* Close button */}
         <button
+          aria-label="Close video player"
           onClick={onClose}
           className="absolute -top-10 right-0 cursor-pointer border-none bg-transparent text-white/80 transition-colors hover:text-white"
         >

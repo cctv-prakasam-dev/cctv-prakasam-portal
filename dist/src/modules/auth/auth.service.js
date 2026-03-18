@@ -57,7 +57,7 @@ async function registerUser(data) {
 }
 async function loginUser(data) {
     const user = await getSingleRecordByAColumnValue(users, "email", data.email, "eq");
-    if (!user || !user.password_hash) {
+    if (!user || !user.password_hash || user.deleted_at) {
         throw new UnauthorizedException(INVALID_CREDENTIALS);
     }
     if (!user.active) {

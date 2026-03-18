@@ -1,11 +1,16 @@
+const EXTERNAL_TIMEOUT_MS = 15_000;
+const API_KEY_REGEX = /key=[^&]+/;
+
 export async function httpGet(url: string, headers?: any) {
   const response = await fetch(url, {
     method: "GET",
     headers,
+    signal: AbortSignal.timeout(EXTERNAL_TIMEOUT_MS),
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP GET ${url} failed with status ${response.status}`);
+    const safeUrl = url.replace(API_KEY_REGEX, "key=***");
+    throw new Error(`HTTP GET ${safeUrl} failed with status ${response.status}`);
   }
 
   return await response.json();
@@ -26,6 +31,7 @@ export async function httpPost(
     method: "POST",
     headers,
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(EXTERNAL_TIMEOUT_MS),
   });
 
   if (!response.ok) {
@@ -50,6 +56,7 @@ export async function httpPatch(
     method: "PATCH",
     headers,
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(EXTERNAL_TIMEOUT_MS),
   });
 
   if (!response.ok) {

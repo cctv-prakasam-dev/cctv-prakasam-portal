@@ -21,9 +21,9 @@ export default function Home() {
   const { language } = useLanguage();
   const { data: breakingNews } = useBreakingNews();
   const { data: categories } = useCategories();
-  const { data: featuredData } = useFeaturedVideos();
-  const { data: trendingData } = useTrendingVideos();
-  const { data: latestData } = useVideos({ page: 1, page_size: 8 });
+  const { data: featuredData, isError: featuredError } = useFeaturedVideos();
+  const { data: trendingData, isError: trendingError } = useTrendingVideos();
+  const { data: latestData, isError: latestError } = useVideos({ page: 1, page_size: 8 });
   const subscribe = useSubscribeNewsletter();
   const [email, setEmail] = useState("");
   const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
@@ -67,13 +67,15 @@ export default function Home() {
                 <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-600" />
                 <span className="font-[var(--font-display)] text-[11px] font-semibold tracking-[1.5px] text-red-600 dark:text-red-400">{t("home.featured", language)}</span>
               </div>
-              {mainFeature && (
-                <VideoCard
-                  video={mainFeature}
-                  large
-                  onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
-                />
-              )}
+              {featuredError
+                ? <p className="py-8 font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load featured video.</p>
+                : mainFeature && (
+                    <VideoCard
+                      video={mainFeature}
+                      large
+                      onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
+                    />
+                  )}
             </div>
 
             {/* Side Stack */}
@@ -151,7 +153,9 @@ export default function Home() {
               {t("home.most_watched", language)}
             </p>
           </div>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
+          {trendingError
+            ? <p className="py-8 text-center font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load trending videos.</p>
+            : <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
             {trending.slice(0, 6).map(v => (
               <VideoCard
                 key={v.id}
@@ -159,7 +163,7 @@ export default function Home() {
                 onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
               />
             ))}
-          </div>
+          </div>}
         </div>
       </section>
 
@@ -228,17 +232,21 @@ export default function Home() {
       <section className="bg-[var(--color-background)] px-6 pt-11 pb-14">
         <div className="mx-auto max-w-[var(--max-content)]">
           <SectionHead title={t("home.latest_videos", language)} />
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
-            {latest.map(v => (
-              <VideoCard
-                key={v.id}
-                video={v}
-                onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
-              />
-            ))}
-          </div>
+          {latestError
+            ? <p className="py-8 text-center font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load latest videos.</p>
+            : (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
+                  {latest.map(v => (
+                    <VideoCard
+                      key={v.id}
+                      video={v}
+                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                    />
+                  ))}
+                </div>
+              )}
           <div className="mt-7 text-center">
-            <Link to="/videos" className="rounded-lg border border-[var(--color-primary)]/30 bg-[var(--color-primary-bg)] px-8 py-2.5 font-[var(--font-heading)] text-[13px] font-bold text-[var(--color-primary)] no-underline transition-all hover:bg-[var(--color-primary)] hover:text-white">
+            <Link to="/videos" search={{ category: undefined }} className="rounded-lg border border-[var(--color-primary)]/30 bg-[var(--color-primary-bg)] px-8 py-2.5 font-[var(--font-heading)] text-[13px] font-bold text-[var(--color-primary)] no-underline transition-all hover:bg-[var(--color-primary)] hover:text-white">
               {t("home.view_all", language)}
             </Link>
           </div>

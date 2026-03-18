@@ -46,9 +46,24 @@ async function submitContact(c) {
       </table>
     `,
     });
+    // Send notification to admin
     await sendEmailNotification(htmlContent, {
-        to: validatedData.email,
+        to: "cctvprakasam@gmail.com",
         subject: `Contact Form: ${escapeHtml(validatedData.subject)}`,
+    });
+    // Send confirmation to user
+    const confirmationHtml = wrapEmailTemplate({
+        previewText: "We received your message — CCTV AP Prakasam",
+        body: `
+      <h2 style="margin:0 0 16px 0;font-size:20px;color:#0f172a;font-weight:700;">Thank You for Contacting Us!</h2>
+      <p style="margin:0 0 12px 0;font-size:14px;color:#475569;line-height:1.6;">Hi <strong>${escapeHtml(validatedData.name)}</strong>,</p>
+      <p style="margin:0 0 12px 0;font-size:14px;color:#475569;line-height:1.6;">We have received your message regarding <strong>"${escapeHtml(validatedData.subject)}"</strong>. Our team will review it and get back to you within 24 hours.</p>
+      <p style="margin:0;font-size:13px;color:#94a3b8;">— CCTV AP Prakasam Team</p>
+    `,
+    });
+    await sendEmailNotification(confirmationHtml, {
+        to: validatedData.email,
+        subject: "We received your message - CCTV Prakasam",
     });
     return sendSuccessResp(c, 200, CONTACT_EMAIL_SENT);
 }

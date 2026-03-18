@@ -74,6 +74,7 @@ export default function Videos() {
           />
           {searchTerm && (
             <button
+              aria-label="Clear search"
               onClick={() => { setSearchTerm(""); setPage(1); }}
               className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
             >

@@ -90,11 +90,11 @@ function createRateLimiter(opts: RateLimiterOptions) {
   });
 }
 
-// Auth endpoints: 10 requests per 15 minutes
+// Auth endpoints: 5 requests per 15 minutes
 export const authRateLimiter = createRateLimiter({
   name: "auth",
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 5,
 });
 
 // General API: 100 requests per minute

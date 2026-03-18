@@ -99,7 +99,7 @@ const videosRoute = createRoute({
   getParentRoute: () => publicLayout,
   path: "/videos",
   component: Videos,
-  validateSearch: (search: Record<string, unknown>): { category?: string } => ({
+  validateSearch: (search: Record<string, unknown>) => ({
     category: (search.category as string) || undefined,
   }),
 });

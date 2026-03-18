@@ -83,7 +83,7 @@ async function loginUser(data: ValidatedLoginSchema): Promise<{ user: Omit<User,
     "eq",
   );
 
-  if (!user || !user.password_hash) {
+  if (!user || !user.password_hash || user.deleted_at) {
     throw new UnauthorizedException(INVALID_CREDENTIALS);
   }
 

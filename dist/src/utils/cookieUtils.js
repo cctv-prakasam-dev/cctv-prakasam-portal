@@ -14,7 +14,7 @@ export function setAuthCookies(c, accessToken, refreshToken) {
         httpOnly: true,
         secure: isSecure,
         sameSite: "Lax",
-        path: "/api/auth/refresh-token",
+        path: "/api",
         maxAge: jwtConfig.refresh_token_expires_in,
     });
 }
@@ -23,6 +23,6 @@ export function clearAuthCookies(c) {
         path: "/",
     });
     deleteCookie(c, "refresh_token", {
-        path: "/api/auth/refresh-token",
+        path: "/api",
     });
 }

@@ -40,9 +40,8 @@ async function getDashboardStats() {
   const [subscriberCount] = await db.select({ total: count() }).from(newsletterSubscribers);
   const [breakingNewsCount] = await db.select({ total: count() }).from(breakingNews);
 
-  // Videos published per day this week (last 7 days)
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  // Videos published per day this week (last 7 days, UTC)
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
   const weeklyVideos = await db
     .select({

@@ -35,15 +35,19 @@ async function request<T = unknown>(
       signal: controller.signal,
     });
 
-    // Handle token expiry — attempt refresh once
-    if (response.status === 401 && !endpoint.includes("/auth/refresh-token")) {
+    // Handle token expiry — attempt refresh once (skip all auth endpoints)
+    if (response.status === 401 && !endpoint.includes("/auth/")) {
       const refreshed = await refreshAccessToken();
       if (refreshed) {
+        const retryController = new AbortController();
+        const retryTimeout = setTimeout(() => retryController.abort(), REQUEST_TIMEOUT_MS);
         const retryResponse = await fetch(`${API_BASE_URL}${endpoint}`, {
           ...options,
           headers,
           credentials: "include",
+          signal: retryController.signal,
         });
+        clearTimeout(retryTimeout);
         const retryData: ApiResponse<T> = await retryResponse.json();
         if (!retryResponse.ok) {
           throw retryData;

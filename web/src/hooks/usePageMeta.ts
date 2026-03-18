@@ -18,7 +18,7 @@ function setMeta(property: string, content: string) {
     }
     document.head.appendChild(el);
   }
-  el.setAttribute("content", content);
+  el.setAttribute("content", content.replace(/"/g, "&quot;"));
 }
 
 export function usePageMeta({ title, description, image }: PageMeta) {

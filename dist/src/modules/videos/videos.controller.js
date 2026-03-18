@@ -3,8 +3,8 @@ import { sendSuccessResp } from "../../utils/respUtils.js";
 import { validateRequest } from "../../validations/validateRequest.js";
 import { createVideo, deleteVideo, getChannelStats, getFeaturedVideos, getTrendingVideos, getVideoById, getVideosPaginated, updateVideo, } from "./videos.service.js";
 async function getVideos(c) {
-    const page = Number(c.req.query("page")) || 1;
-    const limit = Number(c.req.query("limit")) || 10;
+    const page = Math.max(1, Number(c.req.query("page")) || 1);
+    const limit = Math.min(100, Math.max(1, Number(c.req.query("limit")) || 10));
     const categoryId = c.req.query("category") ? Number(c.req.query("category")) : undefined;
     const sort = c.req.query("sort");
     const search = c.req.query("search");
@@ -13,6 +13,10 @@ async function getVideos(c) {
 }
 async function getVideo(c) {
     const id = Number(c.req.param("id"));
+    if (Number.isNaN(id) || id <= 0) {
+        c.status(400);
+        return c.json({ status: 400, success: false, message: "Invalid video ID" });
+    }
     const result = await getVideoById(id);
     return sendSuccessResp(c, 200, VIDEO_FETCHED, result);
 }
