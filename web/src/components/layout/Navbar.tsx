@@ -64,12 +64,12 @@ export default function Navbar() {
             <LanguageToggle />
             <ThemeToggle />
 
-            {/* Subscribe Button - Desktop */}
+            {/* Subscribe Button - All screens */}
             <a
               href="https://www.youtube.com/@CctvPrakasam"
               target="_blank"
               rel="noreferrer"
-              className="hidden items-center gap-1.5 rounded-md bg-[#DB2777] px-4.5 py-2 font-[var(--font-heading)] text-xs font-bold tracking-wide text-white no-underline transition-all hover:bg-[#BE185D] min-[900px]:flex"
+              className="flex items-center gap-1 rounded-md bg-[#DB2777] px-2.5 py-1.5 font-[var(--font-heading)] text-[11px] font-bold tracking-wide text-white no-underline transition-all hover:bg-[#BE185D] min-[900px]:gap-1.5 min-[900px]:px-4.5 min-[900px]:py-2 min-[900px]:text-xs"
             >
               ▶
               {" "}
