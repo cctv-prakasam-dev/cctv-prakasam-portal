@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import logo from "@/assets/logo.svg";
+import PasswordInput from "@/components/ui/PasswordInput";
 import { useLogin } from "@/hooks/useAuth";
 import { useAuthUser } from "@/stores/authStore";
 
@@ -59,6 +60,8 @@ export default function AdminLogin() {
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
@@ -71,14 +74,10 @@ export default function AdminLogin() {
             <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
               Password
             </label>
-            <input
-              type="password"
+            <PasswordInput
               value={password}
               onChange={e => setPassword(e.target.value)}
-              required
-              minLength={8}
-              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
-              placeholder="••••••••"
+              autoComplete="current-password"
             />
           </div>
 

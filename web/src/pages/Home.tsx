@@ -219,7 +219,8 @@ export default function Home() {
               {subscribe.isPending ? "..." : t("home.subscribe_btn", language)}
             </button>
           </div>
-          {subscribe.isSuccess && <p className="mt-2 text-sm text-[var(--color-success)]">Subscribed successfully!</p>}
+          {subscribe.isSuccess && <p className="mt-2 text-sm text-emerald-600 dark:text-emerald-400">Subscribed successfully!</p>}
+          {subscribe.isError && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{subscribe.error instanceof Error ? subscribe.error.message : "Subscription failed. Please try again."}</p>}
         </div>
       </section>
 

@@ -2,7 +2,9 @@ import { Hono } from "hono";
 
 import isAdmin from "../../middlewares/isAdmin.js";
 import isAuthorized from "../../middlewares/isAuthorized.js";
+import isManager from "../../middlewares/isManager.js";
 import {
+  createUser,
   getStats,
   listUsers,
   updateRole,
@@ -10,10 +12,12 @@ import {
 
 const dashboardAdminRoutes = new Hono();
 
-// Admin routes (protected)
-dashboardAdminRoutes.use("*", isAuthorized, isAdmin);
-dashboardAdminRoutes.get("/stats", getStats);
-dashboardAdminRoutes.get("/users", listUsers);
-dashboardAdminRoutes.put("/users/:id", updateRole);
+// Stats accessible by MANAGER and ADMIN
+dashboardAdminRoutes.get("/stats", isAuthorized, isManager, getStats);
+
+// User management - ADMIN only
+dashboardAdminRoutes.get("/users", isAuthorized, isAdmin, listUsers);
+dashboardAdminRoutes.post("/users", isAuthorized, isAdmin, createUser);
+dashboardAdminRoutes.put("/users/:id", isAuthorized, isAdmin, updateRole);
 
 export { dashboardAdminRoutes };

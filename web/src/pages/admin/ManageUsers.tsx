@@ -232,7 +232,7 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
     setLoading(true);
 
     try {
-      await apiPost("/auth/register", {
+      await apiPost("/admin/dashboard/users", {
         first_name: form.first_name,
         last_name: form.last_name,
         email: form.email,

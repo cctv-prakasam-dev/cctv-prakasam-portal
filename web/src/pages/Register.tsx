@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff } from "lucide-react";
-
 import logo from "@/assets/logo.svg";
+import PasswordInput from "@/components/ui/PasswordInput";
 import { useRegister } from "@/hooks/useAuth";
 
 export default function Register() {
@@ -13,7 +12,6 @@ export default function Register() {
     password: "",
     confirm_password: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const register = useRegister();
@@ -79,7 +77,7 @@ export default function Register() {
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 min-[440px]:grid-cols-2">
             <div>
               <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
                 First Name
@@ -129,38 +127,24 @@ export default function Register() {
             <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
               Password
             </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                minLength={8}
-                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 pr-10 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
-                placeholder="Min 8 characters"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer border-none bg-transparent text-[var(--color-text-muted)]"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
+            <PasswordInput
+              value={form.password}
+              onChange={handleChange}
+              name="password"
+              autoComplete="new-password"
+              placeholder="Min 8 characters"
+            />
           </div>
 
           <div className="mt-3">
             <label className="mb-1 block font-[var(--font-body)] text-[13px] font-medium text-[var(--color-text-secondary)]">
               Confirm Password
             </label>
-            <input
-              type="password"
-              name="confirm_password"
+            <PasswordInput
               value={form.confirm_password}
               onChange={handleChange}
-              required
-              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 font-[var(--font-body)] text-sm text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-primary)]"
+              name="confirm_password"
+              autoComplete="new-password"
               placeholder="Re-enter password"
             />
           </div>

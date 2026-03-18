@@ -3,7 +3,6 @@ const VEnvSchema = object({
     NODE_ENV: string(),
     API_VERSION: string(),
     PORT: pipe(string(), transform(val => Number(val))),
-    COOKIE_DOMAIN: string(),
     DB_HOST: string(),
     DB_PORT: pipe(string(), transform(val => Number(val))),
     DB_USER: string(),

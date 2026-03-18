@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 import { Check, Copy, Play } from "lucide-react";
 
+import { useCategories } from "@/hooks/useCategories";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useVideo, useVideos } from "@/hooks/useVideos";
 
@@ -66,6 +67,7 @@ export default function VideoDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const { data: videoData, isLoading, isError } = useVideo(id);
   const { data: relatedData } = useVideos({ page: 1, page_size: 7 });
+  const { data: categories } = useCategories();
 
   const video = videoData?.data;
   usePageMeta({
@@ -73,7 +75,12 @@ export default function VideoDetail() {
     description: video?.description?.slice(0, 160) || undefined,
     image: video?.thumbnail_url || undefined,
   });
-  const related = (relatedData?.data?.records ?? []).filter(v => v.id !== Number(id)).slice(0, 6);
+  const cats = categories?.data ?? [];
+  const catMap = new Map(cats.map(c => [c.id, c]));
+  const related = (relatedData?.data?.records ?? []).filter(v => v.id !== Number(id)).slice(0, 6).map((v) => {
+    const cat = v.category_id ? catMap.get(v.category_id) : undefined;
+    return { ...v, category_name: v.category_name || cat?.name, category_color: v.category_color || cat?.color };
+  });
 
   if (isLoading) {
     return <div className="flex min-h-[80vh] items-center justify-center font-[var(--font-body)] text-[var(--color-text-muted)]">Loading...</div>;

@@ -42,7 +42,7 @@ const cards = [
 export default function About() {
   usePageMeta({ title: "About Us", description: "Learn about CCTV AP Prakasam — Prakasam district's most trusted digital news channel since 2021." });
   const { language } = useLanguage();
-  const { data: statsResp } = useQuery({
+  const { data: statsResp, isLoading } = useQuery({
     queryKey: ["channel-stats"],
     queryFn: () => apiGet<ChannelStats>("/videos/channel-stats"),
     staleTime: 5 * 60 * 1000,
@@ -77,7 +77,7 @@ export default function About() {
               className="rounded-[14px] border border-[var(--color-border)] bg-[var(--color-card)] p-6 text-center shadow-sm"
               style={{ borderTopWidth: 3, borderTopColor: s.color }}
             >
-              <div className="font-[var(--font-display)] text-[32px]" style={{ color: s.color }}>{s.value}</div>
+              <div className="font-[var(--font-display)] text-[32px]" style={{ color: s.color }}>{isLoading ? <span className="inline-block h-8 w-16 animate-pulse rounded bg-[var(--color-surface-2)]" /> : s.value}</div>
               <div className="mt-1 font-[var(--font-body)] text-[11px] text-[var(--color-text-muted)]">{t(s.labelKey, language)}</div>
             </div>
           ))}

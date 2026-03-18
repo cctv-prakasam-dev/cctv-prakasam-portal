@@ -9,7 +9,6 @@ const VEnvSchema = object({
     string(),
     transform(val => Number(val)),
   ),
-  COOKIE_DOMAIN: string(),
   DB_HOST: string(),
   DB_PORT: pipe(
     string(),
