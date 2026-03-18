@@ -1,9 +1,10 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import {
   createRootRoute,
   createRoute,
   createRouter,
   Outlet,
+  useLocation,
 } from "@tanstack/react-router";
 
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -54,8 +55,16 @@ function PublicLayout() {
   );
 }
 
+function RootComponent() {
+  const { href } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [href]);
+  return <Outlet />;
+}
+
 const rootRoute = createRootRoute({
-  component: () => <Outlet />,
+  component: RootComponent,
 });
 
 // Public layout route
@@ -90,6 +99,9 @@ const videosRoute = createRoute({
   getParentRoute: () => publicLayout,
   path: "/videos",
   component: Videos,
+  validateSearch: (search: Record<string, unknown>): { category?: string } => ({
+    category: (search.category as string) || undefined,
+  }),
 });
 
 const videoDetailRoute = createRoute({

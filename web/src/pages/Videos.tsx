@@ -1,6 +1,6 @@
 import { useSearch } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import VideoCard from "@/components/ui/VideoCard";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
@@ -17,6 +17,13 @@ export default function Videos() {
   const search = useSearch({ strict: false }) as { category?: string };
   const [filter, setFilter] = useState(search.category || "all");
   const [page, setPage] = useState(1);
+
+  // Sync filter state when URL search params change (e.g., footer category links)
+  useEffect(() => {
+    const newFilter = search.category || "all";
+    setFilter(newFilter);
+    setPage(1);
+  }, [search.category]);
   const [searchTerm, setSearchTerm] = useState("");
   const searchQuery = useDebounce(searchTerm, 300);
   const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
