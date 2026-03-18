@@ -135,12 +135,23 @@ export default function Navbar() {
               {t(link.key, language)}
             </Link>
           ))}
+          <a
+            href="https://www.youtube.com/@CctvPrakasam"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setMobileOpen(false)}
+            className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#DB2777] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline transition-all hover:bg-[#BE185D]"
+          >
+            ▶
+            {" "}
+            {t("nav.subscribe", language)}
+          </a>
           {user
             ? (
                 <Link
                   to="/admin"
                   onClick={() => setMobileOpen(false)}
-                  className="mt-3 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
+                  className="mt-1 rounded-xl bg-gradient-to-br from-[#0891B2] to-[#06B6D4] px-5 py-4 font-[var(--font-heading)] text-base font-bold text-white no-underline"
                 >
                   🔐
                   {" "}
