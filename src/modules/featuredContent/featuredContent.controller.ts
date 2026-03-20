@@ -19,11 +19,18 @@ import {
   createFeaturedContent,
   deleteFeaturedContent,
   getActiveFeaturedContent,
+  getActiveFeaturedContentWithVideos,
   updateFeaturedContent,
 } from "./featuredContent.service.js";
 
 async function getFeaturedContent(c: Context) {
   const result = await getActiveFeaturedContent();
+
+  return sendSuccessResp(c, 200, FEATURED_CONTENT_FETCHED, result);
+}
+
+async function getFeaturedContentWithVideos(c: Context) {
+  const result = await getActiveFeaturedContentWithVideos();
 
   return sendSuccessResp(c, 200, FEATURED_CONTENT_FETCHED, result);
 }
@@ -68,6 +75,7 @@ async function remove(c: Context) {
 export {
   create,
   getFeaturedContent,
+  getFeaturedContentWithVideos,
   remove,
   update,
 };

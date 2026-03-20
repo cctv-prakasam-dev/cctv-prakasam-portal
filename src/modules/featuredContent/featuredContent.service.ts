@@ -1,8 +1,12 @@
+import { eq, sql } from "drizzle-orm";
+
 import type { FeaturedContentItem } from "../../db/schema/featuredContent.js";
 import type { ValidatedCreateFeaturedContentSchema, ValidatedUpdateFeaturedContentSchema } from "./featuredContent.validation.js";
 
 import { FEATURED_CONTENT_NOT_FOUND } from "../../constants/appMessages.js";
+import { db } from "../../db/configuration.js";
 import { featuredContent } from "../../db/schema/featuredContent.js";
+import { videos } from "../../db/schema/videos.js";
 import NotFoundException from "../../exceptions/notFoundException.js";
 import {
   deleteRecordById,
@@ -28,6 +32,32 @@ async function getActiveFeaturedContent(): Promise<FeaturedContentItem[]> {
   );
 
   return result as FeaturedContentItem[];
+}
+
+async function getActiveFeaturedContentWithVideos() {
+  const result = await db
+    .select({
+      id: featuredContent.id,
+      type: featuredContent.type,
+      title: featuredContent.title,
+      sort_order: featuredContent.sort_order,
+      video_id: featuredContent.video_id,
+      video_title: videos.title,
+      video_title_te: videos.title_te,
+      youtube_id: videos.youtube_id,
+      description: videos.description,
+      thumbnail_url: videos.thumbnail_url,
+      duration: videos.duration,
+      view_count: videos.view_count,
+      published_at: videos.published_at,
+      category_id: videos.category_id,
+    })
+    .from(featuredContent)
+    .leftJoin(videos, eq(featuredContent.video_id, videos.id))
+    .where(sql`${featuredContent.is_active} = true`)
+    .orderBy(featuredContent.sort_order);
+
+  return result;
 }
 
 async function getFeaturedContentById(id: number): Promise<FeaturedContentItem> {
@@ -71,6 +101,7 @@ export {
   createFeaturedContent,
   deleteFeaturedContent,
   getActiveFeaturedContent,
+  getActiveFeaturedContentWithVideos,
   getFeaturedContentById,
   updateFeaturedContent,
 };

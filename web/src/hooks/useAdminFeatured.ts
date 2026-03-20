@@ -13,6 +13,30 @@ export interface FeaturedContentItem {
   updated_at?: string;
 }
 
+export interface FeaturedVideoItem {
+  id: number;
+  type: string;
+  title?: string;
+  sort_order?: number;
+  video_id?: number;
+  video_title?: string;
+  video_title_te?: string;
+  youtube_id?: string;
+  description?: string;
+  thumbnail_url?: string;
+  duration?: string;
+  view_count?: string;
+  published_at?: string;
+  category_id?: number;
+}
+
+export function useFeaturedContent() {
+  return useQuery({
+    queryKey: ["featured-content", "with-videos"],
+    queryFn: () => apiGet<FeaturedVideoItem[]>("/featured-content/with-videos"),
+  });
+}
+
 export function useAdminFeatured() {
   return useQuery({
     queryKey: ["admin", "featured-content"],

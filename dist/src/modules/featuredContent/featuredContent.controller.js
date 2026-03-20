@@ -1,9 +1,13 @@
 import { CREATE_FEATURED_CONTENT_VALIDATION_ERROR, FEATURED_CONTENT_CREATED, FEATURED_CONTENT_DELETED, FEATURED_CONTENT_FETCHED, FEATURED_CONTENT_UPDATED, UPDATE_FEATURED_CONTENT_VALIDATION_ERROR, } from "../../constants/appMessages.js";
 import { sendSuccessResp } from "../../utils/respUtils.js";
 import { validateRequest } from "../../validations/validateRequest.js";
-import { createFeaturedContent, deleteFeaturedContent, getActiveFeaturedContent, updateFeaturedContent, } from "./featuredContent.service.js";
+import { createFeaturedContent, deleteFeaturedContent, getActiveFeaturedContent, getActiveFeaturedContentWithVideos, updateFeaturedContent, } from "./featuredContent.service.js";
 async function getFeaturedContent(c) {
     const result = await getActiveFeaturedContent();
+    return sendSuccessResp(c, 200, FEATURED_CONTENT_FETCHED, result);
+}
+async function getFeaturedContentWithVideos(c) {
+    const result = await getActiveFeaturedContentWithVideos();
     return sendSuccessResp(c, 200, FEATURED_CONTENT_FETCHED, result);
 }
 async function create(c) {
@@ -24,4 +28,4 @@ async function remove(c) {
     const result = await deleteFeaturedContent(id);
     return sendSuccessResp(c, 200, FEATURED_CONTENT_DELETED, result);
 }
-export { create, getFeaturedContent, remove, update, };
+export { create, getFeaturedContent, getFeaturedContentWithVideos, remove, update, };

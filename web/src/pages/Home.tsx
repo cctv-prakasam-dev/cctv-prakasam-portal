@@ -10,17 +10,38 @@ import { useBreakingNews } from "@/hooks/useBreakingNews";
 import { useCategories } from "@/hooks/useCategories";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import type { FeaturedVideoItem } from "@/hooks/useAdminFeatured";
+import { useFeaturedContent } from "@/hooks/useAdminFeatured";
 import type { Video } from "@/hooks/useVideos";
 import { useFeaturedVideos, useTrendingVideos, useVideos } from "@/hooks/useVideos";
 import { formatViews, timeAgo } from "@/lib/format";
 import { t } from "@/lib/i18n";
 import { useLanguage } from "@/stores/languageStore";
 
+function featuredToVideo(item: FeaturedVideoItem): Video {
+  return {
+    id: item.video_id || item.id,
+    title: item.title || item.video_title || "",
+    title_te: item.video_title_te || null,
+    youtube_id: item.youtube_id || null,
+    description: item.description || null,
+    thumbnail_url: item.thumbnail_url || null,
+    duration: item.duration || null,
+    view_count: item.view_count || null,
+    published_at: item.published_at || null,
+    category_id: item.category_id || null,
+    is_featured: true,
+    is_trending: false,
+    is_active: true,
+  } as Video;
+}
+
 export default function Home() {
   usePageMeta({ title: "Home", description: "Prakasam district's trusted digital news channel. Latest politics, entertainment, devotional & local coverage from Andhra Pradesh." });
   const { language } = useLanguage();
   const { data: breakingNews } = useBreakingNews();
   const { data: categories } = useCategories();
+  const { data: featuredContentData } = useFeaturedContent();
   const { data: featuredData, isError: featuredError } = useFeaturedVideos();
   const { data: trendingData, isError: trendingError } = useTrendingVideos();
   const { data: latestData, isError: latestError } = useVideos({ page: 1, page_size: 8 });
@@ -38,7 +59,11 @@ export default function Home() {
     return { ...v, category_name: cat?.name, category_color: cat?.color };
   }
 
-  const featured = (featuredData?.data ?? []).map(enrichVideo);
+  // Use admin Featured Content if available, otherwise fall back to is_featured videos
+  const featuredContentItems = (featuredContentData?.data ?? []).filter(i => i.video_id && i.youtube_id);
+  const featured = featuredContentItems.length > 0
+    ? featuredContentItems.map(i => enrichVideo(featuredToVideo(i)))
+    : (featuredData?.data ?? []).map(enrichVideo);
   const trending = (trendingData?.data ?? []).map(enrichVideo);
   const latest = (latestData?.data?.records ?? []).map(enrichVideo);
   const mainFeature = featured[0];
