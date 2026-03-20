@@ -19,7 +19,6 @@
     "@hono/node-server": "^1.19.11",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.1",
-    "env": "^0.0.2",
     "hono": "^4.12.5",
     "pg": "^8.20.0",
     "valibot": "^1.2.0"

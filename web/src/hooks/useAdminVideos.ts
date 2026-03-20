@@ -39,7 +39,7 @@ export function useAdminVideos(params: UseAdminVideosParams = {}) {
 
   return useQuery({
     queryKey: ["admin", "videos", params],
-    queryFn: () => apiGet<PaginatedVideos>(`/videos${query ? `?${query}` : ""}`),
+    queryFn: () => apiGet<PaginatedVideos>(`/admin/videos${query ? `?${query}` : ""}`),
   });
 }
 
