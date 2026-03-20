@@ -70,12 +70,12 @@ export default function Home() {
               {featuredError
                 ? <p className="py-8 font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load featured video.</p>
                 : mainFeature && (
-                    <VideoCard
-                      video={mainFeature}
-                      large
-                      onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
-                    />
-                  )}
+                  <VideoCard
+                    video={mainFeature}
+                    large
+                    onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
+                  />
+                )}
             </div>
 
             {/* Side Stack */}
@@ -155,15 +155,17 @@ export default function Home() {
           </div>
           {trendingError
             ? <p className="py-8 text-center font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load trending videos.</p>
-            : <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
-            {trending.slice(0, 6).map(v => (
-              <VideoCard
-                key={v.id}
-                video={v}
-                onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
-              />
-            ))}
-          </div>}
+            : (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4">
+                  {trending.slice(0, 6).map(v => (
+                    <VideoCard
+                      key={v.id}
+                      video={v}
+                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                    />
+                  ))}
+                </div>
+              )}
         </div>
       </section>
 
