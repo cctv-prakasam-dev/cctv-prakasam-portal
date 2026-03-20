@@ -21,6 +21,8 @@ function setMeta(property: string, content: string) {
   el.setAttribute("content", content.replace(/"/g, "&quot;"));
 }
 
+const BASE_URL = "https://cctv-prakasam-portal.onrender.com";
+
 export function usePageMeta({ title, description, image }: PageMeta) {
   useEffect(() => {
     const fullTitle = `${title} — CCTV AP Prakasam`;
@@ -28,6 +30,7 @@ export function usePageMeta({ title, description, image }: PageMeta) {
 
     setMeta("og:title", fullTitle);
     setMeta("twitter:title", fullTitle);
+    setMeta("og:url", `${BASE_URL}${window.location.pathname}`);
 
     if (description) {
       setMeta("description", description);
@@ -35,9 +38,8 @@ export function usePageMeta({ title, description, image }: PageMeta) {
       setMeta("twitter:description", description);
     }
 
-    if (image) {
-      setMeta("og:image", image);
-      setMeta("twitter:image", image);
-    }
+    const ogImage = image?.startsWith("http") ? image : `${BASE_URL}${image || "/og-image.png"}`;
+    setMeta("og:image", ogImage);
+    setMeta("twitter:image", ogImage);
   }, [title, description, image]);
 }
