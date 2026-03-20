@@ -25,6 +25,7 @@ videoPublicRoutes.get("/:id", getVideo);
 
 // Admin routes (protected)
 videoAdminRoutes.use("*", isAuthorized, isManager);
+videoAdminRoutes.get("/", getVideos);
 videoAdminRoutes.post("/", create);
 videoAdminRoutes.put("/:id", update);
 videoAdminRoutes.delete("/:id", remove);
