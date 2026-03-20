@@ -21,7 +21,7 @@ function setMeta(property: string, content: string) {
   el.setAttribute("content", content.replace(/"/g, "&quot;"));
 }
 
-const BASE_URL = "https://cctv-prakasam-portal.onrender.com";
+const BASE_URL = "https://cctv-prakasam-portal-g3il.onrender.com";
 
 export function usePageMeta({ title, description, image }: PageMeta) {
   useEffect(() => {
