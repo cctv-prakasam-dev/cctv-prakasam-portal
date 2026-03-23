@@ -4,6 +4,7 @@ import { useState } from "react";
 import ceoPhoto from "@/assets/ceo-photo.svg";
 import BreakingTicker from "@/components/layout/BreakingTicker";
 import SectionHead from "@/components/ui/SectionHead";
+import ShareButtons from "@/components/ui/ShareButtons";
 import VideoCard from "@/components/ui/VideoCard";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useBreakingNews } from "@/hooks/useBreakingNews";
@@ -59,15 +60,16 @@ export default function Home() {
     return { ...v, category_name: cat?.name, category_color: cat?.color };
   }
 
-  // Use admin Featured Content if available, otherwise fall back to is_featured videos
+  // Use admin Featured Content if available, otherwise fall back to is_featured videos, then latest
   const featuredContentItems = (featuredContentData?.data ?? []).filter(i => i.video_id && i.youtube_id);
   const featured = featuredContentItems.length > 0
     ? featuredContentItems.map(i => enrichVideo(featuredToVideo(i)))
     : (featuredData?.data ?? []).map(enrichVideo);
   const trending = (trendingData?.data ?? []).map(enrichVideo);
   const latest = (latestData?.data?.records ?? []).map(enrichVideo);
-  const mainFeature = featured[0];
-  const sideVideos = (featured.length > 1 ? featured.slice(1, 6) : latest.slice(0, 5));
+  // Hero: featured first, then latest uploaded video as fallback
+  const mainFeature = featured[0] || latest[0];
+  const sideVideos = featured.length > 1 ? featured.slice(1, 6) : latest.slice(mainFeature === latest[0] ? 1 : 0, mainFeature === latest[0] ? 6 : 5);
 
   function handleSubscribe() {
     if (!email)
@@ -95,11 +97,14 @@ export default function Home() {
               {featuredError
                 ? <p className="py-8 font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load featured video.</p>
                 : mainFeature && (
-                  <VideoCard
-                    video={mainFeature}
-                    large
-                    onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
-                  />
+                  <>
+                    <VideoCard
+                      video={mainFeature}
+                      large
+                      onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
+                    />
+                    <ShareButtons title={mainFeature.title} videoId={mainFeature.id} compact />
+                  </>
                 )}
             </div>
 

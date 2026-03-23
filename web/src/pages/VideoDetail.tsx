@@ -1,67 +1,10 @@
-import { useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
-import { Check, Copy, Play } from "lucide-react";
+import { Play } from "lucide-react";
 
+import ShareButtons from "@/components/ui/ShareButtons";
 import { useCategories } from "@/hooks/useCategories";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useVideo, useVideos } from "@/hooks/useVideos";
-
-function ShareButtons({ title, youtubeId }: { title: string; youtubeId?: string }) {
-  const [copied, setCopied] = useState(false);
-  const pageUrl = window.location.href;
-  const ytUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : pageUrl;
-  const encodedUrl = encodeURIComponent(ytUrl);
-  const encodedTitle = encodeURIComponent(title);
-
-  function copyLink() {
-    navigator.clipboard.writeText(ytUrl);
-    setCopied(true);
-    setTimeout(setCopied, 2000, false);
-  }
-
-  const shareLinks = [
-    { label: "Facebook", color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
-    { label: "Twitter", color: "#000", href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}` },
-    { label: "WhatsApp", color: "#25D366", href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}` },
-  ];
-
-  return (
-    <div className="mt-4 flex flex-wrap gap-2">
-      {shareLinks.map(s => (
-        <a
-          key={s.label}
-          href={s.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] no-underline transition-colors hover:border-current"
-          style={{ borderLeftWidth: 2, borderLeftColor: s.color }}
-        >
-          {s.label}
-        </a>
-      ))}
-      <button
-        onClick={copyLink}
-        className="flex cursor-pointer items-center gap-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-primary)]"
-      >
-        {copied
-          ? (
-              <>
-                <Check size={10} />
-                {" "}
-                Copied!
-              </>
-            )
-          : (
-              <>
-                <Copy size={10} />
-                {" "}
-                Copy Link
-              </>
-            )}
-      </button>
-    </div>
-  );
-}
 
 export default function VideoDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
@@ -178,7 +121,7 @@ export default function VideoDetail() {
               )}
 
               {/* Share Buttons */}
-              <ShareButtons title={video.title} youtubeId={video.youtube_id} />
+              <ShareButtons title={video.title} videoId={video.id} />
             </div>
           </div>
 
