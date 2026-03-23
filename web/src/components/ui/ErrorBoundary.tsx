@@ -7,16 +7,25 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  errorKey: string;
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, errorKey: window.location.pathname };
   }
 
-  static getDerivedStateFromError(): State {
+  static getDerivedStateFromError(): Partial<State> {
     return { hasError: true };
+  }
+
+  static getDerivedStateFromProps(_props: Props, state: State): Partial<State> | null {
+    // Reset error state when the URL changes (navigation)
+    if (window.location.pathname !== state.errorKey) {
+      return { hasError: false, errorKey: window.location.pathname };
+    }
+    return null;
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {

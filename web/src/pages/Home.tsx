@@ -49,7 +49,7 @@ export default function Home() {
   const { data: latestData, isError: latestError } = useVideos({ page: 1, page_size: 8 });
   const subscribe = useSubscribeNewsletter();
   const [email, setEmail] = useState("");
-  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string; videoId: number } | null>(null);
 
   const breakingItems = breakingNews?.data?.map(b => b.text_te || b.text) ?? [];
   const cats = categories?.data ?? [];
@@ -102,7 +102,7 @@ export default function Home() {
                     <VideoCard
                       video={mainFeature}
                       large
-                      onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title })}
+                      onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title, videoId: mainFeature.id })}
                     />
                     <ShareButtons title={mainFeature.title} videoId={mainFeature.id} compact />
                   </>
@@ -120,7 +120,7 @@ export default function Home() {
                   <div
                     key={v.id}
                     className="group flex cursor-pointer gap-3 overflow-hidden rounded-[10px] border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-all hover:border-[var(--color-primary)]/40 hover:shadow-md"
-                    onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                    onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title, videoId: v.id })}
                   >
                     <div className="relative flex h-[76px] w-[136px] shrink-0 items-center justify-center bg-slate-200 dark:bg-slate-700">
                       {v.thumbnail_url && <img src={v.thumbnail_url} alt={v.title_te || v.title} className="absolute inset-0 h-full w-full object-cover" />}
@@ -202,7 +202,7 @@ export default function Home() {
                     <VideoCard
                       key={v.id}
                       video={v}
-                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title, videoId: v.id })}
                     />
                   ))}
                 </div>
@@ -283,7 +283,7 @@ export default function Home() {
                     <VideoCard
                       key={v.id}
                       video={v}
-                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                      onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title, videoId: v.id })}
                     />
                   ))}
                 </div>
@@ -301,6 +301,7 @@ export default function Home() {
         <VideoPlayerModal
           youtubeId={playingVideo.youtubeId}
           title={playingVideo.title}
+          videoId={playingVideo.videoId}
           onClose={() => setPlayingVideo(null)}
         />
       )}

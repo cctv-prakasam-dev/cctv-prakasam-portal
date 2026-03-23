@@ -1,5 +1,6 @@
 import { Play } from "lucide-react";
 
+import ShareButtons from "@/components/ui/ShareButtons";
 import { formatDate, formatViews } from "@/lib/format";
 
 export interface VideoCardData {
@@ -97,6 +98,9 @@ export default function VideoCard({ video, onClick, large }: VideoCardProps) {
             {formatDate(video.published_at)}
           </span>
         </div>
+
+        {/* Share Buttons */}
+        <ShareButtons title={video.title} videoId={video.id} compact />
       </div>
     </div>
   );

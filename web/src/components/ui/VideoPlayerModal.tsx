@@ -1,15 +1,18 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
+import ShareButtons from "@/components/ui/ShareButtons";
+
 const YOUTUBE_ID_REGEX = /^[\w-]{11}$/;
 
 interface VideoPlayerModalProps {
   youtubeId: string;
   title: string;
+  videoId: number;
   onClose: () => void;
 }
 
-export default function VideoPlayerModal({ youtubeId, title, onClose }: VideoPlayerModalProps) {
+export default function VideoPlayerModal({ youtubeId, title, videoId, onClose }: VideoPlayerModalProps) {
   const isValidId = YOUTUBE_ID_REGEX.test(youtubeId);
 
   // Close on Escape key
@@ -60,8 +63,11 @@ export default function VideoPlayerModal({ youtubeId, title, onClose }: VideoPla
               )}
         </div>
 
-        {/* Title */}
-        <p className="mt-3 font-[var(--font-heading)] text-sm font-semibold text-white/90">{title}</p>
+        {/* Title & Share */}
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-2">
+          <p className="font-[var(--font-heading)] text-sm font-semibold text-white/90">{title}</p>
+          <ShareButtons title={title} videoId={videoId} compact />
+        </div>
       </div>
     </div>
   );

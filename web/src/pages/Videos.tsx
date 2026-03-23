@@ -26,7 +26,7 @@ export default function Videos() {
   }, [search.category]);
   const [searchTerm, setSearchTerm] = useState("");
   const searchQuery = useDebounce(searchTerm, 300);
-  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string; videoId: number } | null>(null);
   const { data: categories } = useCategories();
   const cats = categories?.data ?? [];
 
@@ -140,7 +140,7 @@ export default function Videos() {
                         <VideoCard
                           key={v.id}
                           video={v}
-                          onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })}
+                          onClick={() => v.youtube_id && setPlayingVideo({ youtubeId: v.youtube_id, title: v.title, videoId: v.id })}
                         />
                       ))}
                     </div>
@@ -182,6 +182,7 @@ export default function Videos() {
         <VideoPlayerModal
           youtubeId={playingVideo.youtubeId}
           title={playingVideo.title}
+          videoId={playingVideo.videoId}
           onClose={() => setPlayingVideo(null)}
         />
       )}

@@ -90,7 +90,7 @@ function VideoCard({ video, onDelete, onPlay, categories, onCategoryChange }: {
 export default function ManageVideos() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
-  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string } | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<{ youtubeId: string; title: string; videoId: number } | null>(null);
   const { isSyncing: syncing } = useSyncStore();
   const { data: resp, isLoading } = useAdminVideos({ page, page_size: viewMode === "card" ? 12 : 10 });
   const deleteVideo = useDeleteVideo();
@@ -118,7 +118,7 @@ export default function ManageVideos() {
       render: (row: Video) => (
         <div
           className="group relative cursor-pointer"
-          onClick={() => setPlayingVideo({ youtubeId: row.youtube_id, title: row.title })}
+          onClick={() => setPlayingVideo({ youtubeId: row.youtube_id, title: row.title, videoId: row.id })}
         >
           <img
             src={row.thumbnail_url || `https://img.youtube.com/vi/${row.youtube_id}/mqdefault.jpg`}
@@ -246,7 +246,7 @@ export default function ManageVideos() {
                 : (
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3 sm:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] sm:gap-4">
                       {videos.map(v => (
-                        <VideoCard key={v.id} video={v} onDelete={() => deleteVideo.mutate(v.id)} onPlay={() => setPlayingVideo({ youtubeId: v.youtube_id, title: v.title })} categories={cats} onCategoryChange={handleCategoryChange} />
+                        <VideoCard key={v.id} video={v} onDelete={() => deleteVideo.mutate(v.id)} onPlay={() => setPlayingVideo({ youtubeId: v.youtube_id, title: v.title, videoId: v.id })} categories={cats} onCategoryChange={handleCategoryChange} />
                       ))}
                     </div>
                   )
@@ -286,6 +286,7 @@ export default function ManageVideos() {
         <VideoPlayerModal
           youtubeId={playingVideo.youtubeId}
           title={playingVideo.title}
+          videoId={playingVideo.videoId}
           onClose={() => setPlayingVideo(null)}
         />
       )}
