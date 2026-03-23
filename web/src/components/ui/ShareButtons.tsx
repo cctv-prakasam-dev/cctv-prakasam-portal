@@ -23,7 +23,7 @@ export default function ShareButtons({ title, videoId, compact }: ShareButtonsPr
   }
 
   const shareLinks = [
-    { label: "WhatsApp", color: "#25D366", href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}` },
+    { label: "WhatsApp", color: "#25D366", href: `https://wa.me/?text=${encodedUrl}` },
     { label: "Facebook", color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
     { label: "Twitter", color: "#000", href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}` },
   ];

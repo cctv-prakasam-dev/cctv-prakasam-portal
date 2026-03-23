@@ -6,6 +6,7 @@ import BreakingTicker from "@/components/layout/BreakingTicker";
 import SectionHead from "@/components/ui/SectionHead";
 import ShareButtons from "@/components/ui/ShareButtons";
 import VideoCard from "@/components/ui/VideoCard";
+import { Share2 } from "lucide-react";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
 import { useBreakingNews } from "@/hooks/useBreakingNews";
 import { useCategories } from "@/hooks/useCategories";
@@ -87,7 +88,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section relative px-6 pt-10 pb-12">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[2.2fr_1fr]">
+          <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[2.5fr_1fr]">
             {/* Main Feature */}
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-red-50 px-3.5 py-1.5 dark:bg-red-500/10">
@@ -126,7 +127,7 @@ export default function Home() {
                       <div className="z-1 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-cyan-500/80 text-xs text-white">▶</div>
                       {v.duration && <span className="absolute right-1 bottom-1 rounded bg-black/80 px-1 py-0.5 font-[var(--font-mono)] text-[9px] text-white">{v.duration}</span>}
                     </div>
-                    <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-3">
+                    <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-2">
                       {v.category_name && <span className="font-[var(--font-heading)] text-[9px] font-bold uppercase tracking-wide text-[var(--color-primary)]">{v.category_name}</span>}
                       <h4 className="mt-0.5 truncate font-[var(--font-telugu)] text-xs font-semibold leading-snug text-[var(--color-text-primary)]">{v.title_te || v.title}</h4>
                       <span className="font-[var(--font-body)] text-[10px] text-[var(--color-text-muted)]">
@@ -137,6 +138,16 @@ export default function Home() {
                         {timeAgo(v.published_at)}
                       </span>
                     </div>
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(`https://cctv-prakasam-portal-g3il.onrender.com/videos/${v.id}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      className="flex shrink-0 items-center justify-center px-2 text-[var(--color-text-muted)] transition-colors hover:text-[#25D366]"
+                      title="Share on WhatsApp"
+                    >
+                      <Share2 size={14} />
+                    </a>
                   </div>
                 ))}
               </div>
