@@ -1,0 +1,16 @@
+import{h as n,r as m,j as e}from"./index-BEyoVlTz.js";/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const d=n("Check",[["path",{d:"M20 6 9 17l-5-5",key:"1gmf2c"}]]);/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const p=n("Copy",[["rect",{width:"14",height:"14",x:"8",y:"8",rx:"2",ry:"2",key:"17jyea"}],["path",{d:"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2",key:"zix9uf"}]]);/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const g=n("Play",[["polygon",{points:"6 3 20 12 6 21 6 3",key:"1oa8hb"}]]),u="https://cctv-prakasam-portal-g3il.onrender.com";function v({title:h,videoId:x,compact:f}){const[a,c]=m.useState(!1),s=`${u}/videos/${x}`,o=encodeURIComponent(s),b=encodeURIComponent(h);function l(r){r.stopPropagation(),navigator.clipboard.writeText(s).catch(()=>{}),c(!0),setTimeout(()=>c(!1),2e3)}const i=[{label:"WhatsApp",color:"#25D366",href:`https://wa.me/?text=${o}`},{label:"Facebook",color:"#1877F2",href:`https://www.facebook.com/sharer/sharer.php?u=${o}`},{label:"Twitter",color:"#000",href:`https://twitter.com/intent/tweet?url=${o}&text=${b}`}];return f?e.jsxs("div",{className:"mt-2 flex gap-1.5",children:[i.map(r=>e.jsx("a",{href:r.href,target:"_blank",rel:"noopener noreferrer",onClick:t=>t.stopPropagation(),className:"rounded-md px-2 py-1 font-[var(--font-heading)] text-[9px] font-bold text-white no-underline transition-opacity hover:opacity-80",style:{backgroundColor:r.color},children:r.label},r.label)),e.jsx("button",{onClick:l,className:"flex cursor-pointer items-center gap-0.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-2 py-1 font-[var(--font-heading)] text-[9px] font-bold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-primary)]",children:a?e.jsxs(e.Fragment,{children:[e.jsx(d,{size:9})," Copied!"]}):e.jsxs(e.Fragment,{children:[e.jsx(p,{size:9})," Copy"]})})]}):e.jsxs("div",{className:"mt-4 flex flex-wrap gap-2",children:[i.map(r=>e.jsx("a",{href:r.href,target:"_blank",rel:"noopener noreferrer",onClick:t=>t.stopPropagation(),className:"rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] no-underline transition-colors hover:border-current",style:{borderLeftWidth:2,borderLeftColor:r.color},children:r.label},r.label)),e.jsx("button",{onClick:l,className:"flex cursor-pointer items-center gap-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-1.5 font-[var(--font-heading)] text-[10px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-primary)]",children:a?e.jsxs(e.Fragment,{children:[e.jsx(d,{size:10})," Copied!"]}):e.jsxs(e.Fragment,{children:[e.jsx(p,{size:10})," Copy Link"]})})]})}export{g as P,v as S};

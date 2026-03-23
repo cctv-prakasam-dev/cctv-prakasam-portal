@@ -4,7 +4,6 @@ import { useState } from "react";
 import ceoPhoto from "@/assets/ceo-photo.svg";
 import BreakingTicker from "@/components/layout/BreakingTicker";
 import SectionHead from "@/components/ui/SectionHead";
-import ShareButtons from "@/components/ui/ShareButtons";
 import VideoCard from "@/components/ui/VideoCard";
 import { Share2 } from "lucide-react";
 import VideoPlayerModal from "@/components/ui/VideoPlayerModal";
@@ -98,14 +97,11 @@ export default function Home() {
               {featuredError
                 ? <p className="py-8 font-[var(--font-body)] text-sm text-[var(--color-text-muted)]">Failed to load featured video.</p>
                 : mainFeature && (
-                  <>
                     <VideoCard
                       video={mainFeature}
                       large
                       onClick={() => mainFeature.youtube_id && setPlayingVideo({ youtubeId: mainFeature.youtube_id, title: mainFeature.title, videoId: mainFeature.id })}
                     />
-                    <ShareButtons title={mainFeature.title} videoId={mainFeature.id} compact />
-                  </>
                 )}
             </div>
 
