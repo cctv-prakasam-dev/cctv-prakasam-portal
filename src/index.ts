@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import type { Context } from "hono";
@@ -71,6 +72,43 @@ app.onError((err: any, c: Context) => {
 
   c.status(statusCode);
   return c.json(response);
+});
+
+// Dynamic OG meta for video pages (social media crawlers)
+const indexHtml = readFileSync("./web/dist/index.html", "utf-8");
+
+app.get("/videos/:id", async (c) => {
+  const id = c.req.param("id");
+  try {
+    const resp = await fetch(`http://localhost:${port}/api/videos/${id}`);
+    if (resp.ok) {
+      const json = await resp.json() as { data?: { title?: string; title_te?: string; description?: string; thumbnail_url?: string } };
+      const video = json.data;
+      if (video) {
+        const title = (video.title_te || video.title || "Video") + " — CCTV AP Prakasam";
+        const desc = video.description?.slice(0, 160) || "Watch on CCTV AP Prakasam";
+        const image = video.thumbnail_url || `${envData.APP_BASE_URL}/og-image.png`;
+        const url = `${envData.APP_BASE_URL}/videos/${id}`;
+
+        const html = indexHtml
+          .replace(/<title>.*?<\/title>/, `<title>${title.replace(/</g, "&lt;")}</title>`)
+          .replace(/property="og:title" content="[^"]*"/, `property="og:title" content="${title.replace(/"/g, "&quot;")}"`)
+          .replace(/property="og:description" content="[^"]*"/, `property="og:description" content="${desc.replace(/"/g, "&quot;")}"`)
+          .replace(/property="og:image" content="[^"]*"/, `property="og:image" content="${image}"`)
+          .replace(/property="og:url" content="[^"]*"/, `property="og:url" content="${url}"`)
+          .replace(/name="twitter:title" content="[^"]*"/, `name="twitter:title" content="${title.replace(/"/g, "&quot;")}"`)
+          .replace(/name="twitter:description" content="[^"]*"/, `name="twitter:description" content="${desc.replace(/"/g, "&quot;")}"`)
+          .replace(/name="twitter:image" content="[^"]*"/, `name="twitter:image" content="${image}"`)
+          .replace(/name="description" content="[^"]*"/, `name="description" content="${desc.replace(/"/g, "&quot;")}"`);
+
+        return c.html(html);
+      }
+    }
+  }
+  catch {
+    // Fall through to serve default index.html
+  }
+  return c.html(indexHtml);
 });
 
 // Serve frontend static files

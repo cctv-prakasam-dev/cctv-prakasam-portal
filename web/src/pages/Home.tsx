@@ -87,7 +87,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero-section relative px-6 pt-10 pb-12">
         <div className="mx-auto max-w-[var(--max-content)]">
-          <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[1.6fr_1fr]">
+          <div className="grid grid-cols-1 gap-6 min-[900px]:grid-cols-[2.2fr_1fr]">
             {/* Main Feature */}
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-red-50 px-3.5 py-1.5 dark:bg-red-500/10">
